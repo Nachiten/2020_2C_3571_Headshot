@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using TGC.MonoGame.Samples.Cameras;
+using TGC.MonoGame.Samples.Viewer;
 
 namespace TGC.MonoGame.TP
 {
@@ -36,7 +38,7 @@ namespace TGC.MonoGame.TP
 
         private GraphicsDeviceManager Graphics { get; }
         private SpriteBatch SpriteBatch { get; set; }
-        private Model Model { get; set; }
+        //private Model Model { get; set; }
         private float Rotation { get; set; }
         private Matrix World { get; set; }
         private Matrix View { get; set; }
@@ -46,6 +48,10 @@ namespace TGC.MonoGame.TP
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
         ///     Escribir aquí todo el código de inicialización: todo procesamiento que podemos pre calcular para nuestro juego.
         /// </summary>
+        /// 
+        private Model ModeloTanque { get; set; }
+        private Model ModeloRobot { get; set; }
+        private Camera Camera { get; set; }
         protected override void Initialize()
         {
             // La logica de inicializacion que no depende del contenido se recomienda poner en este metodo.
@@ -78,11 +84,18 @@ namespace TGC.MonoGame.TP
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Cargo el modelo del logo.
-            Model = Content.Load<Model>(ContentFolder3D + "tgc-logo/tgc-logo");
+            //Model = Content.Load<Model>(ContentFolder3D + "tgc-logo/tgc-logo");
             // Obtengo su efecto para cambiarle el color y activar la luz predeterminada que tiene MonoGame.
-            var modelEffect = (BasicEffect) Model.Meshes[0].Effects[0];
-            modelEffect.DiffuseColor = Color.DarkBlue.ToVector3();
-            modelEffect.EnableDefaultLighting();
+            //var modelEffect = (BasicEffect) Model.Meshes[0].Effects[0];
+            //modelEffect.DiffuseColor = Color.DarkBlue.ToVector3();
+            //modelEffect.EnableDefaultLighting();
+
+            ModeloRobot = Game.Content.Load<Model>(ContentFolder3D + "tgcito-classic/tgcito-classic");
+            ((BasicEffect)ModeloRobot.Meshes.FirstOrDefault()?.Effects.FirstOrDefault())?.EnableDefaultLighting();
+
+            ModeloTanque = Game.Content.Load<Model>(ContentFolder3D + "tank/tank");
+
+            foreach (var mesh in ModeloTanque.Meshes) ((BasicEffect)mesh.Effects.FirstOrDefault())?.EnableDefaultLighting();
 
             base.LoadContent();
         }
@@ -117,7 +130,17 @@ namespace TGC.MonoGame.TP
             GraphicsDevice.Clear(Color.Black);
 
             //Finalmente invocamos al draw del modelo.
-            Model.Draw(World * Matrix.CreateRotationY(Rotation), View, Projection);
+            //Model.Draw(World * Matrix.CreateRotationY(Rotation), View, Projection);
+
+            AxisLines.Draw(Camera.View, Camera.Projection);
+
+            Vector3 posicionModelo1 = new Vector3(-8, 0, 0);
+            Vector3 posicionModelo2 = new Vector3(25, -5, 0);
+
+            ModeloRobot.Draw(Matrix.CreateScale(0.1f) * Matrix.CreateTranslation(posicionModelo1), Camera.View,
+                Camera.Projection);
+            ModeloTanque.Draw(Matrix.CreateScale(2.8f) * Matrix.CreateTranslation(posicionModelo2), Camera.View,
+                Camera.Projection);
 
             base.Draw(gameTime);
         }
