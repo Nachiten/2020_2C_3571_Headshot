@@ -27,7 +27,7 @@ namespace TGC.MonoGame.TP
             // Maneja la configuracion y la administracion del dispositivo grafico.
             Graphics = new GraphicsDeviceManager(this);
             // Descomentar para que el juego sea pantalla completa.
-            //Graphics.IsFullScreen = true;
+            Graphics.IsFullScreen = true;
             // Carpeta raiz donde va a estar toda la Media.
             Content.RootDirectory = "Content";
             // Hace que el mouse sea visible.
@@ -39,6 +39,7 @@ namespace TGC.MonoGame.TP
         private Model ModeloTanque { get; set; }
         private Model ModeloCiudad { get; set; }
         private Model ModeloTgcitoClassic { get; set; }
+        private Model ModeloRobotTGC { get; set; }
         private float Rotation { get; set; }
         private Matrix WorldTanque { get; set; }
         private Matrix View { get; set; }
@@ -87,6 +88,8 @@ namespace TGC.MonoGame.TP
             ModeloCiudad = Content.Load<Model>(ContentFolder3D + "scene/city");
 
             ModeloTgcitoClassic = Content.Load<Model>(ContentFolder3D + "tgcito-classic/tgcito-classic");
+
+            ModeloRobotTGC = Content.Load<Model>(ContentFolder3D + "tgcito-mega/tgcito-mega");
 
             // Obtengo su efecto para cambiarle el color y activar la luz predeterminada que tiene MonoGame.
             var modelEffect = (BasicEffect) ModeloTanque.Meshes[0].Effects[0];
@@ -137,7 +140,10 @@ namespace TGC.MonoGame.TP
 
             ModeloCiudad.Draw(WorldTanque * Matrix.CreateScale(0.1f), View, Projection);
 
-            ModeloTgcitoClassic.Draw(WorldTanque * Matrix.CreateScale(0.2f) * Matrix.CreateTranslation(45, 1, 90) , View, Projection);
+            ModeloTgcitoClassic.Draw(WorldTanque * Matrix.CreateScale(0.2f) * Matrix.CreateTranslation(35, 1, 90) , View, Projection);
+
+            ModeloRobotTGC.Draw(WorldTanque * Matrix.CreateScale(0.2f) * Matrix.CreateTranslation(55, 1, 90), View, Projection);
+
 
             base.Draw(gameTime);
         }

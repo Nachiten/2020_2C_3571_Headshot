@@ -101,7 +101,7 @@
 /build:Models/tgcito-classic/uvw.jpg
 
 #begin Models/tgcito-mega/tgcito-mega.obj
-/importer:OpenAssetImporter
+/importer:FbxImporter
 /processor:ModelProcessor
 /processorParam:ColorKeyColor=0,0,0,0
 /processorParam:ColorKeyEnabled=True
