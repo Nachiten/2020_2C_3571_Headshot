@@ -27,7 +27,7 @@ namespace TGC.MonoGame.TP
             // Maneja la configuracion y la administracion del dispositivo grafico.
             Graphics = new GraphicsDeviceManager(this);
             // Descomentar para que el juego sea pantalla completa.
-            //Graphics.IsFullScreen = true;
+            Graphics.IsFullScreen = true;
             // Carpeta raiz donde va a estar toda la Media.
             Content.RootDirectory = "Content";
             // Hace que el mouse sea visible.
@@ -38,6 +38,7 @@ namespace TGC.MonoGame.TP
         private SpriteBatch SpriteBatch { get; set; }
         private Model ModeloTanque { get; set; }
         private Model ModeloCiudad { get; set; }
+        private Model ModeloRobotTGC { get; set; }
         private float Rotation { get; set; }
         private Matrix WorldTanque { get; set; }
         private Matrix View { get; set; }
@@ -85,6 +86,8 @@ namespace TGC.MonoGame.TP
 
             ModeloCiudad = Content.Load<Model>(ContentFolder3D + "scene/city");
 
+            ModeloRobotTGC = Content.Load<Model>(ContentFolder3D + "tgcito-mega/tgcito-mega");
+
             // Obtengo su efecto para cambiarle el color y activar la luz predeterminada que tiene MonoGame.
             var modelEffect = (BasicEffect) ModeloTanque.Meshes[0].Effects[0];
             //modelEffect.DiffuseColor = Color.YellowGreen.ToVector3();
@@ -109,7 +112,7 @@ namespace TGC.MonoGame.TP
 
             if (Keyboard.GetState().IsKeyDown(Keys.W))
                 //Salgo del juego.
-                Exit();
+                //Exit();
 
             // Basado en el tiempo que paso se va generando una rotacion.
             Rotation += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
@@ -133,6 +136,8 @@ namespace TGC.MonoGame.TP
             ModeloTanque.Draw(WorldTanque * Matrix.CreateScale(5) * Matrix.CreateTranslation(0,-10,0), View, Projection);
 
             ModeloCiudad.Draw(WorldTanque * Matrix.CreateScale(0.1f), View, Projection);
+
+            ModeloRobotTGC.Draw(WorldTanque * Matrix.CreateScale(1), View, Projection);
 
             base.Draw(gameTime);
         }
