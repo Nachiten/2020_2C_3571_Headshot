@@ -38,6 +38,8 @@ namespace TGC.MonoGame.TP
         private GraphicsDeviceManager Graphics { get; }
         private SpriteBatch SpriteBatch { get; set; }
         private Model ModeloTanque { get; set; }
+
+        private Model ModeloM4 { get; set; }
         private Model ModeloCiudad { get; set; }
         private Model ModeloTgcitoClassic { get; set; }
         private Model ModeloRobotTGC { get; set; }
@@ -72,10 +74,10 @@ namespace TGC.MonoGame.TP
 
             // Configuramos nuestras matrices de la escena.
             World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(10,0,10);
-            //View = Matrix.CreateLookAt(new Vector3(30,20,150), new Vector3(30,0,0) , Vector3.Up) ;
+            View = Matrix.CreateLookAt(new Vector3(30,20,150), new Vector3(30,0,0) , Vector3.Up) ;
 
-            //Projection =
-            //    Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);
+            Projection =
+                Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);
 
             base.Initialize();
         }
@@ -96,7 +98,10 @@ namespace TGC.MonoGame.TP
            // Model = Content.Load<Model>(ContentFolder3D + "tgc-logo/tgc-logo");
             ModeloTanque = Content.Load<Model>(ContentFolder3D + "tank/tank");
 
-            ModeloCiudad = Content.Load<Model>(ContentFolder3D + "scene/city");
+            ModeloM4 = Content.Load<Model>(ContentFolder3D + "weapons/fbx/m4a1_s");
+        
+
+         ModeloCiudad = Content.Load<Model>(ContentFolder3D + "scene/city");
 
             ModeloTgcitoClassic = Content.Load<Model>(ContentFolder3D + "tgcito-classic/tgcito-classic");
 
@@ -145,7 +150,8 @@ namespace TGC.MonoGame.TP
             //Matrix.CreateRotationY(Rotation)
 
             //Finalmente invocamos al draw del modelo.
-            ModeloTanque.Draw(World * Matrix.CreateScale(5) * Matrix.CreateTranslation(0,-10,0), Camera.View, Camera.Projection);
+
+            ModeloM4.Draw(World * Matrix.CreateScale(5) * Matrix.CreateTranslation(0,-10,0), View, Projection);
 
             ModeloCiudad.Draw(World * Matrix.CreateScale(0.1f), Camera.View, Camera.Projection);
 
