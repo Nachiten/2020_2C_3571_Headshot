@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.Samples.Cameras;
 using TGC.MonoGame.Samples.Viewer.GUI;
 
+
 namespace TGC.MonoGame.TP
 {
     /// <summary>
@@ -49,10 +50,16 @@ namespace TGC.MonoGame.TP
         private Matrix View { get; set; }
         private Matrix Projection { get; set; }
 
+        private VertexPositionTexture[] piso { get; set; }
+        private VertexPositionTexture[] pared { get; set; }
+
         private AxisLines ejes { get; set; }
+        private BasicEffect Effect { get; set; }
 
         private FreeCamera Camera { get; set; }
 
+        private Texture2D TexturaPlano { get; set; }
+        private Texture2D TexturaPared { get; set; }
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
         ///     Escribir aquí todo el código de inicialización: todo procesamiento que podemos pre calcular para nuestro juego.
@@ -71,18 +78,121 @@ namespace TGC.MonoGame.TP
             ejes = new AxisLines(GraphicsDevice);
 
 
+            piso = new VertexPositionTexture[6];
+            
+            piso[0].Position = new Vector3(-20, 0, -20);
+            piso[1].Position = new Vector3(-20, 0, 20);
+            piso[2].Position = new Vector3(20, 0, -20);
+            piso[3].Position = piso[1].Position;
+            piso[4].Position = new Vector3(20, 0, 20);
+            piso[5].Position = piso[2].Position;
+
+            piso[0].TextureCoordinate = new Vector2(0, 0);
+            piso[1].TextureCoordinate = new Vector2(0, 1);
+            piso[2].TextureCoordinate = new Vector2(1, 0);
+            
+            piso[3].TextureCoordinate = piso[1].TextureCoordinate;
+            piso[4].TextureCoordinate = new Vector2(1, 1);
+            piso[5].TextureCoordinate = piso[2].TextureCoordinate;
+
+            pared = new VertexPositionTexture[6];
+
+            pared[0].Position = new Vector3(-20, -20, 0);
+            pared[1].Position = new Vector3(-20, 20, 0);
+            pared[2].Position = new Vector3(20, -20, 0);
+            pared[3].Position = pared[1].Position;
+            pared[4].Position = new Vector3(20, 20, 0);
+            pared[5].Position = pared[2].Position;
+
+            pared[0].TextureCoordinate = new Vector2(0, 0);
+            pared[1].TextureCoordinate = new Vector2(0, 1);
+            pared[2].TextureCoordinate = new Vector2(1, 0);
+            
+            pared[3].TextureCoordinate = piso[1].TextureCoordinate;
+            pared[4].TextureCoordinate = new Vector2(1, 1);
+            pared[5].TextureCoordinate = piso[2].TextureCoordinate;
 
             var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
             Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(-350, 50, 400), screenSize);
+
+            
+
+           
+
 
             // Configuramos nuestras matrices de la escena.
             World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(10,0,10);
             View = Matrix.CreateLookAt(new Vector3(30,20,150), new Vector3(30,0,0) , Vector3.Up) ;
 
+            Effect = new BasicEffect(GraphicsDevice);
             Projection =
                 Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);
 
             base.Initialize();
+        }
+
+        void DrawWall()
+        {
+
+            // The assignment of effect.View and effect.Projection
+            // are nearly identical to the code in the Model drawing code.
+            var cameraPosition = new Vector3(0, 40, 20);
+            var cameraLookAtVector = Vector3.Zero;
+            var cameraUpVector = Vector3.UnitZ;
+
+            Effect.View = Camera.View;
+            Effect.Projection = Camera.Projection;
+
+            Effect.Texture = TexturaPared;
+
+            foreach (var pass in Effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+
+                Graphics.GraphicsDevice.DrawUserPrimitives(
+                    // We’ll be rendering two trinalges
+                    PrimitiveType.TriangleList,
+                    // The array of verts that we want to render
+                    pared,
+                    // The offset, which is 0 since we want to start
+                    // at the beginning of the floorVerts array
+                    0,
+                    // The number of triangles to draw
+                    2);
+            }
+        }
+
+        void DrawFloor()
+        {
+
+            // The assignment of effect.View and effect.Projection
+            // are nearly identical to the code in the Model drawing code.
+            var cameraPosition = new Vector3(0, 40, 20);
+            var cameraLookAtVector = Vector3.Zero;
+            var cameraUpVector = Vector3.UnitZ;
+
+            Effect.View = Camera.View;
+            Effect.Projection = Camera.Projection;
+
+            // new code:
+            Effect.TextureEnabled = true;
+            Effect.Texture = TexturaPlano;
+
+            foreach (var pass in Effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+
+                Graphics.GraphicsDevice.DrawUserPrimitives(
+                    // We’ll be rendering two trinalges
+                    PrimitiveType.TriangleList,
+                    // The array of verts that we want to render
+                    piso,
+                    // The offset, which is 0 since we want to start
+                    // at the beginning of the floorVerts array
+                    0,
+                    // The number of triangles to draw
+                    2);
+            }
         }
 
         /// <summary>
@@ -109,6 +219,19 @@ namespace TGC.MonoGame.TP
             ModeloTgcitoClassic = Content.Load<Model>(ContentFolder3D + "tgcito-classic/tgcito-classic");
 
             ModeloRobotTGC = Content.Load<Model>(ContentFolder3D + "tgcito-mega/tgcito-mega");
+
+
+            // We aren't using the content pipeline, so we need
+            // to access the stream directly:
+            using (var stream = TitleContainer.OpenStream("Content/pasto.jpg"))
+            {
+                TexturaPlano = Texture2D.FromStream(this.GraphicsDevice, stream);
+            }
+
+            using (var stream = TitleContainer.OpenStream("Content/ladrillo.png"))
+            {
+                TexturaPared = Texture2D.FromStream(this.GraphicsDevice, stream);
+            }
 
             // Obtengo su efecto para cambiarle el color y activar la luz predeterminada que tiene MonoGame.
             var modelEffect = (BasicEffect) ModeloM4.Meshes[0].Effects[0];
@@ -147,9 +270,11 @@ namespace TGC.MonoGame.TP
         protected override void Draw(GameTime gameTime)
         {
             // Aca deberiamos poner toda la logia de renderizado del juego.
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Color.White);
 
-            ejes.Draw(Camera.View, Camera.Projection);
+
+            DrawFloor();
+            DrawWall();
             // Rotacion en y
             //Matrix.CreateRotationY(Rotation)
 
@@ -160,7 +285,6 @@ namespace TGC.MonoGame.TP
             //ModeloCiudad.Draw(World * Matrix.CreateScale(0.1f), Camera.View, Camera.Projection);
 
             
-
             ModeloTgcitoClassic.Draw(World * Matrix.CreateScale(0.2f) * Matrix.CreateTranslation(35, 1, 90) , Camera.View, Camera.Projection);
 
             ModeloRobotTGC.Draw(World * Matrix.CreateScale(0.2f) * Matrix.CreateTranslation(55, 1, 90), Camera.View, Camera.Projection);

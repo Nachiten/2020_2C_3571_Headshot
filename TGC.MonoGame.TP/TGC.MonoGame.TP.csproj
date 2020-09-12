@@ -14,11 +14,19 @@
     <None Remove="Icon.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\Debug\netcoreapp3.1\Content\ladrillo.png" />
+    <Content Include="bin\Debug\netcoreapp3.1\Content\pasto.jpg" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
     <EmbeddedResource Include="Icon.bmp" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\netcoreapp3.1\Content\noodas.png" />
+    <None Include="bin\Debug\netcoreapp3.1\Content\Palette.jpg" />
   </ItemGroup>
   <ItemGroup>
     <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
