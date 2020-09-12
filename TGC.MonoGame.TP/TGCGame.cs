@@ -108,8 +108,8 @@ namespace TGC.MonoGame.TP
             ModeloRobotTGC = Content.Load<Model>(ContentFolder3D + "tgcito-mega/tgcito-mega");
 
             // Obtengo su efecto para cambiarle el color y activar la luz predeterminada que tiene MonoGame.
-            var modelEffect = (BasicEffect) ModeloTanque.Meshes[0].Effects[0];
-            //modelEffect.DiffuseColor = Color.YellowGreen.ToVector3();
+            var modelEffect = (BasicEffect) ModeloM4.Meshes[0].Effects[0];
+            modelEffect.DiffuseColor = Color.YellowGreen.ToVector3();
             modelEffect.EnableDefaultLighting();
 
             base.LoadContent();
