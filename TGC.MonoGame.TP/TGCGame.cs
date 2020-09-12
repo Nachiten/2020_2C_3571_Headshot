@@ -41,7 +41,7 @@ namespace TGC.MonoGame.TP
         private Model ModeloTanque { get; set; }
 
         private Model ModeloM4 { get; set; }
-        //private Model ModeloCiudad { get; set; }
+        private Model ModeloCiudad { get; set; }
         private Model ModeloTgcitoClassic { get; set; }
         private Model ModeloRobotTGC { get; set; }
         private float Rotation { get; set; }
@@ -69,8 +69,6 @@ namespace TGC.MonoGame.TP
             GraphicsDevice.RasterizerState = rasterizerState;
             // Seria hasta aca.
             ejes = new AxisLines(GraphicsDevice);
-
-
 
             var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
             Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(-350, 50, 400), screenSize);
@@ -102,9 +100,8 @@ namespace TGC.MonoGame.TP
             ModeloTanque = Content.Load<Model>(ContentFolder3D + "tank/tank");
 
             ModeloM4 = Content.Load<Model>(ContentFolder3D + "weapons/fbx/m4a1_s");
-        
 
-            //ModeloCiudad = Content.Load<Model>(ContentFolder3D + "scene/city");
+            ModeloCiudad = Content.Load<Model>(ContentFolder3D + "scene/city");
 
             ModeloTgcitoClassic = Content.Load<Model>(ContentFolder3D + "tgcito-classic/tgcito-classic");
 
@@ -157,9 +154,9 @@ namespace TGC.MonoGame.TP
 
             ModeloM4.Draw(World * Matrix.CreateScale(5) * Matrix.CreateTranslation(0,-10,0), View, Projection);
 
-            //ModeloCiudad.Draw(World * Matrix.CreateScale(0.1f), Camera.View, Camera.Projection);
+            ModeloCiudad.Draw(World * Matrix.CreateScale(0.1f), Camera.View, Camera.Projection);
 
-            
+            ModeloTanque.Draw(World * Matrix.CreateScale(3) * Matrix.CreateTranslation(20, -10, 30), Camera.View, Camera.Projection);
 
             ModeloTgcitoClassic.Draw(World * Matrix.CreateScale(0.2f) * Matrix.CreateTranslation(35, 1, 90) , Camera.View, Camera.Projection);
 
