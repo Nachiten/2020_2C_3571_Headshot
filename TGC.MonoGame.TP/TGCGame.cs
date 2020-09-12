@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using TGC.MonoGame.Samples.Cameras;
 
 namespace TGC.MonoGame.TP
 {
@@ -27,7 +28,7 @@ namespace TGC.MonoGame.TP
             // Maneja la configuracion y la administracion del dispositivo grafico.
             Graphics = new GraphicsDeviceManager(this);
             // Descomentar para que el juego sea pantalla completa.
-            Graphics.IsFullScreen = true;
+            //Graphics.IsFullScreen = true;
             // Carpeta raiz donde va a estar toda la Media.
             Content.RootDirectory = "Content";
             // Hace que el mouse sea visible.
@@ -45,6 +46,8 @@ namespace TGC.MonoGame.TP
         private Matrix View { get; set; }
         private Matrix Projection { get; set; }
 
+        private FreeCamera Camera { get; set; }
+
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
         ///     Escribir aquí todo el código de inicialización: todo procesamiento que podemos pre calcular para nuestro juego.
@@ -60,6 +63,9 @@ namespace TGC.MonoGame.TP
             rasterizerState.CullMode = CullMode.None;
             GraphicsDevice.RasterizerState = rasterizerState;
             // Seria hasta aca.
+
+            var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
+            Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(-350, 50, 400), screenSize);
 
             // Configuramos nuestras matrices de la escena.
             WorldTanque = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(10,0,10);
@@ -113,9 +119,7 @@ namespace TGC.MonoGame.TP
                 //Salgo del juego.
                 Exit();
 
-            if (Keyboard.GetState().IsKeyDown(Keys.W))
-                //Salgo del juego.
-                //Exit();
+            Camera.Update(gameTime);
 
             // Basado en el tiempo que paso se va generando una rotacion.
             Rotation += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
@@ -136,15 +140,15 @@ namespace TGC.MonoGame.TP
             //Matrix.CreateRotationY(Rotation)
 
             //Finalmente invocamos al draw del modelo.
-            ModeloTanque.Draw(WorldTanque * Matrix.CreateScale(5) * Matrix.CreateTranslation(0,-10,0), View, Projection);
+            ModeloTanque.Draw(WorldTanque * Matrix.CreateScale(5) * Matrix.CreateTranslation(0,-10,0), Camera.View, Camera.Projection);
 
-            ModeloCiudad.Draw(WorldTanque * Matrix.CreateScale(0.1f), View, Projection);
+            ModeloCiudad.Draw(WorldTanque * Matrix.CreateScale(0.1f), Camera.View, Camera.Projection);
 
-            ModeloTgcitoClassic.Draw(WorldTanque * Matrix.CreateScale(0.2f) * Matrix.CreateTranslation(35, 1, 90) , View, Projection);
+            ModeloTgcitoClassic.Draw(WorldTanque * Matrix.CreateScale(0.2f) * Matrix.CreateTranslation(35, 1, 90) , Camera.View, Camera.Projection);
 
-            ModeloRobotTGC.Draw(WorldTanque * Matrix.CreateScale(0.2f) * Matrix.CreateTranslation(55, 1, 90), View, Projection);
+            ModeloRobotTGC.Draw(WorldTanque * Matrix.CreateScale(0.2f) * Matrix.CreateTranslation(55, 1, 90), Camera.View, Camera.Projection);
 
-
+            
             base.Draw(gameTime);
         }
 
