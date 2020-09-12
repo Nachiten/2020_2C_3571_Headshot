@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.Samples.Cameras;
+using TGC.MonoGame.Samples.Viewer.GUI;
 
 namespace TGC.MonoGame.TP
 {
@@ -40,13 +41,15 @@ namespace TGC.MonoGame.TP
         private Model ModeloTanque { get; set; }
 
         private Model ModeloM4 { get; set; }
-        private Model ModeloCiudad { get; set; }
+        //private Model ModeloCiudad { get; set; }
         private Model ModeloTgcitoClassic { get; set; }
         private Model ModeloRobotTGC { get; set; }
         private float Rotation { get; set; }
         private Matrix World { get; set; }
         private Matrix View { get; set; }
         private Matrix Projection { get; set; }
+
+        private AxisLines ejes { get; set; }
 
         private FreeCamera Camera { get; set; }
 
@@ -65,7 +68,7 @@ namespace TGC.MonoGame.TP
             rasterizerState.CullMode = CullMode.None;
             GraphicsDevice.RasterizerState = rasterizerState;
             // Seria hasta aca.
-
+            ejes = new AxisLines(GraphicsDevice);
 
 
 
@@ -101,7 +104,7 @@ namespace TGC.MonoGame.TP
             ModeloM4 = Content.Load<Model>(ContentFolder3D + "weapons/fbx/m4a1_s");
         
 
-         ModeloCiudad = Content.Load<Model>(ContentFolder3D + "scene/city");
+            //ModeloCiudad = Content.Load<Model>(ContentFolder3D + "scene/city");
 
             ModeloTgcitoClassic = Content.Load<Model>(ContentFolder3D + "tgcito-classic/tgcito-classic");
 
@@ -146,6 +149,7 @@ namespace TGC.MonoGame.TP
             // Aca deberiamos poner toda la logia de renderizado del juego.
             GraphicsDevice.Clear(Color.Black);
 
+            ejes.Draw(Camera.View, Camera.Projection);
             // Rotacion en y
             //Matrix.CreateRotationY(Rotation)
 
@@ -153,7 +157,9 @@ namespace TGC.MonoGame.TP
 
             ModeloM4.Draw(World * Matrix.CreateScale(5) * Matrix.CreateTranslation(0,-10,0), View, Projection);
 
-            ModeloCiudad.Draw(World * Matrix.CreateScale(0.1f), Camera.View, Camera.Projection);
+            //ModeloCiudad.Draw(World * Matrix.CreateScale(0.1f), Camera.View, Camera.Projection);
+
+            
 
             ModeloTgcitoClassic.Draw(World * Matrix.CreateScale(0.2f) * Matrix.CreateTranslation(35, 1, 90) , Camera.View, Camera.Projection);
 
