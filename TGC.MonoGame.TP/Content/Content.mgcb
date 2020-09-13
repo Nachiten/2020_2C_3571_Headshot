@@ -169,18 +169,6 @@
 /processorParam:TextureFormat=Color
 /build:Models/weapons/fbx/noodas.png
 
-#begin Models/weapons/fbx/noodas.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Models/weapons/fbx/noodas.png
-
 #begin Models/weapons/obj/m4a1_s.obj
 /importer:OpenAssetImporter
 /processor:ModelProcessor
@@ -224,7 +212,7 @@
 /processorParam:TextureFormat=Color
 /build:Models/weapons/obj/M4A1-s.tga
 
-#begin Palette.jpg
+#begin Textures/ladrillo.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -234,5 +222,29 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Palette.jpg
+/build:Textures/ladrillo.png
+
+#begin Textures/pasto.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/pasto.jpg
+
+#begin Textures/sand.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/sand.jpg
 
