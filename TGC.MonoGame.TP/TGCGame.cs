@@ -159,27 +159,25 @@ namespace TGC.MonoGame.TP
         protected override void Draw(GameTime gameTime)
         {
             // Aca deberiamos poner toda la logia de renderizado del juego.
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Color.LightBlue);
 
             // Walls and floor
             Stage.Draw(Graphics,Effect,Camera.View,Camera.Projection);
 
+            // Gun
+            ModeloM4.Draw(WorldM4, View, Projection);
+
             // Rotacion en y
             //Matrix.CreateRotationY(Rotation)
-
-            //Finalmente invocamos al draw del modelo.
-
-            ModeloM4.Draw(WorldM4, View, Projection);
 
             //ModeloCiudad.Draw(World * Matrix.CreateScale(0.2f), Camera.View, Camera.Projection);
 
             //ModeloTanque.Draw(World * Matrix.CreateScale(3) * Matrix.CreateTranslation(20, -10, 30), Camera.View, Camera.Projection);
 
-            ModeloTgcitoClassic.Draw(World * Matrix.CreateScale(.2f) * Matrix.CreateTranslation(35, 10, 90) , Camera.View, Camera.Projection);
+            //ModeloTgcitoClassic.Draw(World * Matrix.CreateScale(.2f) * Matrix.CreateTranslation(35, 10, 90) , Camera.View, Camera.Projection);
 
-            ModeloRobotTGC.Draw(World * Matrix.CreateScale(.2f) * Matrix.CreateTranslation(55, 10, 90), Camera.View, Camera.Projection);
+            //ModeloRobotTGC.Draw(World * Matrix.CreateScale(.2f) * Matrix.CreateTranslation(55, 10, 90), Camera.View, Camera.Projection);
 
-            
             base.Draw(gameTime);
         }
 
