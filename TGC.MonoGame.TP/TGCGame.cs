@@ -114,12 +114,12 @@ namespace TGC.MonoGame.TP
             // Obtengo su efecto para cambiarle el color y activar la luz predeterminada que tiene MonoGame.
             //Mesh Silenciador
             var modelEffect = (BasicEffect) ModeloM4.Meshes[0].Effects[0];
-            modelEffect.DiffuseColor = Color.DarkGray.ToVector3();
+            modelEffect.DiffuseColor = Color.Goldenrod.ToVector3();
             modelEffect.EnableDefaultLighting();
 
             //Mesh Arma
             var modelEffect2 = (BasicEffect)ModeloM4.Meshes[1].Effects[0];
-            modelEffect2.DiffuseColor = Color.DarkGray.ToVector3();
+            modelEffect2.DiffuseColor = Color.Goldenrod.ToVector3();
             modelEffect2.EnableDefaultLighting();
 
 
