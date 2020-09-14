@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
 namespace TGC.MonoGame.TP{
     public class Plane {
         public VertexPositionTexture[] vertices { get; set; }
@@ -24,11 +25,8 @@ namespace TGC.MonoGame.TP{
             vertices[4].TextureCoordinate = new Vector2(textureRepetitions.X, textureRepetitions.Y);
             vertices[5].TextureCoordinate = vertices[2].TextureCoordinate;
         }
-        public void LoadTexture(string path,GraphicsDevice gd) {
-            using (var stream = TitleContainer.OpenStream(path))
-            {
-                texture = Texture2D.FromStream(gd, stream);
-            }
+        public void LoadTexture(string path,ContentManager Content) {
+            texture = Content.Load<Texture2D>(path);
         }
         public void Draw(GraphicsDeviceManager Graphics, BasicEffect Effect, Matrix View, Matrix Projection){
             Effect.View = View;

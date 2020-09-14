@@ -40,6 +40,7 @@ namespace TGC.MonoGame.TP
         private SpriteBatch SpriteBatch { get; set; }
         private Model ModeloTanque { get; set; }
         private Model ModeloM4 { get; set; }
+        private Matrix WorldM4 { get; set; }
         private Model ModeloCiudad { get; set; }
         private Model ModeloTgcitoClassic { get; set; }
         private Model ModeloRobotTGC { get; set; }
@@ -76,7 +77,9 @@ namespace TGC.MonoGame.TP
 
             // Configuramos nuestras matrices de la escena.
             World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(10,0,10);
-            View = Matrix.CreateLookAt(new Vector3(30,20,150), new Vector3(30,0,0) , Vector3.Up) ;
+            View = Matrix.CreateLookAt(new Vector3(30,20,150), new Vector3(30,0,0) , Vector3.Up);
+
+            WorldM4 = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(50,0,110);
 
             Effect = new BasicEffect(GraphicsDevice);
             Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);
@@ -106,7 +109,7 @@ namespace TGC.MonoGame.TP
 
             ModeloRobotTGC = Content.Load<Model>(ContentFolder3D + "tgcito-mega/tgcito-mega");
 
-            Stage.LoadContent(GraphicsDevice);            
+            Stage.LoadContent(Content,GraphicsDevice);       
 
             // Obtengo su efecto para cambiarle el color y activar la luz predeterminada que tiene MonoGame.
             var modelEffect = (BasicEffect) ModeloM4.Meshes[0].Effects[0];
@@ -149,21 +152,21 @@ namespace TGC.MonoGame.TP
 
             // Walls and floor
             Stage.Draw(Graphics,Effect,Camera.View,Camera.Projection);
-            
+
             // Rotacion en y
             //Matrix.CreateRotationY(Rotation)
 
             //Finalmente invocamos al draw del modelo.
 
-            ModeloM4.Draw(World * Matrix.CreateScale(5) * Matrix.CreateTranslation(0,-10,0), View, Projection);
+            ModeloM4.Draw(WorldM4, View, Projection);
 
             //ModeloCiudad.Draw(World * Matrix.CreateScale(0.2f), Camera.View, Camera.Projection);
 
             //ModeloTanque.Draw(World * Matrix.CreateScale(3) * Matrix.CreateTranslation(20, -10, 30), Camera.View, Camera.Projection);
 
-            ModeloTgcitoClassic.Draw(World * Matrix.CreateScale(0.2f) * Matrix.CreateTranslation(35, 1, 90) , Camera.View, Camera.Projection);
+            ModeloTgcitoClassic.Draw(World * Matrix.CreateScale(.2f) * Matrix.CreateTranslation(35, 10, 90) , Camera.View, Camera.Projection);
 
-            ModeloRobotTGC.Draw(World * Matrix.CreateScale(0.2f) * Matrix.CreateTranslation(55, 1, 90), Camera.View, Camera.Projection);
+            ModeloRobotTGC.Draw(World * Matrix.CreateScale(.2f) * Matrix.CreateTranslation(55, 10, 90), Camera.View, Camera.Projection);
 
             
             base.Draw(gameTime);
