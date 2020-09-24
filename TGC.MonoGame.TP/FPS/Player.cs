@@ -10,6 +10,7 @@ namespace TGC.MonoGame.TP.FPS
     {
 
         //default 100
+        private Matrix WorldWeapon { get; set; }
         public int Health { get; set; }
         public Weapon CurrentWeapon { get; set; }
         public int Speed { get; set; }
@@ -19,6 +20,11 @@ namespace TGC.MonoGame.TP.FPS
         public Weapon[] Weapons { get; set; }
 
         public Matrix CurrentPosition { get; set; }
+
+        public void Initialize()
+        {
+            
+        }
         public void Shoot(Matrix direction)
         {
             //this.weapon.fire()
