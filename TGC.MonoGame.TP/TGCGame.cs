@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.Samples.Cameras;
-using TGC.MonoGame.Samples.Viewer.GUI;
 
 namespace TGC.MonoGame.TP
 {
@@ -40,6 +39,7 @@ namespace TGC.MonoGame.TP
         private SpriteBatch SpriteBatch { get; set; }
         private Model ModeloTanque { get; set; }
         private Model ModeloM4 { get; set; }
+        private Model Knife { get; set; }
         private Matrix WorldM4 { get; set; }
         private Model ModeloCiudad { get; set; }
         private Model ModeloTgcitoClassic { get; set; }
@@ -48,7 +48,6 @@ namespace TGC.MonoGame.TP
         private Matrix World { get; set; }
         private Matrix View { get; set; }
         private Matrix Projection { get; set; }
-        private AxisLines ejes { get; set; }
         private BasicEffect Effect { get; set; }
         private FreeCamera Camera { get; set; }
         private Stage Stage { get; set; }
@@ -67,8 +66,7 @@ namespace TGC.MonoGame.TP
             var rasterizerState = new RasterizerState();
             rasterizerState.CullMode = CullMode.None;
             GraphicsDevice.RasterizerState = rasterizerState;
-            // Seria hasta aca.
-            ejes = new AxisLines(GraphicsDevice);
+          
 
             Stage = new Stage();       
 
@@ -103,6 +101,8 @@ namespace TGC.MonoGame.TP
 
             ModeloM4 = Content.Load<Model>(ContentFolder3D + "weapons/fbx/m4a1_s");
 
+            Knife = Content.Load<Model>(ContentFolder3D + "weapons/knife/Karambit");
+
             ModeloCiudad = Content.Load<Model>(ContentFolder3D + "scene/city");
 
             ModeloTgcitoClassic = Content.Load<Model>(ContentFolder3D + "tgcito-classic/tgcito-classic");
@@ -115,16 +115,16 @@ namespace TGC.MonoGame.TP
 
             // Obtengo su efecto para cambiarle el color y activar la luz predeterminada que tiene MonoGame.
             //Mesh Silenciador
-            var modelEffect = (BasicEffect) ModeloM4.Meshes[0].Effects[0];
-            modelEffect.TextureEnabled = true;
-            modelEffect.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/fbx/noodas");
-            modelEffect.EnableDefaultLighting();
+            //var modelEffect = (BasicEffect) ModeloM4.Meshes[0].Effects[0];
+            //modelEffect.TextureEnabled = true;
+            //modelEffect.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/fbx/noodas");
+            //modelEffect.EnableDefaultLighting();
             
             //Mesh Arma
-            var modelEffect2 = (BasicEffect)ModeloM4.Meshes[1].Effects[0];
-            modelEffect2.EnableDefaultLighting();
-            modelEffect2.TextureEnabled = true;
-            modelEffect2.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/fbx/noodas");
+            //var modelEffect2 = (BasicEffect)ModeloM4.Meshes[1].Effects[0];
+            //modelEffect2.EnableDefaultLighting();
+            //modelEffect2.TextureEnabled = true;
+            //modelEffect2.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/fbx/noodas");
 
 
             base.LoadContent();
@@ -170,6 +170,17 @@ namespace TGC.MonoGame.TP
             // Rotacion en y
             //Matrix.CreateRotationY(Rotation)
 
+            //Finalmente invocamos al draw del modelo.
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Q))
+            {
+                Knife.Draw(WorldM4, View, Projection);
+            }
+            else
+            {
+                ModeloM4.Draw(WorldM4, View, Projection);
+            }
+            
             //ModeloCiudad.Draw(World * Matrix.CreateScale(0.2f), Camera.View, Camera.Projection);
 
             //ModeloTanque.Draw(World * Matrix.CreateScale(3) * Matrix.CreateTranslation(20, -10, 30), Camera.View, Camera.Projection);
