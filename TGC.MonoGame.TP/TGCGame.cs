@@ -109,22 +109,22 @@ namespace TGC.MonoGame.TP
 
             ModeloRobotTGC = Content.Load<Model>(ContentFolder3D + "tgcito-mega/tgcito-mega");
 
-            Stage.LoadContent(Content,GraphicsDevice);       
+            Stage.LoadContent(Content,GraphicsDevice);
 
 
 
             // Obtengo su efecto para cambiarle el color y activar la luz predeterminada que tiene MonoGame.
             //Mesh Silenciador
-            //var modelEffect = (BasicEffect) ModeloM4.Meshes[0].Effects[0];
-            //modelEffect.TextureEnabled = true;
-            //modelEffect.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/fbx/noodas");
-            //modelEffect.EnableDefaultLighting();
-            
+            var modelEffect = (BasicEffect)ModeloM4.Meshes[0].Effects[0];
+            modelEffect.TextureEnabled = true;
+            modelEffect.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/fbx/noodas");
+            modelEffect.EnableDefaultLighting();
+
             //Mesh Arma
-            //var modelEffect2 = (BasicEffect)ModeloM4.Meshes[1].Effects[0];
-            //modelEffect2.EnableDefaultLighting();
-            //modelEffect2.TextureEnabled = true;
-            //modelEffect2.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/fbx/noodas");
+            var modelEffect2 = (BasicEffect)ModeloM4.Meshes[1].Effects[0];
+            modelEffect2.EnableDefaultLighting();
+            modelEffect2.TextureEnabled = true;
+            modelEffect2.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/fbx/noodas");
 
 
             base.LoadContent();
@@ -164,8 +164,7 @@ namespace TGC.MonoGame.TP
             // Walls and floor
             Stage.Draw(Graphics,Effect,Camera.View,Camera.Projection);
 
-            // Gun
-            ModeloM4.Draw(WorldM4, View, Projection);
+            
 
             // Rotacion en y
             //Matrix.CreateRotationY(Rotation)
