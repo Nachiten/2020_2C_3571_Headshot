@@ -6,29 +6,28 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TGC.MonoGame.TP.FPS
 {
-    public abstract class Weapon: DrawableGameComponent
-    {
-        protected Weapon(Game game) : base(game)
+    public class Weapon 
+    { 
+        public Weapon(Model weaponModel)
         {
-
+            WeaponModel = weaponModel;
         }
-        private Model WeaponModel { get; set; }
+        public Model WeaponModel { get; set; }
         public int Damage { get; set; }
 
         public int SpeedFire { get; set; }
 
         public Model bullet { get; set; }
         //sound!!!
-
         //range??
         public void Fire()
         {
             //disparar bala
         }
-        public void Draw()
+        public void Draw(Matrix world, Matrix view, Matrix projection)
         {
-
+            WeaponModel.Draw(world, view, projection);
         }
-
+      
     }
 }

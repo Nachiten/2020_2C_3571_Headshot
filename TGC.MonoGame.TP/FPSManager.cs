@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using TGC.MonoGame.Samples.Cameras;
 using TGC.MonoGame.TP.FPS;
 
 namespace TGC.MonoGame.TP
@@ -20,6 +21,13 @@ namespace TGC.MonoGame.TP
 
         private PlayerGUI  PlayerGUI {get;set;}
 
+        private Weapon Weapon { get; set; }
+        private Weapon WeaponKnife { get; set; }
+
+        private FreeCamera Camera { get; set; }
+
+        private Stage Stage { get; set; }
+        private BasicEffect Effect { get; set; }
         #endregion
 
         /// <summary>
@@ -39,31 +47,63 @@ namespace TGC.MonoGame.TP
 
         protected override void Initialize()
         {
+
+            var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
+            Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(-350, 50, 400), screenSize);
+
             Player = new Player(this);
             Player.Initialize();
 
             PlayerGUI = new PlayerGUI(this);
             PlayerGUI.Initialize(Player);
 
-            
+
+            //Agrego arma
+            Weapon = new Weapon(Content.Load<Model>(ContentFolder3D + "weapons/fbx/m4a1_s"));
+            WeaponKnife = new Weapon(Content.Load<Model>(ContentFolder3D + "weapons/knife/Karambit"));
+
+            var modelEffect = (BasicEffect)Weapon.WeaponModel.Meshes[0].Effects[0];
+            modelEffect.TextureEnabled = true;
+            modelEffect.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/fbx/noodas");
+            modelEffect.EnableDefaultLighting();
+
+            var modelEffect2 = (BasicEffect)Weapon.WeaponModel.Meshes[1].Effects[0];
+            modelEffect2.EnableDefaultLighting();
+            modelEffect2.TextureEnabled = true;
+            modelEffect2.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/fbx/noodas");
+
+            Player.AgarrarArma(Weapon);
+            Stage = new Stage();
+
+            Effect = new BasicEffect(GraphicsDevice);
+
             base.Initialize();
         }
         protected override void LoadContent()
         {
+            Stage.LoadContent(Content, GraphicsDevice);
             base.LoadContent();
         }
 
         protected override void Update(GameTime gameTime)
         {
+            Camera.Update(gameTime);
+            if (Keyboard.GetState().IsKeyDown(Keys.Q))
+            {
+                Player.AgarrarArma(WeaponKnife);
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.E))
+            {
+                Player.AgarrarArma(Weapon);
+            }
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
+            GraphicsDevice.Clear(Color.LightBlue);
             Player.Draw(gameTime);
             PlayerGUI.Draw(gameTime);
-          
-          
             base.Draw(gameTime);
         }
 

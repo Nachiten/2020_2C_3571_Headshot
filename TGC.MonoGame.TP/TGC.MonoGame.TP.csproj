@@ -39,5 +39,6 @@
     <Folder Include="Content\Models\weapons\hands\" />
     <Folder Include="Content\Sounds\" />
     <Folder Include="Content\Textures\interface\" />
+    <Folder Include="FPS\Model\" />
   </ItemGroup>
 </Project>
