@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using TGC.MonoGame.TP.FPS;
 
 namespace TGC.MonoGame.TP
 {
@@ -15,6 +16,9 @@ namespace TGC.MonoGame.TP
 
         #region Propiedades
         private GraphicsDeviceManager Graphics { get; }
+        private Player Player { get; set; }
+
+        private PlayerGUI  PlayerGUI {get;set;}
 
         #endregion
 
@@ -35,10 +39,14 @@ namespace TGC.MonoGame.TP
 
         protected override void Initialize()
         {
-            base.Initialize();
+            Player = new Player(this);
+            Player.Initialize();
 
-            //idioma - default 
-            //inicializo - menu
+            PlayerGUI = new PlayerGUI(this);
+            PlayerGUI.Initialize(Player);
+
+            
+            base.Initialize();
         }
         protected override void LoadContent()
         {
@@ -52,6 +60,10 @@ namespace TGC.MonoGame.TP
 
         protected override void Draw(GameTime gameTime)
         {
+            Player.Draw(gameTime);
+            PlayerGUI.Draw(gameTime);
+          
+          
             base.Draw(gameTime);
         }
 

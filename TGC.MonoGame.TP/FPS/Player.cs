@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,10 +7,18 @@ using System.Text;
 
 namespace TGC.MonoGame.TP.FPS
 {
-    public class Player
+    public class Player: DrawableGameComponent
     {
+        public Player(Game game) : base(game)
+        {
+        }
 
-        //default 100
+        #region Componentes
+        
+        
+        #endregion
+
+        #region Propiedades
         private Matrix WorldWeapon { get; set; }
         public int Health { get; set; }
         public Weapon CurrentWeapon { get; set; }
@@ -21,9 +30,13 @@ namespace TGC.MonoGame.TP.FPS
 
         public Matrix CurrentPosition { get; set; }
 
-        public void Initialize()
+        #endregion
+        //default 100
+
+        public override void Initialize()
         {
-            
+            Health = 100;
+            base.Initialize();
         }
         public void Shoot(Matrix direction)
         {
@@ -51,6 +64,12 @@ namespace TGC.MonoGame.TP.FPS
             {
                 Weapons.Append(nuevaArma);
             }
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            
+            base.Draw(gameTime);
         }
     }
 }
