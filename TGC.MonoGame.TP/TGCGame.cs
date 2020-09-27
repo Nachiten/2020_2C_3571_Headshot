@@ -51,6 +51,7 @@ namespace TGC.MonoGame.TP
         private BasicEffect Effect { get; set; }
         private FreeCamera Camera { get; set; }
         private Stage Stage { get; set; }
+        private FPS.Recolectables Recolectables { get; set; }
 
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
@@ -67,8 +68,8 @@ namespace TGC.MonoGame.TP
             rasterizerState.CullMode = CullMode.None;
             GraphicsDevice.RasterizerState = rasterizerState;
           
-
-            Stage = new Stage();       
+            Stage = new Stage();
+            Recolectables = new FPS.Recolectables();
 
             var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
             Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(-350, 50, 400), screenSize);
@@ -97,20 +98,20 @@ namespace TGC.MonoGame.TP
 
             // Cargo el modelo del logo.
            // Model = Content.Load<Model>(ContentFolder3D + "tgc-logo/tgc-logo");
-            ModeloTanque = Content.Load<Model>(ContentFolder3D + "tank/tank");
-
+            
+            // Armas
             ModeloM4 = Content.Load<Model>(ContentFolder3D + "weapons/fbx/m4a1_s");
-
             Knife = Content.Load<Model>(ContentFolder3D + "weapons/knife/Karambit");
 
-            ModeloCiudad = Content.Load<Model>(ContentFolder3D + "scene/city");
-
-            ModeloTgcitoClassic = Content.Load<Model>(ContentFolder3D + "tgcito-classic/tgcito-classic");
-
-            ModeloRobotTGC = Content.Load<Model>(ContentFolder3D + "tgcito-mega/tgcito-mega");
+            // OLD | Borrar
+            //ModeloTanque = Content.Load<Model>(ContentFolder3D + "tank/tank");
+            //ModeloCiudad = Content.Load<Model>(ContentFolder3D + "scene/city");
+            //ModeloTgcitoClassic = Content.Load<Model>(ContentFolder3D + "tgcito-classic/tgcito-classic");
+            //ModeloRobotTGC = Content.Load<Model>(ContentFolder3D + "tgcito-mega/tgcito-mega");
+            
 
             Stage.LoadContent(Content,GraphicsDevice);
-
+            Recolectables.LoadContent(Content, GraphicsDevice);
 
 
             // Obtengo su efecto para cambiarle el color y activar la luz predeterminada que tiene MonoGame.
@@ -145,6 +146,7 @@ namespace TGC.MonoGame.TP
                 Exit();
 
             Camera.Update(gameTime);
+            Recolectables.Update(gameTime);
 
             //// Basado en el tiempo que paso se va generando una rotacion.
             //Rotation += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
@@ -158,18 +160,25 @@ namespace TGC.MonoGame.TP
         /// </summary>
         protected override void Draw(GameTime gameTime)
         {
-            // Aca deberiamos poner toda la logia de renderizado del juego.
+            // Aca deberiamos poner toda la logica de renderizado del juego.
             GraphicsDevice.Clear(Color.LightBlue);
 
             // Walls and floor
             Stage.Draw(Graphics,Effect,Camera.View,Camera.Projection);
 
-            
+            // Dibujar recolectables
+            Recolectables.dibujarVidaEn(-40, 0,30, Camera.View, Camera.Projection);
+            Recolectables.dibujarVidaEn(20, 0, 30, Camera.View, Camera.Projection);
+            Recolectables.dibujarVidaEn(20, 0, 80, Camera.View, Camera.Projection);
+
+            //Recolectables.dibujarArmorEn(20, 10, 30, Camera.View, Camera.Projection);
+
+            //ModeloVida.Draw(World * Matrix.CreateScale(0.2f) * Matrix.CreateTranslation(20, 0, 30), Camera.View, Camera.Projection);
 
             // Rotacion en y
             //Matrix.CreateRotationY(Rotation)
 
-            //Finalmente invocamos al draw del modelo.
+
 
             if (Keyboard.GetState().IsKeyDown(Keys.Q))
             {
@@ -179,15 +188,14 @@ namespace TGC.MonoGame.TP
             {
                 ModeloM4.Draw(WorldM4, View, Projection);
             }
-            
+
+            // OLD | Eliminar
             //ModeloCiudad.Draw(World * Matrix.CreateScale(0.2f), Camera.View, Camera.Projection);
-
             //ModeloTanque.Draw(World * Matrix.CreateScale(3) * Matrix.CreateTranslation(20, -10, 30), Camera.View, Camera.Projection);
-
             //ModeloTgcitoClassic.Draw(World * Matrix.CreateScale(.2f) * Matrix.CreateTranslation(35, 10, 90) , Camera.View, Camera.Projection);
-
             //ModeloRobotTGC.Draw(World * Matrix.CreateScale(.2f) * Matrix.CreateTranslation(55, 10, 90), Camera.View, Camera.Projection);
 
+            //Finalmente invocamos al draw del modelo.
             base.Draw(gameTime);
         }
 
