@@ -243,6 +243,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/ladrillo.png
 
+#begin Textures/rusty.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/rusty.jpg
+
 #begin Textures/sand.jpg
 /importer:TextureImporter
 /processor:TextureProcessor

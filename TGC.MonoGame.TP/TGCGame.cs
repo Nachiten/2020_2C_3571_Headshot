@@ -145,7 +145,6 @@ namespace TGC.MonoGame.TP
                 Exit();
 
             Camera.Update(gameTime);
-
             //// Basado en el tiempo que paso se va generando una rotacion.
             //Rotation += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
 

@@ -31,8 +31,8 @@ namespace TGC.MonoGame.Samples.Cameras
             CalculateView();
         }
 
-        public float MovementSpeed { get; set; } = 100f;
-        public float MouseSensitivity { get; set; } = 5f;
+        public float MovementSpeed { get; set; } = 200f;
+        public float MouseSensitivity { get; set; } = 10f;
 
         private void CalculateView()
         {
@@ -82,37 +82,35 @@ namespace TGC.MonoGame.Samples.Cameras
                 Position += -FrontDirection * currentMovementSpeed * elapsedTime;
                 changed = true;
             }
+            Position = new Vector3(Position.X, 50, Position.Z);
         }
 
         private void ProcessMouseMovement(float elapsedTime)
         {
             var mouseState = Mouse.GetState();
 
-            if (mouseState.RightButton.Equals(ButtonState.Pressed))
+            var mouseDelta = mouseState.Position.ToVector2() - pastMousePosition;
+            mouseDelta *= MouseSensitivity * elapsedTime;
+
+            yaw += mouseDelta.X;
+            pitch -= mouseDelta.Y;
+
+            if (pitch > 89.0f)
+                pitch = 89.0f;
+            if (pitch < -89.0f)
+                pitch = -89.0f;
+
+            changed = true;
+            UpdateCameraVectors();
+
+            if (lockMouse)
             {
-                var mouseDelta = mouseState.Position.ToVector2() - pastMousePosition;
-                mouseDelta *= MouseSensitivity * elapsedTime;
-
-                yaw -= mouseDelta.X;
-                pitch += mouseDelta.Y;
-
-                if (pitch > 89.0f)
-                    pitch = 89.0f;
-                if (pitch < -89.0f)
-                    pitch = -89.0f;
-
-                changed = true;
-                UpdateCameraVectors();
-
-                if (lockMouse)
-                {
-                    Mouse.SetPosition(screenCenter.X, screenCenter.Y);
-                    Mouse.SetCursor(MouseCursor.Crosshair);
-                }
-                else
-                {
-                    Mouse.SetCursor(MouseCursor.Arrow);
-                }
+                Mouse.SetPosition(screenCenter.X, screenCenter.Y);
+                Mouse.SetCursor(MouseCursor.Crosshair);
+            }
+            else
+            {
+                Mouse.SetCursor(MouseCursor.Arrow);
             }
 
             pastMousePosition = Mouse.GetState().Position.ToVector2();
