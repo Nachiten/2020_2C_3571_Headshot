@@ -23,14 +23,22 @@ namespace TGC.MonoGame.TP.FPS
 
         public void Update(GameTime gameTime) {
             // Basado en el tiempo que paso se va generando una rotacion.
-            Rotation += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
+            Rotation += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds) * 0.7f;
         }
 
         public void LoadContent(ContentManager Content, GraphicsDevice GraphicsDevice)
         {
             Console.Out.Write("Hola");
             ModeloVida = Content.Load<Model>(ContentFolder3D + "healthAndArmor/corazon");
-            //ModeloArmor = Content.Load<Model>(ContentFolder3D + "healthAndArmor/escudo");
+            ModeloArmor = Content.Load<Model>(ContentFolder3D + "healthAndArmor/cascoConvertido");
+
+            var modelEffectArmor = (BasicEffect)ModeloArmor.Meshes[0].Effects[0];
+            modelEffectArmor.DiffuseColor = Color.DarkGreen.ToVector3();
+            modelEffectArmor.EnableDefaultLighting();
+
+            var modelEffectVida = (BasicEffect)ModeloVida.Meshes[0].Effects[0];
+            modelEffectVida.DiffuseColor = Color.Red.ToVector3();
+            modelEffectVida.EnableDefaultLighting();
         }
 
         public void dibujarVidaEn(float posX, float posY, float posZ, Matrix view, Matrix projection) {
@@ -38,7 +46,7 @@ namespace TGC.MonoGame.TP.FPS
         }
 
         public void dibujarArmorEn(float posX, float posY, float posZ, Matrix view, Matrix projection) {
-            ModeloArmor.Draw(World * Matrix.CreateScale(1) * Matrix.CreateTranslation(posX, posY, posZ), view, projection);
+            ModeloArmor.Draw(World * Matrix.CreateScale(0.7f) * Matrix.CreateTranslation(posX, posY, posZ), view, projection);
         }
     }
 }

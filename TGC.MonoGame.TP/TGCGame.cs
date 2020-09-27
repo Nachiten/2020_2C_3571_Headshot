@@ -171,9 +171,8 @@ namespace TGC.MonoGame.TP
             Recolectables.dibujarVidaEn(20, 0, 30, Camera.View, Camera.Projection);
             Recolectables.dibujarVidaEn(20, 0, 80, Camera.View, Camera.Projection);
 
-            //Recolectables.dibujarArmorEn(20, 10, 30, Camera.View, Camera.Projection);
-
-            //ModeloVida.Draw(World * Matrix.CreateScale(0.2f) * Matrix.CreateTranslation(20, 0, 30), Camera.View, Camera.Projection);
+            Recolectables.dibujarArmorEn(-80, -40, 30, Camera.View, Camera.Projection);
+            Recolectables.dibujarArmorEn(-120, -40, 30, Camera.View, Camera.Projection);
 
             // Rotacion en y
             //Matrix.CreateRotationY(Rotation)
