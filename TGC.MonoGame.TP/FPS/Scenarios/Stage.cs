@@ -101,11 +101,11 @@ namespace TGC.MonoGame.TP{
             //AABB
             // Paredes
             AABB box = new AABB(new Vector3(2*WoodenBoxSize,WoodenBoxSize,WoodenBoxSize));
-            box.Translation(WoodenBoxWorldPared1);
+            box.Translation(WoodenBoxWorldPared2);
             Collison.appendStatic(box);
 
             box = new AABB(new Vector3(2*WoodenBoxSize,WoodenBoxSize,WoodenBoxSize));
-            box.Translation(WoodenBoxWorldPared3);
+            box.Translation(WoodenBoxWorldPared4);
             Collison.appendStatic(box);
 
             // Centro

@@ -8,11 +8,12 @@ namespace TGC.MonoGame.TP.Collisions{
         Vector3 minExtents { get; set; }
         Matrix world;
         Vector3 size;
+
         public AABB(Vector3 size){
             this.size = size;
             minExtents = -size;
             maxExtents = size;
-            world = Matrix.CreateRotationY(MathHelper.Pi) ;
+            world = Matrix.CreateRotationY(MathHelper.Pi);
         }
         public bool IntersectAABB(AABB other){
             Vector3 distance1 = other.minExtents - maxExtents;

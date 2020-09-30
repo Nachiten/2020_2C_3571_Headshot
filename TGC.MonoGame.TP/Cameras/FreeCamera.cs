@@ -65,7 +65,6 @@ namespace TGC.MonoGame.Samples.Cameras
                 CalculateView();
         }
         public int collisionCallback(AABB a, AABB b){
-            System.Diagnostics.Debug.WriteLine("This is a log");
             Position = oldPosition;
             cameraBox.Translation(Position);
             return 0;
@@ -74,7 +73,7 @@ namespace TGC.MonoGame.Samples.Cameras
         private void ProcessKeyboard(float elapsedTime, Collision Collision)
         {
             var keyboardState = Keyboard.GetState();
-            Vector3 oldPosition = Position;
+            oldPosition = Position;
 
             var currentMovementSpeed = MovementSpeed;
             if (keyboardState.IsKeyDown(Keys.LeftShift))
