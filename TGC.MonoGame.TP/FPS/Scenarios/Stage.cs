@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using TGC.MonoGame.Samples.Geometries.Textures;
+using TGC.MonoGame.TP.Collisions;
 namespace TGC.MonoGame.TP{
     public class Stage {
         public const string ContentFolderTextures = "Textures/";
@@ -20,7 +21,36 @@ namespace TGC.MonoGame.TP{
         int anchoPiso = 1000;
         int altoPared = 100;
         int gapMiddleBoxes = 100;
-        public Stage(){
+        // Trash code
+        Matrix WoodenBoxWorldPared1;
+        Matrix WoodenBoxWorldPared2;
+        Matrix WoodenBoxWorldPared3;
+        Matrix WoodenBoxWorldPared4;
+        Matrix SteelBoxWorldCentro1;
+        Matrix SteelBoxWorldCentro2;
+        Matrix SteelBoxWorldCentro3;
+        Matrix SteelBoxWorldCentro4;
+        Matrix SteelBoxWorldCentro5;
+        Matrix SteelBoxWorldCentro6;
+        Matrix SteelBoxWorldCentro7;
+        Matrix SteelBoxWorldCentro8;
+        Matrix SteelBoxWorldCentro9;
+        Matrix SteelBoxWorldCentro10;
+        Matrix SteelBoxWorldCentro11;
+        Matrix SteelBoxWorldCentro12;
+        Matrix SteelBoxWorldCentro13;
+        Matrix SteelBoxWorldCentro14;
+        Matrix SteelBoxWorldCentro15;
+        Matrix SteelBoxWorldCentro16;
+        Matrix WoodenBoxWorldCostados1;
+        Matrix WoodenBoxWorldCostados2;
+        Matrix WoodenBoxWorldCostados3;
+        Matrix WoodenBoxWorldCostados4;
+        Matrix WoodenBoxWorldCostados5;
+        Matrix WoodenBoxWorldCostados6;
+        Matrix WoodenBoxWorldCostados7;
+        Matrix WoodenBoxWorldCostados8;
+        public Stage(Collision Collison){
             Vector3 piso1 = new Vector3(-largoPiso/2,0,-anchoPiso/2);
             Vector3 piso2 = new Vector3(-largoPiso/2,0,anchoPiso/2);
             Vector3 piso3 = new Vector3(largoPiso/2,0,-anchoPiso/2);
@@ -34,6 +64,83 @@ namespace TGC.MonoGame.TP{
 
             WoodenBoxWorld = Matrix.CreateTranslation(Vector3.UnitY * WoodenBoxSize/2 - Vector3.UnitX * WoodenBoxSize/2 - Vector3.UnitZ * WoodenBoxSize/2);
             SteelBoxWorld = Matrix.CreateTranslation(Vector3.UnitY * SteelBoxSize/2);
+
+            // Trash code
+            WoodenBoxWorldPared1 = WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * largoPiso/2);
+            WoodenBoxWorldPared2 = WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (largoPiso/2 - WoodenBoxSize));
+            WoodenBoxWorldPared3 = WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (-largoPiso/2 + WoodenBoxSize));
+            WoodenBoxWorldPared4 = WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (-largoPiso/2 + 2*WoodenBoxSize));
+
+            SteelBoxWorldCentro1 = SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes) + Vector3.UnitZ * gapMiddleBoxes);
+            SteelBoxWorldCentro2 = SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes + SteelBoxSize) + Vector3.UnitZ * gapMiddleBoxes);
+            SteelBoxWorldCentro3 = SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes) + Vector3.UnitZ * (gapMiddleBoxes + SteelBoxSize));
+            SteelBoxWorldCentro4 = SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes + SteelBoxSize) + Vector3.UnitZ * (gapMiddleBoxes + SteelBoxSize));
+            SteelBoxWorldCentro5 = SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes) + Vector3.UnitZ * gapMiddleBoxes);
+            SteelBoxWorldCentro6 = SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes + SteelBoxSize) + Vector3.UnitZ * gapMiddleBoxes);
+            SteelBoxWorldCentro7 = SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes) + Vector3.UnitZ * (gapMiddleBoxes + SteelBoxSize));
+            SteelBoxWorldCentro8 = SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes + SteelBoxSize) + Vector3.UnitZ * (gapMiddleBoxes + SteelBoxSize));
+            SteelBoxWorldCentro9 = SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes) + Vector3.UnitZ * -gapMiddleBoxes);
+            SteelBoxWorldCentro10 = SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes + SteelBoxSize) + Vector3.UnitZ * -gapMiddleBoxes);
+            SteelBoxWorldCentro11 = SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes) + Vector3.UnitZ * -(gapMiddleBoxes + SteelBoxSize));
+            SteelBoxWorldCentro12 = SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes + SteelBoxSize) + Vector3.UnitZ * -(gapMiddleBoxes + SteelBoxSize));
+            SteelBoxWorldCentro13 = SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes) + Vector3.UnitZ * -gapMiddleBoxes);
+            SteelBoxWorldCentro14 = SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes + SteelBoxSize) + Vector3.UnitZ * -gapMiddleBoxes);
+            SteelBoxWorldCentro15 = SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes) + Vector3.UnitZ * -(gapMiddleBoxes + SteelBoxSize));
+            SteelBoxWorldCentro16 = SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes + SteelBoxSize) + Vector3.UnitZ * -(gapMiddleBoxes + SteelBoxSize));
+
+            WoodenBoxWorldCostados1 = WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes + 2*SteelBoxSize) + Vector3.UnitZ * (gapMiddleBoxes + 2*SteelBoxSize - WoodenBoxSize));
+            WoodenBoxWorldCostados2 = WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes + 2*SteelBoxSize + WoodenBoxSize) + Vector3.UnitZ * (gapMiddleBoxes + 2*SteelBoxSize - WoodenBoxSize));
+            WoodenBoxWorldCostados3 = WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes + 2*SteelBoxSize) + Vector3.UnitZ * -(gapMiddleBoxes + 2*SteelBoxSize - 2*WoodenBoxSize));
+            WoodenBoxWorldCostados4 = WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes + 2*SteelBoxSize + WoodenBoxSize) + Vector3.UnitZ * -(gapMiddleBoxes + 2*SteelBoxSize - 2*WoodenBoxSize));
+            WoodenBoxWorldCostados5 = WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes + 2*SteelBoxSize) + Vector3.UnitZ * (gapMiddleBoxes + 2*SteelBoxSize - WoodenBoxSize));
+            WoodenBoxWorldCostados6 = WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes + 2*SteelBoxSize - WoodenBoxSize) + Vector3.UnitZ * (gapMiddleBoxes + 2*SteelBoxSize - WoodenBoxSize));
+            WoodenBoxWorldCostados7 = WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes + 2*SteelBoxSize) + Vector3.UnitZ * -(gapMiddleBoxes + 2*SteelBoxSize - 2*WoodenBoxSize));
+            WoodenBoxWorldCostados8 = WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes + 2*SteelBoxSize - WoodenBoxSize) + Vector3.UnitZ * -(gapMiddleBoxes + 2*SteelBoxSize - 2*WoodenBoxSize));
+
+
+            //AABB
+            // Paredes
+            AABB box = new AABB(new Vector3(2*WoodenBoxSize,WoodenBoxSize,WoodenBoxSize));
+            box.Translation(WoodenBoxWorldPared1);
+            Collison.appendStatic(box);
+
+            box = new AABB(new Vector3(2*WoodenBoxSize,WoodenBoxSize,WoodenBoxSize));
+            box.Translation(WoodenBoxWorldPared3);
+            Collison.appendStatic(box);
+
+            // Centro
+            box = new AABB(new Vector3(2*SteelBoxSize,2*SteelBoxSize,SteelBoxSize));
+            box.Translation(SteelBoxWorldCentro1);
+            Collison.appendStatic(box);
+            
+            box = new AABB(new Vector3(2*SteelBoxSize,2*SteelBoxSize,SteelBoxSize));
+            box.Translation(SteelBoxWorldCentro5);
+            Collison.appendStatic(box);
+            
+            box = new AABB(new Vector3(2*SteelBoxSize,2*SteelBoxSize,SteelBoxSize));
+            box.Translation(SteelBoxWorldCentro9);
+            Collison.appendStatic(box);
+
+            box = new AABB(new Vector3(2*SteelBoxSize,2*SteelBoxSize,SteelBoxSize));
+            box.Translation(SteelBoxWorldCentro13);
+            Collison.appendStatic(box);
+
+            // Costados
+            box = new AABB(new Vector3(2*WoodenBoxSize,WoodenBoxSize,WoodenBoxSize));
+            box.Translation(WoodenBoxWorldCostados1);
+            Collison.appendStatic(box);
+            
+            box = new AABB(new Vector3(2*WoodenBoxSize,WoodenBoxSize,WoodenBoxSize));
+            box.Translation(WoodenBoxWorldCostados3);
+            Collison.appendStatic(box);
+            
+            box = new AABB(new Vector3(2*WoodenBoxSize,WoodenBoxSize,WoodenBoxSize));
+            box.Translation(WoodenBoxWorldCostados5);
+            Collison.appendStatic(box);
+
+            box = new AABB(new Vector3(2*WoodenBoxSize,WoodenBoxSize,WoodenBoxSize));
+            box.Translation(WoodenBoxWorldCostados7);
+            Collison.appendStatic(box);
         }
         public void LoadContent(ContentManager Content,GraphicsDevice GraphicsDevice){
             Floor.LoadTexture(ContentFolderTextures + "sand", Content);
@@ -53,45 +160,45 @@ namespace TGC.MonoGame.TP{
             WallAdel.Draw(Graphics,Effect,View,Projection);
 
             // Cajas Pared
-            WoodenBox.Draw(WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * largoPiso/2), View, Projection);
-            WoodenBox.Draw(WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (largoPiso/2 - WoodenBoxSize)), View, Projection);
+            WoodenBox.Draw(WoodenBoxWorldPared1, View, Projection);
+            WoodenBox.Draw(WoodenBoxWorldPared2, View, Projection);
 
-            WoodenBox.Draw(WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (-largoPiso/2 + WoodenBoxSize)), View, Projection);
-            WoodenBox.Draw(WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (-largoPiso/2 + 2*WoodenBoxSize)), View, Projection);
+            WoodenBox.Draw(WoodenBoxWorldPared3, View, Projection);
+            WoodenBox.Draw(WoodenBoxWorldPared4, View, Projection);
             
             // Cajas Centro
-            SteelBox.Draw(SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes) + Vector3.UnitZ * gapMiddleBoxes), View, Projection);
-            SteelBox.Draw(SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes + SteelBoxSize) + Vector3.UnitZ * gapMiddleBoxes), View, Projection);
-            SteelBox.Draw(SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes) + Vector3.UnitZ * (gapMiddleBoxes + SteelBoxSize)), View, Projection);
-            SteelBox.Draw(SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes + SteelBoxSize) + Vector3.UnitZ * (gapMiddleBoxes + SteelBoxSize)), View, Projection);
+            SteelBox.Draw(SteelBoxWorldCentro1, View, Projection);
+            SteelBox.Draw(SteelBoxWorldCentro2, View, Projection);
+            SteelBox.Draw(SteelBoxWorldCentro3, View, Projection);
+            SteelBox.Draw(SteelBoxWorldCentro4, View, Projection);
 
-            SteelBox.Draw(SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes) + Vector3.UnitZ * gapMiddleBoxes), View, Projection);
-            SteelBox.Draw(SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes + SteelBoxSize) + Vector3.UnitZ * gapMiddleBoxes), View, Projection);
-            SteelBox.Draw(SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes) + Vector3.UnitZ * (gapMiddleBoxes + SteelBoxSize)), View, Projection);
-            SteelBox.Draw(SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes + SteelBoxSize) + Vector3.UnitZ * (gapMiddleBoxes + SteelBoxSize)), View, Projection);
+            SteelBox.Draw(SteelBoxWorldCentro5, View, Projection);
+            SteelBox.Draw(SteelBoxWorldCentro6, View, Projection);
+            SteelBox.Draw(SteelBoxWorldCentro7, View, Projection);
+            SteelBox.Draw(SteelBoxWorldCentro8, View, Projection);
 
-            SteelBox.Draw(SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes) + Vector3.UnitZ * -gapMiddleBoxes), View, Projection);
-            SteelBox.Draw(SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes + SteelBoxSize) + Vector3.UnitZ * -gapMiddleBoxes), View, Projection);
-            SteelBox.Draw(SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes) + Vector3.UnitZ * -(gapMiddleBoxes + SteelBoxSize)), View, Projection);
-            SteelBox.Draw(SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes + SteelBoxSize) + Vector3.UnitZ * -(gapMiddleBoxes + SteelBoxSize)), View, Projection);
+            SteelBox.Draw(SteelBoxWorldCentro9, View, Projection);
+            SteelBox.Draw(SteelBoxWorldCentro10, View, Projection);
+            SteelBox.Draw(SteelBoxWorldCentro11, View, Projection);
+            SteelBox.Draw(SteelBoxWorldCentro12, View, Projection);
 
-            SteelBox.Draw(SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes) + Vector3.UnitZ * -gapMiddleBoxes), View, Projection);
-            SteelBox.Draw(SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes + SteelBoxSize) + Vector3.UnitZ * -gapMiddleBoxes), View, Projection);
-            SteelBox.Draw(SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes) + Vector3.UnitZ * -(gapMiddleBoxes + SteelBoxSize)), View, Projection);
-            SteelBox.Draw(SteelBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes + SteelBoxSize) + Vector3.UnitZ * -(gapMiddleBoxes + SteelBoxSize)), View, Projection);
+            SteelBox.Draw(SteelBoxWorldCentro13, View, Projection);
+            SteelBox.Draw(SteelBoxWorldCentro14, View, Projection);
+            SteelBox.Draw(SteelBoxWorldCentro15, View, Projection);
+            SteelBox.Draw(SteelBoxWorldCentro16, View, Projection);
 
             // Cajas costados
-            WoodenBox.Draw(WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes + 2*SteelBoxSize) + Vector3.UnitZ * (gapMiddleBoxes + 2*SteelBoxSize - WoodenBoxSize)), View, Projection);
-            WoodenBox.Draw(WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes + 2*SteelBoxSize + WoodenBoxSize) + Vector3.UnitZ * (gapMiddleBoxes + 2*SteelBoxSize - WoodenBoxSize)), View, Projection);
+            WoodenBox.Draw(WoodenBoxWorldCostados1, View, Projection);
+            WoodenBox.Draw(WoodenBoxWorldCostados2, View, Projection);
 
-            WoodenBox.Draw(WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes + 2*SteelBoxSize) + Vector3.UnitZ * -(gapMiddleBoxes + 2*SteelBoxSize - 2*WoodenBoxSize)), View, Projection);
-            WoodenBox.Draw(WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * (gapMiddleBoxes + 2*SteelBoxSize + WoodenBoxSize) + Vector3.UnitZ * -(gapMiddleBoxes + 2*SteelBoxSize - 2*WoodenBoxSize)), View, Projection);
+            WoodenBox.Draw(WoodenBoxWorldCostados3, View, Projection);
+            WoodenBox.Draw(WoodenBoxWorldCostados4, View, Projection);
 
-            WoodenBox.Draw(WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes + 2*SteelBoxSize) + Vector3.UnitZ * (gapMiddleBoxes + 2*SteelBoxSize - WoodenBoxSize)), View, Projection);
-            WoodenBox.Draw(WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes + 2*SteelBoxSize - WoodenBoxSize) + Vector3.UnitZ * (gapMiddleBoxes + 2*SteelBoxSize - WoodenBoxSize)), View, Projection);
+            WoodenBox.Draw(WoodenBoxWorldCostados5, View, Projection);
+            WoodenBox.Draw(WoodenBoxWorldCostados6, View, Projection);
 
-            WoodenBox.Draw(WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes + 2*SteelBoxSize) + Vector3.UnitZ * -(gapMiddleBoxes + 2*SteelBoxSize - 2*WoodenBoxSize)), View, Projection);
-            WoodenBox.Draw(WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes + 2*SteelBoxSize - WoodenBoxSize) + Vector3.UnitZ * -(gapMiddleBoxes + 2*SteelBoxSize - 2*WoodenBoxSize)), View, Projection);
+            WoodenBox.Draw(WoodenBoxWorldCostados7, View, Projection);
+            WoodenBox.Draw(WoodenBoxWorldCostados8, View, Projection);
 
         }
        

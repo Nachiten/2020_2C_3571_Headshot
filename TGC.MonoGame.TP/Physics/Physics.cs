@@ -17,10 +17,12 @@ namespace TGC.MonoGame.TP.Physics
         private SimpleThreadDispatcher ThreadDispatcher { get; set; }
         public PositionFirstTimestepper timeStepper = new PositionFirstTimestepper();
         private List<BodyHandle> BodiesHandle { get; set; }
+        private CollidableProperty<BodyProperties> bodyProperties;
         //private List<SpherePrimitive> Bodies { get; set; }
         public Physics(){
             BufferPool = new BufferPool();
-            Simulation = Simulation.Create(BufferPool, new NarrowPhaseCallbacks(),new PoseIntegratorCallbacks(new NumericVector3(0, -100, 0)), timeStepper);
+            bodyProperties = new CollidableProperty<BodyProperties>();
+            Simulation = Simulation.Create(BufferPool, new NarrowPhaseCallbacks() { Properties = bodyProperties },new PoseIntegratorCallbacks(new NumericVector3(0, -100, 0)), timeStepper);
             //Bodies = new List<SpherePrimitive>();
             BodiesHandle = new List<BodyHandle>();
 

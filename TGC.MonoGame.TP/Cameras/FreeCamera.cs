@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using TGC.MonoGame.TP.Collisions;
+using System.Collections.Generic;
 
 namespace TGC.MonoGame.Samples.Cameras
 {
@@ -16,11 +18,14 @@ namespace TGC.MonoGame.Samples.Cameras
 
         // Angles
         private float yaw = -90f;
+        public AABB cameraBox;
+        Vector3 oldPosition;
 
         public FreeCamera(float aspectRatio, Vector3 position, Point screenCenter) : this(aspectRatio, position)
         {
             lockMouse = true;
             this.screenCenter = screenCenter;
+            cameraBox = new AABB(Vector3.One * 50);
         }
 
         public FreeCamera(float aspectRatio, Vector3 position) : base(aspectRatio)
@@ -38,22 +43,38 @@ namespace TGC.MonoGame.Samples.Cameras
         {
             View = Matrix.CreateLookAt(Position, Position + FrontDirection, UpDirection);
         }
-
-        /// <inheritdoc />
-        public override void Update(GameTime gameTime)
-        {
+        public override void Update(GameTime gameTime){
             var elapsedTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
             changed = false;
-            ProcessKeyboard(elapsedTime);
+            //ProcessKeyboard(elapsedTime);
             ProcessMouseMovement(elapsedTime);
 
             if (changed)
                 CalculateView();
         }
 
-        private void ProcessKeyboard(float elapsedTime)
+        /// <inheritdoc />
+        public void Update(GameTime gameTime, Collision Collision)
+        {
+            var elapsedTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
+            changed = false;
+            ProcessKeyboard(elapsedTime,Collision);
+            ProcessMouseMovement(elapsedTime);
+
+            if (changed)
+                CalculateView();
+        }
+        public int collisionCallback(AABB a, AABB b){
+            System.Diagnostics.Debug.WriteLine("This is a log");
+            Position = oldPosition;
+            cameraBox.Translation(Position);
+            return 0;
+        }
+
+        private void ProcessKeyboard(float elapsedTime, Collision Collision)
         {
             var keyboardState = Keyboard.GetState();
+            Vector3 oldPosition = Position;
 
             var currentMovementSpeed = MovementSpeed;
             if (keyboardState.IsKeyDown(Keys.LeftShift))
@@ -83,6 +104,8 @@ namespace TGC.MonoGame.Samples.Cameras
                 changed = true;
             }
             Position = new Vector3(Position.X, 50, Position.Z);
+            cameraBox.Translation(Position);
+            Collision.actualCollision(cameraBox, collisionCallback);
         }
 
         private void ProcessMouseMovement(float elapsedTime)

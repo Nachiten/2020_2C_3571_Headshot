@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.Samples.Cameras;
+using TGC.MonoGame.TP.Collisions;
 
 namespace TGC.MonoGame.TP
 {
@@ -51,6 +52,7 @@ namespace TGC.MonoGame.TP
         private BasicEffect Effect { get; set; }
         private FreeCamera Camera { get; set; }
         private Stage Stage { get; set; }
+        private Collision Collision { get; set; }
 
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
@@ -66,12 +68,15 @@ namespace TGC.MonoGame.TP
             var rasterizerState = new RasterizerState();
             rasterizerState.CullMode = CullMode.None;
             GraphicsDevice.RasterizerState = rasterizerState;
-          
 
-            Stage = new Stage();       
+
+            Collision = new Collision();
+
+            Stage = new Stage(Collision);
 
             var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
             Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(-350, 50, 400), screenSize);
+
 
             // Configuramos nuestras matrices de la escena.
             World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(10,0,10);
@@ -111,8 +116,6 @@ namespace TGC.MonoGame.TP
 
             Stage.LoadContent(Content,GraphicsDevice);
 
-
-
             // Obtengo su efecto para cambiarle el color y activar la luz predeterminada que tiene MonoGame.
             //Mesh Silenciador
             var modelEffect = (BasicEffect)ModeloM4.Meshes[0].Effects[0];
@@ -144,7 +147,7 @@ namespace TGC.MonoGame.TP
                 //Salgo del juego.
                 Exit();
 
-            Camera.Update(gameTime);
+            Camera.Update(gameTime, Collision);
             //// Basado en el tiempo que paso se va generando una rotacion.
             //Rotation += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
 

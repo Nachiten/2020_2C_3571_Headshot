@@ -26,6 +26,19 @@ namespace TGC.MonoGame.Samples.Geometries.Textures
             CreateVertexBuffer(graphicsDevice, size);
             CreateIndexBuffer(graphicsDevice);
         }
+        /// <summary>
+        ///     Create a box with a center at the given point, with a size and a color in each vertex.
+        /// </summary>
+        /// <param name="graphicsDevice">Used to initialize and control the presentation of the graphics device.</param>
+        /// <param name="size">Size of the box.</param>
+        public BoxPrimitive(GraphicsDevice graphicsDevice, Vector3 size)
+        {
+            Effect = new BasicEffect(graphicsDevice);
+            Effect.EnableDefaultLighting();
+
+            CreateVertexBuffer(graphicsDevice, size);
+            CreateIndexBuffer(graphicsDevice);
+        }
 
         /// <summary>
         ///     Represents a list of 3D vertices to be streamed to the graphics device.
