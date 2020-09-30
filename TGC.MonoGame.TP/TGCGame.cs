@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -51,7 +52,12 @@ namespace TGC.MonoGame.TP
         private BasicEffect Effect { get; set; }
         private FreeCamera Camera { get; set; }
         private Stage Stage { get; set; }
-        private FPS.Recolectables Recolectables { get; set; }
+        //private Recolectable Recolectables { get; set; }
+
+        List<Recolectable> recolectables = new List<Recolectable>();
+
+        // Array de recolectables
+        // Cuando recolecta algo se quita de la lista
 
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
@@ -67,21 +73,35 @@ namespace TGC.MonoGame.TP
             var rasterizerState = new RasterizerState();
             rasterizerState.CullMode = CullMode.None;
             GraphicsDevice.RasterizerState = rasterizerState;
-          
+
             Stage = new Stage();
-            Recolectables = new FPS.Recolectables();
 
             var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
             Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(-350, 50, 400), screenSize);
 
             // Configuramos nuestras matrices de la escena.
-            World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(10,0,10);
-            View = Matrix.CreateLookAt(new Vector3(30,20,150), new Vector3(30,0,0) , Vector3.Up);
+            World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(10, 0, 10);
+            View = Matrix.CreateLookAt(new Vector3(30, 20, 150), new Vector3(30, 0, 0), Vector3.Up);
 
-            WorldM4 = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(50,0,110);
+            WorldM4 = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(50, 0, 110);
 
             Effect = new BasicEffect(GraphicsDevice);
             Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);
+
+            // Inicializacion de recolectables
+            Recolectable recolectable1 = new Recolectable(new Vector3(-40, 0, 30), TipoRecolectable.vida);
+            Recolectable recolectable2 = new Recolectable(new Vector3(20, 0, 30), TipoRecolectable.vida);
+            Recolectable recolectable3 = new Recolectable(new Vector3(20, 0, 80), TipoRecolectable.vida);
+
+            Recolectable recolectable4 = new Recolectable(new Vector3(-80, -40, 30), TipoRecolectable.armor);
+            Recolectable recolectable5 = new Recolectable(new Vector3(-120, -40, 30), TipoRecolectable.armor);
+
+            recolectables.Add(recolectable1);
+            recolectables.Add(recolectable2);
+            recolectables.Add(recolectable3);
+            recolectables.Add(recolectable4);
+            recolectables.Add(recolectable5);
+
 
             base.Initialize();
         }
@@ -111,8 +131,10 @@ namespace TGC.MonoGame.TP
             
 
             Stage.LoadContent(Content,GraphicsDevice);
-            Recolectables.LoadContent(Content, GraphicsDevice);
 
+            foreach (Recolectable unRecolectable in recolectables) {
+                unRecolectable.LoadContent(Content, GraphicsDevice);
+            }
 
             // Obtengo su efecto para cambiarle el color y activar la luz predeterminada que tiene MonoGame.
             //Mesh Silenciador
@@ -146,8 +168,11 @@ namespace TGC.MonoGame.TP
                 Exit();
 
             Camera.Update(gameTime);
-            Recolectables.Update(gameTime);
-
+            foreach (Recolectable unRecolectable in recolectables)
+            {
+                unRecolectable.Update(gameTime);
+            }
+                
             //// Basado en el tiempo que paso se va generando una rotacion.
             //Rotation += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
 
@@ -166,22 +191,17 @@ namespace TGC.MonoGame.TP
             // Walls and floor
             Stage.Draw(Graphics,Effect,Camera.View,Camera.Projection);
 
-            // Dibujar recolectables
-            Recolectables.dibujarVidaEn(-40, 0,30, Camera.View, Camera.Projection);
-            Recolectables.dibujarVidaEn(20, 0, 30, Camera.View, Camera.Projection);
-            Recolectables.dibujarVidaEn(20, 0, 80, Camera.View, Camera.Projection);
-
-            Recolectables.dibujarArmorEn(-80, -40, 30, Camera.View, Camera.Projection);
-            Recolectables.dibujarArmorEn(-120, -40, 30, Camera.View, Camera.Projection);
-
-            // Rotacion en y
-            //Matrix.CreateRotationY(Rotation)
-
+            // Foreach de la lista de recolectables y dibujarlos
+            foreach (Recolectable unRecolectable in recolectables)
+            {
+                unRecolectable.Draw(Camera.View, Camera.Projection);
+            }
 
 
             if (Keyboard.GetState().IsKeyDown(Keys.Q))
             {
                 Knife.Draw(WorldM4, View, Projection);
+                recolectarEnIndice(0);
             }
             else
             {
@@ -196,6 +216,10 @@ namespace TGC.MonoGame.TP
 
             //Finalmente invocamos al draw del modelo.
             base.Draw(gameTime);
+        }
+
+        private void recolectarEnIndice(int index) {
+            recolectables.RemoveAt(index);
         }
 
         /// <summary>
