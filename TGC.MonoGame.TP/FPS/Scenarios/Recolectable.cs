@@ -34,7 +34,7 @@ namespace TGC.MonoGame.TP
         public Recolectable(Vector3 posicion, TipoRecolectable tipoRecolectable) {
             this.posicion = posicion;
             this.tipoRecolectable = tipoRecolectable;
-            World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(10, 0, 10);
+            World = Matrix.CreateRotationY(MathHelper.Pi);
         }
 
         public void Update(GameTime gameTime) {

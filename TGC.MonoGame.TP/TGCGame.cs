@@ -43,7 +43,7 @@ namespace TGC.MonoGame.TP
         private Model Knife { get; set; }
         private Matrix WorldM4 { get; set; }
         private Model ModeloCiudad { get; set; }
-        private Model ModeloTgcitoClassic { get; set; }
+        //private Model ModeloTgcitoClassic { get; set; }
         private Model ModeloRobotTGC { get; set; }
         private float Rotation { get; set; }
         private Matrix World { get; set; }
@@ -52,9 +52,11 @@ namespace TGC.MonoGame.TP
         private BasicEffect Effect { get; set; }
         private FreeCamera Camera { get; set; }
         private Stage Stage { get; set; }
-        //private Recolectable Recolectables { get; set; }
 
-        List<Recolectable> recolectables = new List<Recolectable>();
+        // Esta lita de recolectables deberia estar en otra clase "recolectables"
+        private List<Recolectable> recolectables = new List<Recolectable>();
+
+        private Enemigo enemigo1;
 
         // Array de recolectables
         // Cuando recolecta algo se quita de la lista
@@ -102,6 +104,9 @@ namespace TGC.MonoGame.TP
             recolectables.Add(recolectable4);
             recolectables.Add(recolectable5);
 
+            // Inicializacion enemigo
+            enemigo1 = new Enemigo(new Vector3(0,20,350));
+
 
             base.Initialize();
         }
@@ -135,6 +140,7 @@ namespace TGC.MonoGame.TP
             foreach (Recolectable unRecolectable in recolectables) {
                 unRecolectable.LoadContent(Content, GraphicsDevice);
             }
+            enemigo1.LoadContent(Content, GraphicsDevice);
 
             // Obtengo su efecto para cambiarle el color y activar la luz predeterminada que tiene MonoGame.
             //Mesh Silenciador
@@ -179,6 +185,8 @@ namespace TGC.MonoGame.TP
             base.Update(gameTime);
         }
 
+        bool agarrado = false;
+
         /// <summary>
         ///     Se llama cada vez que hay que refrescar la pantalla.
         ///     Escribir aquí todo el código referido al renderizado.
@@ -197,11 +205,22 @@ namespace TGC.MonoGame.TP
                 unRecolectable.Draw(Camera.View, Camera.Projection);
             }
 
+            // Dibujar un enemigo
+            enemigo1.Draw(Camera.View, Camera.Projection);
+
+            // Testing de agarrar un recolectable
+            if (Keyboard.GetState().IsKeyDown(Keys.R)) 
+            {
+                if (!agarrado)
+                {
+                    recolectarEnIndice(0);
+                    agarrado = true;
+                }
+            }
 
             if (Keyboard.GetState().IsKeyDown(Keys.Q))
             {
-                Knife.Draw(WorldM4, View, Projection);
-                recolectarEnIndice(0);
+                Knife.Draw(WorldM4, View, Projection);     
             }
             else
             {
@@ -211,7 +230,7 @@ namespace TGC.MonoGame.TP
             // OLD | Eliminar
             //ModeloCiudad.Draw(World * Matrix.CreateScale(0.2f), Camera.View, Camera.Projection);
             //ModeloTanque.Draw(World * Matrix.CreateScale(3) * Matrix.CreateTranslation(20, -10, 30), Camera.View, Camera.Projection);
-            //ModeloTgcitoClassic.Draw(World * Matrix.CreateScale(.2f) * Matrix.CreateTranslation(35, 10, 90) , Camera.View, Camera.Projection);
+            //ModeloTgcitoClassic.Draw(World * Matrix.CreateScale(1) * Matrix.CreateTranslation(35, 10, 90) , Camera.View, Camera.Projection);
             //ModeloRobotTGC.Draw(World * Matrix.CreateScale(.2f) * Matrix.CreateTranslation(55, 10, 90), Camera.View, Camera.Projection);
 
             //Finalmente invocamos al draw del modelo.
