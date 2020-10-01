@@ -16,7 +16,6 @@ namespace TGC.MonoGame.TP
     class Recolectable
     {
         public const string ContentFolder3D = "Models/";
-
         private Model ModeloVida { get; set; }
         private Model ModeloArmor { get; set; }
         private float Rotation { get; set; }
@@ -45,10 +44,10 @@ namespace TGC.MonoGame.TP
         public void LoadContent(ContentManager Content, GraphicsDevice GraphicsDevice)
         {
             ModeloVida = Content.Load<Model>(ContentFolder3D + "healthAndArmor/corazon");
-            ModeloArmor = Content.Load<Model>(ContentFolder3D + "healthAndArmor/cascoConvertido");
+            ModeloArmor = Content.Load<Model>(ContentFolder3D + "healthAndArmor/armadura");
 
             var modelEffectArmor = (BasicEffect)ModeloArmor.Meshes[0].Effects[0];
-            modelEffectArmor.DiffuseColor = Color.DarkGreen.ToVector3();
+            modelEffectArmor.DiffuseColor = Color.Gray.ToVector3();
             modelEffectArmor.EnableDefaultLighting();
 
             var modelEffectVida = (BasicEffect)ModeloVida.Meshes[0].Effects[0];
@@ -72,7 +71,7 @@ namespace TGC.MonoGame.TP
         }
 
         private void dibujarVidaEn(float posX, float posY, float posZ, Matrix view, Matrix projection) {
-            ModeloVida.Draw(World * Matrix.CreateScale(0.2f) * Matrix.CreateRotationY(Rotation) * Matrix.CreateTranslation(posX, posY, posZ), view, projection);
+            ModeloVida.Draw(World * Matrix.CreateScale(0.15f) * Matrix.CreateRotationY(Rotation) * Matrix.CreateTranslation(posX, posY, posZ), view, projection);
         }
 
         private void dibujarArmorEn(float posX, float posY, float posZ, Matrix view, Matrix projection) {

@@ -95,8 +95,8 @@ namespace TGC.MonoGame.TP
             Recolectable recolectable2 = new Recolectable(new Vector3(20, 0, 30), TipoRecolectable.vida);
             Recolectable recolectable3 = new Recolectable(new Vector3(20, 0, 80), TipoRecolectable.vida);
 
-            Recolectable recolectable4 = new Recolectable(new Vector3(-80, -40, 30), TipoRecolectable.armor);
-            Recolectable recolectable5 = new Recolectable(new Vector3(-120, -40, 30), TipoRecolectable.armor);
+            Recolectable recolectable4 = new Recolectable(new Vector3(-100, -75, 30), TipoRecolectable.armor);
+            Recolectable recolectable5 = new Recolectable(new Vector3(-120, -75, 30), TipoRecolectable.armor);
 
             recolectables.Add(recolectable1);
             recolectables.Add(recolectable2);
