@@ -46,8 +46,14 @@ namespace TGC.MonoGame.TP.FPS
             //spriteBatch.Draw(bullets, new Vector2(750, 440), new Rectangle(0, 0, 250, 250), Color.White, 0.01f, origin, .095f, SpriteEffects.None, 1);
 
 
-
-            SpriteBatch.DrawString(InterfaceFont, Player.Health.ToString(), new Vector2(50, 432), Color.White);
+            if (Player.Health <= 0)
+            {
+                SpriteBatch.DrawString(InterfaceFont, "Dead", new Vector2(50, 432), Color.White);
+            }
+            else {
+                SpriteBatch.DrawString(InterfaceFont, Player.Health.ToString(), new Vector2(50, 432), Color.White);
+            }
+            
             //spriteBatch.DrawString(FontTexture, "50/250", new Vector2(660, 440), Color.White);
             SpriteBatch.End();
 

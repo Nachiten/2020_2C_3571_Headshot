@@ -1,23 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Grafics = Microsoft.Xna.Framework.Graphics;
 
 namespace TGC.MonoGame.TP.FPS
 {
     public class Weapon 
     { 
-        public Weapon(Model weaponModel)
+        public Weapon(Grafics.Model weaponModel)
         {
             WeaponModel = weaponModel;
         }
-        public Model WeaponModel { get; set; }
+        public Grafics.Model WeaponModel { get; set; }
         public int Damage { get; set; }
 
         public int SpeedFire { get; set; }
 
-        public Model bullet { get; set; }
+        public Grafics.Model bullet { get; set; }
         //sound!!!
         //range??
         public void Fire()

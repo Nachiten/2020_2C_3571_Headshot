@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,14 +49,26 @@ namespace TGC.MonoGame.TP.FPS
             //inicializar el current weapon con Fist
             base.Initialize();
         }
-        public void Shoot(Matrix direction)
+
+        /// <summary>
+        /// Toma el arma y lanza en direccion de donde este el mouse un projectil
+        /// </summary>
+        /// <param name="direction"></param>
+        public void Shoot()
         {
+            //Deberiamos ver como obtenemos la direccion a la que esta aputando el arma.
             //this.weapon.fire()
         }
 
         public void Move(Matrix direction)
         {
             //CurrentPosition.CreateTranslation(direction) algo asi
+        }
+
+        public void RecibirDisparo(int cantidadDanio) {
+            if (this.Health > 0) {
+                this.Health -= cantidadDanio;
+            }
         }
 
         public void Jump()
@@ -72,7 +85,7 @@ namespace TGC.MonoGame.TP.FPS
         {
             CurrentWeapon = nuevaArma;
         }
-
+        
         public override void Draw(GameTime gameTime)
         {
             if (CurrentWeapon != null) {

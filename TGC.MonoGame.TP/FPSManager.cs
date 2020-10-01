@@ -3,6 +3,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.Samples.Cameras;
 using TGC.MonoGame.TP.FPS;
+using BepuPhysics;
+using BepuUtilities.Memory;
+using TGC.MonoGame.TP.FPS.Interface;
 
 namespace TGC.MonoGame.TP
 {
@@ -16,18 +19,21 @@ namespace TGC.MonoGame.TP
         public const string ContentFolderTextures = "Textures/";
 
         #region Propiedades
-        private GraphicsDeviceManager Graphics { get; }
+        public GraphicsDeviceManager Graphics { get; }
         private Player Player { get; set; }
 
         private PlayerGUI  PlayerGUI {get;set;}
 
-        private Weapon Weapon { get; set; }
-        private Weapon WeaponKnife { get; set; }
+        //private FreeCamera Camera { get; set; }
 
-        private FreeCamera Camera { get; set; }
-
-        private Stage Stage { get; set; }
+        
         private BasicEffect Effect { get; set; }
+
+        private VertexPositionTexture[] floorVerts { get; set; }
+
+        private KeyboardManager PlayerControl { get; set; }
+
+
         #endregion
 
         /// <summary>
@@ -37,6 +43,7 @@ namespace TGC.MonoGame.TP
         {
             // Maneja la configuracion y la administracion del dispositivo grafico.
             Graphics = new GraphicsDeviceManager(this);
+
             // Descomentar para que el juego sea pantalla completa.
             Graphics.IsFullScreen = false;
             // Carpeta raiz donde va a estar toda la Media.
@@ -47,9 +54,10 @@ namespace TGC.MonoGame.TP
 
         protected override void Initialize()
         {
+            
 
             var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
-            Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(-350, 50, 400), screenSize);
+            //Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(-350, 50, 400), screenSize);
 
             Player = new Player(this);
             Player.Initialize();
@@ -57,23 +65,12 @@ namespace TGC.MonoGame.TP
             PlayerGUI = new PlayerGUI(this);
             PlayerGUI.Initialize(Player);
 
+            PlayerControl = new KeyboardManager(Player);
 
-            //Agrego arma
-            Weapon = new Weapon(Content.Load<Model>(ContentFolder3D + "weapons/fbx/m4a1_s"));
-            WeaponKnife = new Weapon(Content.Load<Model>(ContentFolder3D + "weapons/knife/Karambit"));
 
-            var modelEffect = (BasicEffect)Weapon.WeaponModel.Meshes[0].Effects[0];
-            modelEffect.TextureEnabled = true;
-            modelEffect.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/fbx/noodas");
-            modelEffect.EnableDefaultLighting();
+            //StageBuilder = new IceWorldStage(this);
+            //StageBuilder.CrearPiso(800, 1000);
 
-            var modelEffect2 = (BasicEffect)Weapon.WeaponModel.Meshes[1].Effects[0];
-            modelEffect2.EnableDefaultLighting();
-            modelEffect2.TextureEnabled = true;
-            modelEffect2.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/fbx/noodas");
-
-            Player.AgarrarArma(Weapon);
-            Stage = new Stage();
 
             Effect = new BasicEffect(GraphicsDevice);
 
@@ -81,29 +78,68 @@ namespace TGC.MonoGame.TP
         }
         protected override void LoadContent()
         {
-            Stage.LoadContent(Content, GraphicsDevice);
             base.LoadContent();
         }
 
         protected override void Update(GameTime gameTime)
         {
-            Camera.Update(gameTime);
-            if (Keyboard.GetState().IsKeyDown(Keys.Q))
-            {
-                Player.AgarrarArma(WeaponKnife);
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.E))
-            {
-                Player.AgarrarArma(Weapon);
-            }
+            //Camera.Update(gameTime);
+            PlayerControl.Update(gameTime);
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.LightBlue);
+            GraphicsDevice.Clear(Color.Black);
+
+            Vector3 piso4 = new Vector3(20, 20, 0);
+            Vector3 piso1 = new Vector3(-20, -20, 0);
+            Vector3 piso2 = new Vector3(-20, 20, 0);
+            Vector3 piso3 = new Vector3(20, -20, 0);
+
+
+            var textura = new Vector2(5, 10);
+            floorVerts = TP.Utils.ShapeCreatorHelper.CreatePlane(piso1, piso2, piso3, piso4, textura);
+            // The assignment of effect.View and effect.Projection
+            // are nearly identical to the code in the Model drawing code.
+            var cameraPosition = new Vector3(0, 40, 20);
+            var cameraLookAtVector = Vector3.Zero;
+            var cameraUpVector = Vector3.UnitZ;
+
+            Effect.View = Matrix.CreateLookAt(
+                cameraPosition, cameraLookAtVector, cameraUpVector);
+
+            float aspectRatio =
+                Graphics.PreferredBackBufferWidth / (float)Graphics.PreferredBackBufferHeight;
+            float fieldOfView = Microsoft.Xna.Framework.MathHelper.PiOver4;
+            float nearClipPlane = 1;
+            float farClipPlane = 200;
+
+            Effect.Projection = Matrix.CreatePerspectiveFieldOfView(
+                fieldOfView, aspectRatio, nearClipPlane, farClipPlane);
+            Effect.TextureEnabled = true;
             Player.Draw(gameTime);
             PlayerGUI.Draw(gameTime);
+            Effect.Texture = Content.Load<Texture2D>(ContentFolderTextures + "ice_rink");
+            
+
+            foreach (var pass in Effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+
+                Graphics.GraphicsDevice.DrawUserPrimitives(
+                    // We’ll be rendering two trinalges
+                    PrimitiveType.TriangleList,
+                    // The array of verts that we want to render
+                    floorVerts,
+                    // The offset, which is 0 since we want to start
+                    // at the beginning of the floorVerts array
+                    0,
+                    // The number of triangles to draw
+                    2);
+            }
+
+
             base.Draw(gameTime);
         }
 
@@ -111,7 +147,6 @@ namespace TGC.MonoGame.TP
         {
             // Libero los recursos.
             Content.Unload();
-
             base.UnloadContent();
         }
     }
