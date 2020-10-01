@@ -105,7 +105,7 @@ namespace TGC.MonoGame.TP
             recolectables.Add(recolectable5);
 
             // Inicializacion enemigo
-            enemigo1 = new Enemigo(new Vector3(0,20,350));
+            enemigo1 = new Enemigo(new Vector3(0,20,200));
 
 
             base.Initialize();
@@ -178,6 +178,8 @@ namespace TGC.MonoGame.TP
             {
                 unRecolectable.Update(gameTime);
             }
+
+            enemigo1.Update(gameTime, Camera.Position);
                 
             //// Basado en el tiempo que paso se va generando una rotacion.
             //Rotation += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
@@ -209,14 +211,14 @@ namespace TGC.MonoGame.TP
             enemigo1.Draw(Camera.View, Camera.Projection);
 
             // Testing de agarrar un recolectable
-            if (Keyboard.GetState().IsKeyDown(Keys.R)) 
-            {
-                if (!agarrado)
-                {
-                    recolectarEnIndice(0);
-                    agarrado = true;
-                }
-            }
+            //if (Keyboard.GetState().IsKeyDown(Keys.R))
+            //{
+            //    if (!agarrado)
+            //    {
+            //        recolectarEnIndice(0);
+            //        agarrado = true;
+            //    }
+            //}
 
             if (Keyboard.GetState().IsKeyDown(Keys.Q))
             {
