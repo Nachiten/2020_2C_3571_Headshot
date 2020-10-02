@@ -71,8 +71,7 @@ namespace TGC.MonoGame.TP
 
 
             Collision = new Collision();
-
-            Stage = new Stage(Collision);
+            Stage = new Stage();
 
             var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
             Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(-350, 50, 400), screenSize);
@@ -113,8 +112,8 @@ namespace TGC.MonoGame.TP
             ModeloTgcitoClassic = Content.Load<Model>(ContentFolder3D + "tgcito-classic/tgcito-classic");
 
             ModeloRobotTGC = Content.Load<Model>(ContentFolder3D + "tgcito-mega/tgcito-mega");
-
-            Stage.LoadContent(Content,GraphicsDevice);
+        
+            Stage.LoadContent(Content,GraphicsDevice,Collision);
 
             // Obtengo su efecto para cambiarle el color y activar la luz predeterminada que tiene MonoGame.
             //Mesh Silenciador

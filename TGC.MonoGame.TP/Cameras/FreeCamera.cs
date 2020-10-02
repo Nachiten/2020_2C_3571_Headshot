@@ -25,7 +25,7 @@ namespace TGC.MonoGame.Samples.Cameras
         {
             lockMouse = true;
             this.screenCenter = screenCenter;
-            cameraBox = new AABB(Vector3.One * 50);
+            cameraBox = new AABB(Vector3.One * 20);
         }
 
         public FreeCamera(float aspectRatio, Vector3 position) : base(aspectRatio)

@@ -7,7 +7,7 @@ namespace TGC.MonoGame.TP.Collisions{
         Vector3 maxExtents { get; set; }
         Vector3 minExtents { get; set; }
         Matrix world;
-        Vector3 size;
+        public Vector3 size;
 
         public AABB(Vector3 size){
             this.size = size;

@@ -1,7 +1,4 @@
 using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 namespace TGC.MonoGame.TP.Collisions{
@@ -11,6 +8,7 @@ namespace TGC.MonoGame.TP.Collisions{
             collidableElements = new List<AABB>();
         }
         public void appendStatic(AABB elem){
+            //Console.WriteLine(elem.size.ToString());
             collidableElements.Add(elem);
         }
         public void actualCollision(AABB elem,Func<AABB,AABB,int> callback){

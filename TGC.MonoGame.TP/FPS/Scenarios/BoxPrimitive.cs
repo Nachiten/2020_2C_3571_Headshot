@@ -27,20 +27,6 @@ namespace TGC.MonoGame.Samples.Geometries.Textures
             CreateIndexBuffer(graphicsDevice);
         }
         /// <summary>
-        ///     Create a box with a center at the given point, with a size and a color in each vertex.
-        /// </summary>
-        /// <param name="graphicsDevice">Used to initialize and control the presentation of the graphics device.</param>
-        /// <param name="size">Size of the box.</param>
-        public BoxPrimitive(GraphicsDevice graphicsDevice, Vector3 size)
-        {
-            Effect = new BasicEffect(graphicsDevice);
-            Effect.EnableDefaultLighting();
-
-            CreateVertexBuffer(graphicsDevice, size);
-            CreateIndexBuffer(graphicsDevice);
-        }
-
-        /// <summary>
         ///     Represents a list of 3D vertices to be streamed to the graphics device.
         /// </summary>
         private VertexBuffer Vertices { get; set; }
@@ -216,7 +202,7 @@ namespace TGC.MonoGame.Samples.Geometries.Textures
         /// <param name="world">The world matrix for this box.</param>
         /// <param name="view">The view matrix, normally from the camera.</param>
         /// <param name="projection">The projection matrix, normally from the application.</param>
-        public void Draw(Matrix world, Matrix view, Matrix projection)
+        public virtual void Draw(Matrix world, Matrix view, Matrix projection)
         {
             // Set BasicEffect parameters.
             Effect.World = world;
