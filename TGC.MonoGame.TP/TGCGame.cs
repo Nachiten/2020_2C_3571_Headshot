@@ -105,7 +105,7 @@ namespace TGC.MonoGame.TP
             recolectables.Add(recolectable5);
 
             // Inicializacion enemigo
-            enemigo1 = new Enemigo(new Vector3(0,20,200));
+            enemigo1 = new Enemigo(new Vector3(30,20,200));
 
 
             base.Initialize();

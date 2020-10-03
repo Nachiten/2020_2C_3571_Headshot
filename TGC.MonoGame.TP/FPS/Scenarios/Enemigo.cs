@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Collections.Generic;
+using jorge = System.Windows;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
@@ -28,24 +29,27 @@ namespace TGC.MonoGame.TP
             World = Matrix.CreateRotationY(MathHelper.Pi);
         }
 
-        //private double tiempoInicialMovimiento;
-        //private double tiempoActualMovimiento;
         private Vector3 posicionInicial;
-
+        private Vector3 mirandoInicial = new Vector3(0,0,-1);
         private bool moverse = false;
-        float velocidadMovimiento = 5;
+        float velocidadMovimiento = 2;
         Vector3 posicionObjetivo = Vector3.Zero;
         Vector3 vectorDireccion = Vector3.Zero;
+
+        float anguloRotacionRadianes = 0;
 
         public void Update(GameTime gameTime, Vector3 posicionCamara)
         {
             // Tiempo total desde el comienzo del juego
             tiempo += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
 
-            Debug.WriteLine("Tiempo actual tota:" + tiempo);
+            // Calculo la posicion a la que me voy a mover
+            posicionObjetivo = new Vector3(posicionCamara.X, 50, posicionCamara.Z);
 
-            // Testing de animacion
-            if (Keyboard.GetState().IsKeyDown(Keys.R))
+            float distanciaAlObjetivo = Vector3.Distance(posicion, posicionObjetivo);
+
+            // Si la distancia es menor a un margen comienzo a moverme
+            if (distanciaAlObjetivo < 200 && distanciaAlObjetivo > 50)
             {
                 if (!moverse) { 
                     moverse = true;
@@ -53,10 +57,31 @@ namespace TGC.MonoGame.TP
                     //tiempoInicialMovimiento = tiempo;
                     posicionInicial = posicion;
 
-                    posicionObjetivo = new Vector3(posicionCamara.X, 50, posicionCamara.Z);
+                    // Calculo la direccion en al que debo moverme
                     vectorDireccion = Vector3.Normalize(posicionObjetivo - posicion);
+
+                    // Inivierto la rotacion anterior para quedar con rotacion 0 siempre al comenzar
+                    World *= Matrix.CreateRotationY(-anguloRotacionRadianes);
+
+                    // Calculo angulo de rotacion entre el robot y el objetivo
+                    anguloRotacionRadianes = (float)Math.Acos(Vector3.Dot(vectorDireccion, mirandoInicial) 
+                        / (Vector3.Distance(vectorDireccion, Vector3.Zero) * Vector3.Distance(mirandoInicial, Vector3.Zero) ));
+
+                    //Debug.WriteLine("Dot product: " + Vector3.Dot(vectorDireccion, mirandoInicial));
+                    //Debug.WriteLine("Angulo rotacion: " + anguloRotacionRadianes);
+
+                    // Si posX del objetivo es mayor a posX actual => * -1
+                    // Si el objetivo está en el tercer o cuarto cuadrante (angulo > 180) entonces debo invertir el angulo
+                    if (posicionObjetivo.X > posicion.X) { 
+                        anguloRotacionRadianes *= -1;
+                    }
                     
-                    //World *= Matrix.CreateRotationY();
+                    // Aplico la rotacion que corresponde
+                    World *= Matrix.CreateRotationY(anguloRotacionRadianes);
+
+                    Debug.WriteLine("Inicio movimiento de velocidad [" + velocidadMovimiento + "] unidadesPorSegundo desde la posicion [" 
+                        + posicion.X + ", " + posicion.Y + ", " + posicion.Z + "] hasta la posicion [" + posicionObjetivo.X + ", " + posicionObjetivo.Y + ", " + posicionObjetivo.Z + "]");
+
                 }
             }
 
@@ -64,13 +89,11 @@ namespace TGC.MonoGame.TP
 
                 posicion = posicion + (vectorDireccion * velocidadMovimiento);
 
-                if (Vector3.Distance(posicion, posicionObjetivo) < 50)
+                if (distanciaAlObjetivo < 50 || distanciaAlObjetivo > 200)
                 {
                     moverse = false;
                     Debug.WriteLine("Termino de moverme");
                 }
-
-                Debug.WriteLine("Inicio movimiento de velocidad [" + velocidadMovimiento + "] unidadesPorSegundo desde la posicion [" + posicion.X + ", " + posicion.Y + ", " + posicion.Z + "] hasta la posicion [" + posicionObjetivo.X + ", " + posicionObjetivo.Y + ", " + posicionObjetivo.Z + "]");
 
             }
         }
