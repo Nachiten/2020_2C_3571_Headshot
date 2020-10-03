@@ -44,7 +44,7 @@ namespace TGC.MonoGame.TP
             tiempo += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
 
             // Calculo la posicion a la que me voy a mover
-            posicionObjetivo = new Vector3(posicionCamara.X, 50, posicionCamara.Z);
+            posicionObjetivo = new Vector3(posicionCamara.X, 20, posicionCamara.Z);
 
             float distanciaAlObjetivo = Vector3.Distance(posicion, posicionObjetivo);
 

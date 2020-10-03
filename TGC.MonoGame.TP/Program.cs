@@ -7,7 +7,7 @@ namespace TGC.MonoGame.TP
         [STAThread]
         static void Main()
         {
-            using (var game = new FPSManager())
+            using (var game = new TGCGame())
                 game.Run();
         }
     }
