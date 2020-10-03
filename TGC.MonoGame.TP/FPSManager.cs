@@ -1,10 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using TGC.MonoGame.Samples.Cameras;
 using TGC.MonoGame.TP.FPS;
-using BepuPhysics;
-using BepuUtilities.Memory;
 using TGC.MonoGame.TP.FPS.Interface;
 
 namespace TGC.MonoGame.TP
@@ -55,7 +51,6 @@ namespace TGC.MonoGame.TP
         protected override void Initialize()
         {
             
-
             var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
             //Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(-350, 50, 400), screenSize);
 
@@ -92,52 +87,55 @@ namespace TGC.MonoGame.TP
         {
             GraphicsDevice.Clear(Color.Black);
 
-            Vector3 piso4 = new Vector3(20, 20, 0);
-            Vector3 piso1 = new Vector3(-20, -20, 0);
-            Vector3 piso2 = new Vector3(-20, 20, 0);
-            Vector3 piso3 = new Vector3(20, -20, 0);
-
-
-            var textura = new Vector2(5, 10);
-            floorVerts = TP.Utils.ShapeCreatorHelper.CreatePlane(piso1, piso2, piso3, piso4, textura);
-            // The assignment of effect.View and effect.Projection
-            // are nearly identical to the code in the Model drawing code.
-            var cameraPosition = new Vector3(0, 40, 20);
-            var cameraLookAtVector = Vector3.Zero;
-            var cameraUpVector = Vector3.UnitZ;
-
-            Effect.View = Matrix.CreateLookAt(
-                cameraPosition, cameraLookAtVector, cameraUpVector);
-
-            float aspectRatio =
-                Graphics.PreferredBackBufferWidth / (float)Graphics.PreferredBackBufferHeight;
-            float fieldOfView = Microsoft.Xna.Framework.MathHelper.PiOver4;
-            float nearClipPlane = 1;
-            float farClipPlane = 200;
-
-            Effect.Projection = Matrix.CreatePerspectiveFieldOfView(
-                fieldOfView, aspectRatio, nearClipPlane, farClipPlane);
-            Effect.TextureEnabled = true;
             Player.Draw(gameTime);
             PlayerGUI.Draw(gameTime);
-            Effect.Texture = Content.Load<Texture2D>(ContentFolderTextures + "ice_rink");
-            
 
-            foreach (var pass in Effect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
 
-                Graphics.GraphicsDevice.DrawUserPrimitives(
-                    // We’ll be rendering two trinalges
-                    PrimitiveType.TriangleList,
-                    // The array of verts that we want to render
-                    floorVerts,
-                    // The offset, which is 0 since we want to start
-                    // at the beginning of the floorVerts array
-                    0,
-                    // The number of triangles to draw
-                    2);
-            }
+            //Vector3 piso4 = new Vector3(20, 20, 0);
+            //Vector3 piso1 = new Vector3(-20, -20, 0);
+            //Vector3 piso2 = new Vector3(-20, 20, 0);
+            //Vector3 piso3 = new Vector3(20, -20, 0);
+
+
+            //var textura = new Vector2(5, 10);
+            //floorVerts = TP.Utils.ShapeCreatorHelper.CreatePlane(piso1, piso2, piso3, piso4, textura);
+            //// The assignment of effect.View and effect.Projection
+            //// are nearly identical to the code in the Model drawing code.
+            //var cameraPosition = new Vector3(0, 40, 20);
+            //var cameraLookAtVector = Vector3.Zero;
+            //var cameraUpVector = Vector3.UnitZ;
+
+            //Effect.View = Matrix.CreateLookAt(
+            //    cameraPosition, cameraLookAtVector, cameraUpVector);
+
+            //float aspectRatio =
+            //    Graphics.PreferredBackBufferWidth / (float)Graphics.PreferredBackBufferHeight;
+            //float fieldOfView = Microsoft.Xna.Framework.MathHelper.PiOver4;
+            //float nearClipPlane = 1;
+            //float farClipPlane = 200;
+
+            //Effect.Projection = Matrix.CreatePerspectiveFieldOfView(
+            //    fieldOfView, aspectRatio, nearClipPlane, farClipPlane);
+            //Effect.TextureEnabled = true;
+
+            //Effect.Texture = Content.Load<Texture2D>(ContentFolderTextures + "ice_rink");
+
+
+            //foreach (var pass in Effect.CurrentTechnique.Passes)
+            //{
+            //    pass.Apply();
+
+            //    Graphics.GraphicsDevice.DrawUserPrimitives(
+            //        // We’ll be rendering two trinalges
+            //        PrimitiveType.TriangleList,
+            //        // The array of verts that we want to render
+            //        floorVerts,
+            //        // The offset, which is 0 since we want to start
+            //        // at the beginning of the floorVerts array
+            //        0,
+            //        // The number of triangles to draw
+            //        2);
+            //}
 
 
             base.Draw(gameTime);
