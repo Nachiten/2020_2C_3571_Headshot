@@ -13,12 +13,13 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Icon.ico" />
-    <None Remove="Icon.bmp" />
+    <Compile Remove="bin\Debug\netcoreapp3.1\Content\**" />
+    <EmbeddedResource Remove="bin\Debug\netcoreapp3.1\Content\**" />
+    <None Remove="bin\Debug\netcoreapp3.1\Content\**" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bin\Debug\netcoreapp3.1\Content\ladrillo.png" />
-    <Content Include="bin\Debug\netcoreapp3.1\Content\pasto.jpg" />
+    <None Remove="Icon.ico" />
+    <None Remove="Icon.bmp" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
@@ -26,10 +27,6 @@
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="bin\Debug\netcoreapp3.1\Content\noodas.png" />
-    <None Include="bin\Debug\netcoreapp3.1\Content\Palette.jpg" />
   </ItemGroup>
   <ItemGroup>
     <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
@@ -40,6 +37,12 @@
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="bin\Debug\netcoreapp3.1\" />
     <Folder Include="Content\Models\weapons\hands\" />
+    <Folder Include="Content\Sounds\" />
+    <Folder Include="Content\Textures\interface\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TGC.MonoGame.TP.Utils\TGC.MonoGame.TP.Utils.csproj" />
   </ItemGroup>
 </Project>
