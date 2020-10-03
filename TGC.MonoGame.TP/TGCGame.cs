@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -42,7 +43,7 @@ namespace TGC.MonoGame.TP
         private Model Knife { get; set; }
         private Matrix WorldM4 { get; set; }
         private Model ModeloCiudad { get; set; }
-        private Model ModeloTgcitoClassic { get; set; }
+        //private Model ModeloTgcitoClassic { get; set; }
         private Model ModeloRobotTGC { get; set; }
         private float Rotation { get; set; }
         private Matrix World { get; set; }
@@ -51,6 +52,14 @@ namespace TGC.MonoGame.TP
         private BasicEffect Effect { get; set; }
         private FreeCamera Camera { get; set; }
         private Stage Stage { get; set; }
+
+        // Esta lita de recolectables deberia estar en otra clase "recolectables"
+        private List<Recolectable> recolectables = new List<Recolectable>();
+
+        private Enemigo enemigo1;
+
+        // Array de recolectables
+        // Cuando recolecta algo se quita de la lista
 
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
@@ -66,21 +75,38 @@ namespace TGC.MonoGame.TP
             var rasterizerState = new RasterizerState();
             rasterizerState.CullMode = CullMode.None;
             GraphicsDevice.RasterizerState = rasterizerState;
-          
 
-            Stage = new Stage();       
+            Stage = new Stage();
 
             var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
             Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(-350, 50, 400), screenSize);
 
             // Configuramos nuestras matrices de la escena.
-            World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(10,0,10);
-            View = Matrix.CreateLookAt(new Vector3(30,20,150), new Vector3(30,0,0) , Vector3.Up);
+            World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(10, 0, 10);
+            View = Matrix.CreateLookAt(new Vector3(30, 20, 150), new Vector3(30, 0, 0), Vector3.Up);
 
-            WorldM4 = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(50,0,110);
+            WorldM4 = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(50, 0, 110);
 
             Effect = new BasicEffect(GraphicsDevice);
             Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);
+
+            // Inicializacion de recolectables
+            Recolectable recolectable1 = new Recolectable(new Vector3(-40, 0, 30), TipoRecolectable.vida);
+            Recolectable recolectable2 = new Recolectable(new Vector3(20, 0, 30), TipoRecolectable.vida);
+            Recolectable recolectable3 = new Recolectable(new Vector3(20, 0, 80), TipoRecolectable.vida);
+
+            Recolectable recolectable4 = new Recolectable(new Vector3(-100, -75, 30), TipoRecolectable.armor);
+            Recolectable recolectable5 = new Recolectable(new Vector3(-120, -75, 30), TipoRecolectable.armor);
+
+            recolectables.Add(recolectable1);
+            recolectables.Add(recolectable2);
+            recolectables.Add(recolectable3);
+            recolectables.Add(recolectable4);
+            recolectables.Add(recolectable5);
+
+            // Inicializacion enemigo
+            enemigo1 = new Enemigo(new Vector3(30,20,200));
+
 
             base.Initialize();
         }
@@ -97,21 +123,24 @@ namespace TGC.MonoGame.TP
 
             // Cargo el modelo del logo.
            // Model = Content.Load<Model>(ContentFolder3D + "tgc-logo/tgc-logo");
-            ModeloTanque = Content.Load<Model>(ContentFolder3D + "tank/tank");
-
+            
+            // Armas
             ModeloM4 = Content.Load<Model>(ContentFolder3D + "weapons/fbx/m4a1_s");
-
             Knife = Content.Load<Model>(ContentFolder3D + "weapons/knife/Karambit");
 
-            ModeloCiudad = Content.Load<Model>(ContentFolder3D + "scene/city");
-
-            ModeloTgcitoClassic = Content.Load<Model>(ContentFolder3D + "tgcito-classic/tgcito-classic");
-
-            ModeloRobotTGC = Content.Load<Model>(ContentFolder3D + "tgcito-mega/tgcito-mega");
+            // OLD | Borrar
+            //ModeloTanque = Content.Load<Model>(ContentFolder3D + "tank/tank");
+            //ModeloCiudad = Content.Load<Model>(ContentFolder3D + "scene/city");
+            //ModeloTgcitoClassic = Content.Load<Model>(ContentFolder3D + "tgcito-classic/tgcito-classic");
+            //ModeloRobotTGC = Content.Load<Model>(ContentFolder3D + "tgcito-mega/tgcito-mega");
+            
 
             Stage.LoadContent(Content,GraphicsDevice);
 
-
+            foreach (Recolectable unRecolectable in recolectables) {
+                unRecolectable.LoadContent(Content, GraphicsDevice);
+            }
+            enemigo1.LoadContent(Content, GraphicsDevice);
 
             // Obtengo su efecto para cambiarle el color y activar la luz predeterminada que tiene MonoGame.
             //Mesh Silenciador
@@ -145,12 +174,20 @@ namespace TGC.MonoGame.TP
                 Exit();
 
             Camera.Update(gameTime);
+            foreach (Recolectable unRecolectable in recolectables)
+            {
+                unRecolectable.Update(gameTime);
+            }
 
+            enemigo1.Update(gameTime, Camera.Position);
+                
             //// Basado en el tiempo que paso se va generando una rotacion.
             //Rotation += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Update(gameTime);
         }
+
+        bool agarrado = false;
 
         /// <summary>
         ///     Se llama cada vez que hay que refrescar la pantalla.
@@ -158,37 +195,52 @@ namespace TGC.MonoGame.TP
         /// </summary>
         protected override void Draw(GameTime gameTime)
         {
-            // Aca deberiamos poner toda la logia de renderizado del juego.
+            // Aca deberiamos poner toda la logica de renderizado del juego.
             GraphicsDevice.Clear(Color.LightBlue);
 
             // Walls and floor
             Stage.Draw(Graphics,Effect,Camera.View,Camera.Projection);
 
-            
+            // Foreach de la lista de recolectables y dibujarlos
+            foreach (Recolectable unRecolectable in recolectables)
+            {
+                unRecolectable.Draw(Camera.View, Camera.Projection);
+            }
 
-            // Rotacion en y
-            //Matrix.CreateRotationY(Rotation)
+            // Dibujar un enemigo
+            enemigo1.Draw(Camera.View, Camera.Projection);
 
-            //Finalmente invocamos al draw del modelo.
+            // Testing de agarrar un recolectable
+            //if (Keyboard.GetState().IsKeyDown(Keys.R))
+            //{
+            //    if (!agarrado)
+            //    {
+            //        recolectarEnIndice(0);
+            //        agarrado = true;
+            //    }
+            //}
 
             if (Keyboard.GetState().IsKeyDown(Keys.Q))
             {
-                Knife.Draw(WorldM4, View, Projection);
+                Knife.Draw(WorldM4, View, Projection);     
             }
             else
             {
                 ModeloM4.Draw(WorldM4, View, Projection);
             }
-            
+
+            // OLD | Eliminar
             //ModeloCiudad.Draw(World * Matrix.CreateScale(0.2f), Camera.View, Camera.Projection);
-
             //ModeloTanque.Draw(World * Matrix.CreateScale(3) * Matrix.CreateTranslation(20, -10, 30), Camera.View, Camera.Projection);
-
-            //ModeloTgcitoClassic.Draw(World * Matrix.CreateScale(.2f) * Matrix.CreateTranslation(35, 10, 90) , Camera.View, Camera.Projection);
-
+            //ModeloTgcitoClassic.Draw(World * Matrix.CreateScale(1) * Matrix.CreateTranslation(35, 10, 90) , Camera.View, Camera.Projection);
             //ModeloRobotTGC.Draw(World * Matrix.CreateScale(.2f) * Matrix.CreateTranslation(55, 10, 90), Camera.View, Camera.Projection);
 
+            //Finalmente invocamos al draw del modelo.
             base.Draw(gameTime);
+        }
+
+        private void recolectarEnIndice(int index) {
+            recolectables.RemoveAt(index);
         }
 
         /// <summary>
