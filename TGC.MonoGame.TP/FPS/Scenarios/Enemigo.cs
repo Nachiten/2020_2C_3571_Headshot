@@ -18,72 +18,61 @@ namespace TGC.MonoGame.TP
 
         private Model ModeloTgcitoClassic { get; set; }
 
-        private bool moviendoseX = false;
-        private bool moviendoseZ = false;
+        private Matrix Rotacion;
 
         private double tiempo = 0;
 
         public Enemigo(Vector3 posicion)
         {
             this.posicion = posicion;
-            World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(10, 0, 10);
+            World = Matrix.CreateRotationY(MathHelper.Pi);
         }
 
-        private double tiempoInicialMovimiento;
-        private double tiempoTotalMovimientoX;
-        private double tiempoTotalMovimientoZ;
-        private double tiempoActualMovimiento;
-
-        private float distanciaX;
-        private float distanciaZ;
-
+        //private double tiempoInicialMovimiento;
+        //private double tiempoActualMovimiento;
         private Vector3 posicionInicial;
+
+        private bool moverse = false;
+        float velocidadMovimiento = 5;
+        Vector3 posicionObjetivo = Vector3.Zero;
+        Vector3 vectorDireccion = Vector3.Zero;
 
         public void Update(GameTime gameTime, Vector3 posicionCamara)
         {
             // Tiempo total desde el comienzo del juego
             tiempo += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
 
-            //Debug.WriteLine("Tiempo actual tota:" + tiempo);
-
-            // using System.Diagnostics;
-            //Debug.WriteLine(tiempo);
+            Debug.WriteLine("Tiempo actual tota:" + tiempo);
 
             // Testing de animacion
             if (Keyboard.GetState().IsKeyDown(Keys.R))
             {
-                // Posicion incial: 1,20,200
-                moverHacia(posicionCamara.X, 20, posicionCamara.Z, 20, tiempo);
+                if (!moverse) { 
+                    moverse = true;
+                    // Fijo el tiempo inicial y el tiempo total, mas la posicion inicial del moviemiento
+                    //tiempoInicialMovimiento = tiempo;
+                    posicionInicial = posicion;
 
-                // 20unidadesXSegundo -> 10 segundos
-                // si lo muevo a 0,20,100 -> 5 segundos
-            }
-
-            tiempoActualMovimiento = tiempo - tiempoInicialMovimiento;
-
-            if (moviendoseX) 
-            {
-                // Es una funcion lineal que determina la posicion en base al tiempo y la distancia.
-                // (regla de 3) Si tiempoTotal = 2 y distanciaTotal = 20 => desplazamientoX = tiempoX * distanciaTotal / tiempoTotal 
-                posicion.X = (float)(posicionInicial.X + tiempoActualMovimiento * distanciaX / tiempoTotalMovimientoX);
-                 
-                if (tiempoActualMovimiento >= tiempoTotalMovimientoX ) {                               
-                    Debug.WriteLine("Finalizó movimiento de " + tiempoActualMovimiento + " segundos");
-                    moviendoseX = false;
+                    posicionObjetivo = new Vector3(posicionCamara.X, 50, posicionCamara.Z);
+                    vectorDireccion = Vector3.Normalize(posicionObjetivo - posicion);
+                    
+                    //World *= Matrix.CreateRotationY();
                 }
             }
 
-            if (moviendoseZ)
-            {
-                posicion.Z = (float)(posicionInicial.Z + tiempoActualMovimiento * distanciaZ / tiempoTotalMovimientoZ);
+            if (moverse) { 
 
-                if (tiempoActualMovimiento >= tiempoTotalMovimientoZ)
+                posicion = posicion + (vectorDireccion * velocidadMovimiento);
+
+                if (Vector3.Distance(posicion, posicionObjetivo) < 50)
                 {
-                    moviendoseZ = false;
+                    moverse = false;
+                    Debug.WriteLine("Termino de moverme");
                 }
+
+                Debug.WriteLine("Inicio movimiento de velocidad [" + velocidadMovimiento + "] unidadesPorSegundo desde la posicion [" + posicion.X + ", " + posicion.Y + ", " + posicion.Z + "] hasta la posicion [" + posicionObjetivo.X + ", " + posicionObjetivo.Y + ", " + posicionObjetivo.Z + "]");
+
             }
-
-
         }
 
         public void LoadContent(ContentManager Content, GraphicsDevice GraphicsDevice)
@@ -95,46 +84,7 @@ namespace TGC.MonoGame.TP
             modelEffectArmor.EnableDefaultLighting();
         }
 
-        public void moverHacia(float posX, float posY, float posZ, float velocidadMovimiento, double gameTime) {
-            if (!moviendoseX && !moviendoseZ)
-            {
-                distanciaX = posX - posicion.X;
-                distanciaZ = posZ - posicion.Z;
-
-                if (distanciaX == 0)
-                {
-                    Debug.WriteLine("No hay movimiento en X!!");
-                }
-                else {
-                    moviendoseX = true;
-                }
-
-                if (distanciaZ == 0)
-                {
-                    Debug.WriteLine("No hay movimiento en Z!!");
-                }
-                else {
-                    moviendoseZ = true;
-                }
-                
-                Debug.WriteLine("distanciaX: " + distanciaX);
-                Debug.WriteLine("distanciaZ: " + distanciaZ);
-
-                // Fijo el tiempo inicial y el tiempo total, mas la posicion inicial del moviemiento
-                tiempoInicialMovimiento = gameTime;
-
-                tiempoTotalMovimientoX = Math.Abs(distanciaX) / velocidadMovimiento;
-                tiempoTotalMovimientoZ = Math.Abs(distanciaZ) / velocidadMovimiento;
-
-                Debug.WriteLine("TiempoTotalMovimientoX: " + tiempoTotalMovimientoX);
-                Debug.WriteLine("TiempoTotalMovimientoZ: " + tiempoTotalMovimientoZ);
-
-                posicionInicial = posicion;
-
-
-
-                Debug.WriteLine("Inicio movimiento de velocidad [" + velocidadMovimiento + "] unidadesPorSegundo desde la posicion [" + posicion.X + ", " + posicion.Y + ", " + posicion.Z + "] hasta la posicion [" + posX + ", " + posY + ", " + posZ + "]");
-            }
+        public void moverHacia(Vector3 posicionObjetivo, float velocidadMovimiento) {
         }
 
         public void Draw(Matrix view, Matrix projection)
