@@ -60,6 +60,8 @@ namespace TGC.MonoGame.TP
 
         private Enemigo enemigo1;
 
+        private Enemigo enemigo2;
+
         // Array de recolectables
         // Cuando recolecta algo se quita de la lista
 
@@ -109,7 +111,8 @@ namespace TGC.MonoGame.TP
             recolectables.Add(recolectable5);
 
             // Inicializacion enemigo
-            enemigo1 = new Enemigo(new Vector3(30,20,200));
+            enemigo1 = new Enemigo(new Vector3(30, 20, 200));
+            enemigo2 = new Enemigo(new Vector3(-30, 20, -200));
 
 
             base.Initialize();
@@ -138,6 +141,7 @@ namespace TGC.MonoGame.TP
                 unRecolectable.LoadContent(Content, GraphicsDevice);
             }
             enemigo1.LoadContent(Content, GraphicsDevice);
+            enemigo2.LoadContent(Content, GraphicsDevice);
 
             // Obtengo su efecto para cambiarle el color y activar la luz predeterminada que tiene MonoGame.
             //Mesh Silenciador
@@ -177,7 +181,8 @@ namespace TGC.MonoGame.TP
             }
 
             enemigo1.Update(gameTime, Camera.Position);
-                
+            enemigo2.Update(gameTime, Camera.Position);
+
             //// Basado en el tiempo que paso se va generando una rotacion.
             //Rotation += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
 
@@ -206,6 +211,7 @@ namespace TGC.MonoGame.TP
 
             // Dibujar un enemigo
             enemigo1.Draw(Camera.View, Camera.Projection);
+            enemigo2.Draw(Camera.View, Camera.Projection);
 
             // Testing de agarrar un recolectable
             //if (Keyboard.GetState().IsKeyDown(Keys.R))

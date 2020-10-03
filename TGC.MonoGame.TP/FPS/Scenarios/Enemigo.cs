@@ -29,9 +29,8 @@ namespace TGC.MonoGame.TP
             World = Matrix.CreateRotationY(MathHelper.Pi);
         }
 
-        private Vector3 posicionInicial;
+        //private Vector3 posicionInicial;
         private Vector3 mirandoInicial = new Vector3(0,0,-1);
-        private bool moverse = false;
         float velocidadMovimiento = 2;
         Vector3 posicionObjetivo = Vector3.Zero;
         Vector3 vectorDireccion = Vector3.Zero;
@@ -49,51 +48,29 @@ namespace TGC.MonoGame.TP
             float distanciaAlObjetivo = Vector3.Distance(posicion, posicionObjetivo);
 
             // Si la distancia es menor a un margen comienzo a moverme
-            if (distanciaAlObjetivo < 200 && distanciaAlObjetivo > 50)
-            {
-                if (!moverse) { 
-                    moverse = true;
-                    // Fijo el tiempo inicial y el tiempo total, mas la posicion inicial del moviemiento
-                    //tiempoInicialMovimiento = tiempo;
-                    posicionInicial = posicion;
+            if (distanciaAlObjetivo < 200 && distanciaAlObjetivo > 50) {
+                vectorDireccion = Vector3.Normalize(posicionObjetivo - posicion);
 
-                    // Calculo la direccion en al que debo moverme
-                    vectorDireccion = Vector3.Normalize(posicionObjetivo - posicion);
+                // Establezco el giro al inicial
+                World *= Matrix.CreateRotationY(-anguloRotacionRadianes);
 
-                    // Inivierto la rotacion anterior para quedar con rotacion 0 siempre al comenzar
-                    World *= Matrix.CreateRotationY(-anguloRotacionRadianes);
+                // Calculo angulo de rotacion entre el robot y el objetivo
+                anguloRotacionRadianes = (float)Math.Acos(Vector3.Dot(vectorDireccion, mirandoInicial)
+                    / (Vector3.Distance(vectorDireccion, Vector3.Zero) * Vector3.Distance(mirandoInicial, Vector3.Zero)));
 
-                    // Calculo angulo de rotacion entre el robot y el objetivo
-                    anguloRotacionRadianes = (float)Math.Acos(Vector3.Dot(vectorDireccion, mirandoInicial) 
-                        / (Vector3.Distance(vectorDireccion, Vector3.Zero) * Vector3.Distance(mirandoInicial, Vector3.Zero) ));
+                //Debug.WriteLine("Dot product: " + Vector3.Dot(vectorDireccion, mirandoInicial));
+                //Debug.WriteLine("Angulo rotacion: " + anguloRotacionRadianes);
 
-                    //Debug.WriteLine("Dot product: " + Vector3.Dot(vectorDireccion, mirandoInicial));
-                    //Debug.WriteLine("Angulo rotacion: " + anguloRotacionRadianes);
-
-                    // Si posX del objetivo es mayor a posX actual => * -1
-                    // Si el objetivo está en el tercer o cuarto cuadrante (angulo > 180) entonces debo invertir el angulo
-                    if (posicionObjetivo.X > posicion.X) { 
-                        anguloRotacionRadianes *= -1;
-                    }
-                    
-                    // Aplico la rotacion que corresponde
-                    World *= Matrix.CreateRotationY(anguloRotacionRadianes);
-
-                    Debug.WriteLine("Inicio movimiento de velocidad [" + velocidadMovimiento + "] unidadesPorSegundo desde la posicion [" 
-                        + posicion.X + ", " + posicion.Y + ", " + posicion.Z + "] hasta la posicion [" + posicionObjetivo.X + ", " + posicionObjetivo.Y + ", " + posicionObjetivo.Z + "]");
-
-                }
-            }
-
-            if (moverse) { 
-
-                posicion = posicion + (vectorDireccion * velocidadMovimiento);
-
-                if (distanciaAlObjetivo < 50 || distanciaAlObjetivo > 200)
+                // Si posX del objetivo es mayor a posX actual => * -1
+                // Si el objetivo está en el tercer o cuarto cuadrante (angulo > 180) entonces debo invertir el angulo
+                if (posicionObjetivo.X > posicion.X)
                 {
-                    moverse = false;
-                    Debug.WriteLine("Termino de moverme");
+                    anguloRotacionRadianes *= -1;
                 }
+
+                // Aplico la rotacion que corresponde
+                World *= Matrix.CreateRotationY(anguloRotacionRadianes);
+                posicion = posicion + (vectorDireccion * velocidadMovimiento);
 
             }
         }
