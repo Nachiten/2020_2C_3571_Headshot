@@ -8,18 +8,24 @@ namespace TGC.MonoGame.TP.Collisions{
         Vector3 minExtents { get; set; }
         Matrix world;
         public Vector3 size;
+        BoundingBox boundingBox;
 
         public AABB(Vector3 size){
             this.size = size;
             minExtents = -size;
             maxExtents = size;
+            boundingBox = new BoundingBox(minExtents,maxExtents);
             world = Matrix.CreateRotationY(MathHelper.Pi);
         }
         public bool IntersectAABB(AABB other){
             Vector3 distance1 = other.minExtents - maxExtents;
             Vector3 distance2 = minExtents - other.maxExtents;
             Vector3 distance = Vector3.Max(distance1,distance2);
+            Console.WriteLine(boundingBox.Intersects(other.boundingBox));
             return maxCoord(distance) < 0;
+        }
+        public float? IntersectRay(Ray ray){
+            return boundingBox.Intersects(ray);
         }
         public void Translation(Vector3 position){
             minExtents = position - size;
