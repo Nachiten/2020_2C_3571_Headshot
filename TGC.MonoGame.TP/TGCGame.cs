@@ -97,9 +97,9 @@ namespace TGC.MonoGame.TP
             // Inicializacion de recolectables
             Recolectable recolectable1 = new Recolectable(new Vector3(-40, 0, 30), TipoRecolectable.vida);
             Recolectable recolectable2 = new Recolectable(new Vector3(20, 0, 30), TipoRecolectable.vida);
-            Recolectable recolectable3 = new Recolectable(new Vector3(20, 0, 80), TipoRecolectable.vida);
+            Recolectable recolectable3 = new Recolectable(new Vector3(0, 0, 0), TipoRecolectable.vida);
 
-            Recolectable recolectable4 = new Recolectable(new Vector3(-100, -75, 30), TipoRecolectable.armor);
+            Recolectable recolectable4 = new Recolectable(new Vector3(0, -75, 0), TipoRecolectable.armor);
             Recolectable recolectable5 = new Recolectable(new Vector3(-120, -75, 30), TipoRecolectable.armor);
 
             recolectables.Add(recolectable1);

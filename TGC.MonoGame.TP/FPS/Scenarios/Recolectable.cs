@@ -75,7 +75,8 @@ namespace TGC.MonoGame.TP
         }
 
         private void dibujarArmorEn(float posX, float posY, float posZ, Matrix view, Matrix projection) {
-            ModeloArmor.Draw(World * Matrix.CreateScale(0.7f) * Matrix.CreateTranslation(posX, posY, posZ), view, projection);
+            // Corrijo offset del modelo (-37 , 0, 2)
+            ModeloArmor.Draw(World * Matrix.CreateScale(0.7f) * Matrix.CreateTranslation(-37, 0, 2) * Matrix.CreateRotationY(Rotation) * Matrix.CreateTranslation(posX, posY, posZ), view, projection);
         }
     }
 }
