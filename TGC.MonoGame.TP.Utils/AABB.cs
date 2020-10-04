@@ -2,11 +2,11 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-namespace TGC.MonoGame.TP.Collisions{
+namespace TGC.MonoGame.TP.Utils{
     public class AABB{
         Vector3 maxExtents { get; set; }
         Vector3 minExtents { get; set; }
-        Matrix world;
+        //public Matrix world;
         public Vector3 size;
         BoundingBox boundingBox;
 
@@ -15,14 +15,21 @@ namespace TGC.MonoGame.TP.Collisions{
             minExtents = -size;
             maxExtents = size;
             boundingBox = new BoundingBox(minExtents,maxExtents);
-            world = Matrix.CreateRotationY(MathHelper.Pi);
+            //world = Matrix.CreateRotationY(MathHelper.Pi);
+        }
+        public AABB(Vector3 min, Vector3 max)
+        {
+            minExtents = min;
+            maxExtents = max;
+            boundingBox = new BoundingBox(minExtents, maxExtents);
+            //world = Matrix.CreateRotationY(MathHelper.Pi);
         }
         public bool IntersectAABB(AABB other){
             Vector3 distance1 = other.minExtents - maxExtents;
             Vector3 distance2 = minExtents - other.maxExtents;
             Vector3 distance = Vector3.Max(distance1,distance2);
             Console.WriteLine(boundingBox.Intersects(other.boundingBox));
-            return maxCoord(distance) < 0;
+            return MaxCoord(distance) < 0;
         }
         public float? IntersectRay(Ray ray){
             return boundingBox.Intersects(ray);
@@ -36,7 +43,7 @@ namespace TGC.MonoGame.TP.Collisions{
             minExtents = pos - size;
             maxExtents = pos + size;
         }
-        private float maxCoord(Vector3 v){
+        private float MaxCoord(Vector3 v){
             if(v.X > v.Y && v.X > v.Z) {
                 return v.X;
             } else{

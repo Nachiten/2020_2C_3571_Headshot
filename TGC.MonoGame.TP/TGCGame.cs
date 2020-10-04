@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.Samples.Cameras;
-using TGC.MonoGame.TP.Collisions;
+using TGC.MonoGame.TP.Utils;
 
 namespace TGC.MonoGame.TP
 {
@@ -88,7 +88,7 @@ namespace TGC.MonoGame.TP
 
 
             // Configuramos nuestras matrices de la escena.
-            World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(10, 0, 10);
+            //World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(10, 0, 10);
             View = Matrix.CreateLookAt(new Vector3(30, 20, 150), new Vector3(30, 0, 0), Vector3.Up);
 
             WorldM4 = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(50, 0, 110);
@@ -111,8 +111,8 @@ namespace TGC.MonoGame.TP
             recolectables.Add(recolectable5);
 
             // Inicializacion enemigo
-            enemigo1 = new Enemigo(new Vector3(30, 20, 200));
-            enemigo2 = new Enemigo(new Vector3(-30, 20, -200));
+            enemigo1 = new Enemigo(new Vector3(30, 20, 200), Colission);
+            enemigo2 = new Enemigo(new Vector3(-30, 20, -200), Colission);
 
 
             base.Initialize();
@@ -129,8 +129,11 @@ namespace TGC.MonoGame.TP
             //SpriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Cargo el modelo del logo.
-           // Model = Content.Load<Model>(ContentFolder3D + "tgc-logo/tgc-logo");
-            
+            // Model = Content.Load<Model>(ContentFolder3D + "tgc-logo/tgc-logo");
+
+            //ModelCollidableStatic m4collidable = new ModelCollidableStatic(Content, ContentFolder3D + "weapons/fbx/m4a1_s",Collision);
+            //ModelCollidableStatic knifecollidable = new ModelCollidableStatic(Content, ContentFolder3D + "weapons/knife/Karambit", Collision);
+
             // Armas
             ModeloM4 = Content.Load<Model>(ContentFolder3D + "weapons/fbx/m4a1_s");
             Knife = Content.Load<Model>(ContentFolder3D + "weapons/knife/Karambit");

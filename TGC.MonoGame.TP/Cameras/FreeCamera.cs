@@ -1,8 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using TGC.MonoGame.TP.Collisions;
-using System.Collections.Generic;
+using TGC.MonoGame.TP.Utils;
 
 namespace TGC.MonoGame.Samples.Cameras
 {

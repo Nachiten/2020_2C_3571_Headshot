@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using TGC.MonoGame.TP.Collisions;
+using TGC.MonoGame.TP.Utils;
 namespace TGC.MonoGame.Samples.Geometries.Textures {
     public class QuadPrimitiveCollidable : QuadPrimitive {
         public AABB aabb { get; set; }

@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using TGC.MonoGame.Samples.Geometries.Textures;
-using TGC.MonoGame.TP.Collisions;
+using TGC.MonoGame.TP.Utils;
 using System.Collections.Generic;
 namespace TGC.MonoGame.TP{
     public class Stage {

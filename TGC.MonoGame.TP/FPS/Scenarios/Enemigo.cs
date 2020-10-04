@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
+using TGC.MonoGame.TP.Utils;
+using System.Reflection.Metadata;
 
 namespace TGC.MonoGame.TP
 {
@@ -17,16 +19,19 @@ namespace TGC.MonoGame.TP
 
         private Matrix World { get; set; }
 
-        private Model ModeloTgcitoClassic { get; set; }
+        private ModelCollidable ModeloTgcitoClassic { get; set; }
 
         private Matrix Rotacion;
 
         private double tiempo = 0;
 
-        public Enemigo(Vector3 posicion)
+        Collision Collision { get; set; }
+
+        public Enemigo(Vector3 posicion, Collision collision)
         {
+            Collision = collision;
             this.posicion = posicion;
-            World = Matrix.CreateRotationY(MathHelper.Pi);
+            World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateScale(0.5f);
         }
 
         //private Vector3 posicionInicial;
@@ -77,9 +82,9 @@ namespace TGC.MonoGame.TP
 
         public void LoadContent(ContentManager Content, GraphicsDevice GraphicsDevice)
         {
-            ModeloTgcitoClassic = Content.Load<Model>(ContentFolder3D + "tgcito-classic/tgcito-classic");
+            ModeloTgcitoClassic = new ModelCollidable(Content, ContentFolder3D + "tgcito-classic/tgcito-classic", World);
 
-            var modelEffectArmor = (BasicEffect)ModeloTgcitoClassic.Meshes[0].Effects[0];
+            var modelEffectArmor = (BasicEffect)ModeloTgcitoClassic.Model.Meshes[0].Effects[0];
             modelEffectArmor.DiffuseColor = Color.White.ToVector3();
             modelEffectArmor.EnableDefaultLighting();
         }
@@ -90,8 +95,15 @@ namespace TGC.MonoGame.TP
         public void Draw(Matrix view, Matrix projection)
         {
             // Dibujo en las coordenadas actuales
-            ModeloTgcitoClassic.Draw(World * Matrix.CreateScale(0.5f) * Matrix.CreateTranslation(posicion.X, posicion.Y, posicion.Z), view, projection);
+            ModeloTgcitoClassic.Transform(Matrix.CreateTranslation(posicion.X, posicion.Y, posicion.Z));
+            Collision.actualCollision(ModeloTgcitoClassic.Aabb, collisionCallback);
+            ModeloTgcitoClassic.Draw(view, projection);
 
+        }
+        public int collisionCallback(AABB a, AABB b)
+        {
+            //TODO: Handle Collision
+            return 0;
         }
     }
 }

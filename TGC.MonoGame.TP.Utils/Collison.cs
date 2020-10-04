@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace TGC.MonoGame.TP.Collisions{
+namespace TGC.MonoGame.TP.Utils{
     public class Collision{
         public List<AABB> collidableElements { get; set; }
         public Collision(){
