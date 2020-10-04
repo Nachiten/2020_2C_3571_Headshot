@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.Samples.Cameras;
 using TGC.MonoGame.TP.Utils;
+using TGC.MonoGame.TP.FPS.Scenarios;
 
 namespace TGC.MonoGame.TP
 {
@@ -39,21 +39,16 @@ namespace TGC.MonoGame.TP
 
         private GraphicsDeviceManager Graphics { get; }
         private SpriteBatch SpriteBatch { get; set; }
-        private Model ModeloTanque { get; set; }
         private Model ModeloM4 { get; set; }
         private Model Knife { get; set; }
         private Matrix WorldM4 { get; set; }
-        private Model ModeloCiudad { get; set; }
         //private Model ModeloTgcitoClassic { get; set; }
-        private Model ModeloRobotTGC { get; set; }
-        private float Rotation { get; set; }
         private Matrix World { get; set; }
         private Matrix View { get; set; }
         private Matrix Projection { get; set; }
         private BasicEffect Effect { get; set; }
-        private FreeCamera Camera { get; set; }
-        private Stage Stage { get; set; }
-        private Collision Collision { get; set; }
+        public FreeCamera Camera { get; set; }
+        IStageBuilder StageBuilder { get; set; }
 
         // Esta lita de recolectables deberia estar en otra clase "recolectables"
         private List<Recolectable> recolectables = new List<Recolectable>();
@@ -71,17 +66,12 @@ namespace TGC.MonoGame.TP
         /// </summary>
         protected override void Initialize()
         {
-            // La logica de inicializacion que no depende del contenido se recomienda poner en este metodo.
-
-            // Apago el backface culling.
-            // Esto se hace por un problema en el diseno del modelo del logo de la materia.
-            // Una vez que empiecen su juego, esto no es mas necesario y lo pueden sacar.
+            Collision.Init();
             var rasterizerState = new RasterizerState();
             rasterizerState.CullMode = CullMode.None;
             GraphicsDevice.RasterizerState = rasterizerState;
 
-            Collision = new Collision();
-            Stage = new Stage();
+            //Stage = new Stage();
 
             var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
             Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(-350, 50, 400), screenSize);
@@ -89,12 +79,15 @@ namespace TGC.MonoGame.TP
 
             // Configuramos nuestras matrices de la escena.
             //World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(10, 0, 10);
-            View = Matrix.CreateLookAt(new Vector3(30, 20, 150), new Vector3(30, 0, 0), Vector3.Up);
+            //View = Matrix.CreateLookAt(new Vector3(30, 20, 150), new Vector3(30, 0, 0), Vector3.Up);
+            //Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);
+
+            StageBuilder = new IceWorldStage(this);
 
             WorldM4 = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(50, 0, 110);
 
             Effect = new BasicEffect(GraphicsDevice);
-            Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);
+
 
             // Inicializacion de recolectables
             Recolectable recolectable1 = new Recolectable(new Vector3(-40, 0, 30), TipoRecolectable.vida);
@@ -111,8 +104,8 @@ namespace TGC.MonoGame.TP
             recolectables.Add(recolectable5);
 
             // Inicializacion enemigo
-            enemigo1 = new Enemigo(new Vector3(30, 20, 200), Colission);
-            enemigo2 = new Enemigo(new Vector3(-30, 20, -200), Colission);
+            enemigo1 = new Enemigo(new Vector3(30, 20, 200));
+            enemigo2 = new Enemigo(new Vector3(-30, 20, -200));
 
 
             base.Initialize();
@@ -126,10 +119,9 @@ namespace TGC.MonoGame.TP
         protected override void LoadContent()
         {
             // Aca es donde deberiamos cargar todos los contenido necesarios antes de iniciar el juego.
-            //SpriteBatch = new SpriteBatch(GraphicsDevice);
+            SpriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // Cargo el modelo del logo.
-            // Model = Content.Load<Model>(ContentFolder3D + "tgc-logo/tgc-logo");
+            StageBuilder.CrearEstructura();
 
             //ModelCollidableStatic m4collidable = new ModelCollidableStatic(Content, ContentFolder3D + "weapons/fbx/m4a1_s",Collision);
             //ModelCollidableStatic knifecollidable = new ModelCollidableStatic(Content, ContentFolder3D + "weapons/knife/Karambit", Collision);
@@ -138,9 +130,10 @@ namespace TGC.MonoGame.TP
             ModeloM4 = Content.Load<Model>(ContentFolder3D + "weapons/fbx/m4a1_s");
             Knife = Content.Load<Model>(ContentFolder3D + "weapons/knife/Karambit");
 
-            Stage.LoadContent(Content,GraphicsDevice,Collision);
+            //Stage.LoadContent(Content,GraphicsDevice,Collision);
 
-            foreach (Recolectable unRecolectable in recolectables) {
+            foreach (Recolectable unRecolectable in recolectables)
+            {
                 unRecolectable.LoadContent(Content, GraphicsDevice);
             }
             enemigo1.LoadContent(Content, GraphicsDevice);
@@ -177,7 +170,7 @@ namespace TGC.MonoGame.TP
                 //Salgo del juego.
                 Exit();
 
-            Camera.Update(gameTime,Collision);
+            Camera.Update(gameTime);
             foreach (Recolectable unRecolectable in recolectables)
             {
                 unRecolectable.Update(gameTime);
@@ -185,9 +178,6 @@ namespace TGC.MonoGame.TP
 
             enemigo1.Update(gameTime, Camera.Position);
             enemigo2.Update(gameTime, Camera.Position);
-
-            //// Basado en el tiempo que paso se va generando una rotacion.
-            //Rotation += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Update(gameTime);
         }
@@ -200,11 +190,9 @@ namespace TGC.MonoGame.TP
         /// </summary>
         protected override void Draw(GameTime gameTime)
         {
-            // Aca deberiamos poner toda la logica de renderizado del juego.
             GraphicsDevice.Clear(Color.LightBlue);
 
-            // Walls and floor
-            Stage.Draw(Graphics,Effect,Camera.View,Camera.Projection);
+            StageBuilder.Draw(gameTime);
 
             // Foreach de la lista de recolectables y dibujarlos
             foreach (Recolectable unRecolectable in recolectables)
@@ -228,24 +216,19 @@ namespace TGC.MonoGame.TP
 
             if (Keyboard.GetState().IsKeyDown(Keys.Q))
             {
-                Knife.Draw(WorldM4, View, Projection);     
+                Knife.Draw(WorldM4, View, Projection);
             }
             else
             {
                 ModeloM4.Draw(WorldM4, View, Projection);
             }
 
-            // OLD | Eliminar
-            //ModeloCiudad.Draw(World * Matrix.CreateScale(0.2f), Camera.View, Camera.Projection);
-            //ModeloTanque.Draw(World * Matrix.CreateScale(3) * Matrix.CreateTranslation(20, -10, 30), Camera.View, Camera.Projection);
-            //ModeloTgcitoClassic.Draw(World * Matrix.CreateScale(1) * Matrix.CreateTranslation(35, 10, 90) , Camera.View, Camera.Projection);
-            //ModeloRobotTGC.Draw(World * Matrix.CreateScale(.2f) * Matrix.CreateTranslation(55, 10, 90), Camera.View, Camera.Projection);
-
             //Finalmente invocamos al draw del modelo.
             base.Draw(gameTime);
         }
 
-        private void recolectarEnIndice(int index) {
+        private void recolectarEnIndice(int index)
+        {
             recolectables.RemoveAt(index);
         }
 

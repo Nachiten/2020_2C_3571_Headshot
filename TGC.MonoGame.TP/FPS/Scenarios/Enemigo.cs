@@ -25,11 +25,9 @@ namespace TGC.MonoGame.TP
 
         private double tiempo = 0;
 
-        Collision Collision { get; set; }
 
-        public Enemigo(Vector3 posicion, Collision collision)
+        public Enemigo(Vector3 posicion)
         {
-            Collision = collision;
             this.posicion = posicion;
             World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateScale(0.5f);
         }
@@ -41,19 +39,22 @@ namespace TGC.MonoGame.TP
         Vector3 vectorDireccion = Vector3.Zero;
 
         float anguloRotacionRadianes = 0;
+        Vector3 OldPosition = Vector3.Zero;
 
         public void Update(GameTime gameTime, Vector3 posicionCamara)
         {
             // Tiempo total desde el comienzo del juego
-            tiempo += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
+            //tiempo += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
 
             // Calculo la posicion a la que me voy a mover
             posicionObjetivo = new Vector3(posicionCamara.X, 20, posicionCamara.Z);
 
             float distanciaAlObjetivo = Vector3.Distance(posicion, posicionObjetivo);
-
             // Si la distancia es menor a un margen comienzo a moverme
             if (distanciaAlObjetivo < 200 && distanciaAlObjetivo > 50) {
+                //Guardo la posición anterior
+                OldPosition = posicion;
+
                 vectorDireccion = Vector3.Normalize(posicionObjetivo - posicion);
 
                 // Establezco el giro al inicial
@@ -76,6 +77,10 @@ namespace TGC.MonoGame.TP
                 // Aplico la rotacion que corresponde
                 World *= Matrix.CreateRotationY(anguloRotacionRadianes);
                 posicion = posicion + (vectorDireccion * velocidadMovimiento);
+                
+                // Muevo el modelo y chequeo si colisiono con algo
+                ModeloTgcitoClassic.Transform(World * Matrix.CreateTranslation(posicion));
+                Collision.Instance.actualCollision(ModeloTgcitoClassic.Aabb, CollisionCallback);
 
             }
         }
@@ -95,14 +100,14 @@ namespace TGC.MonoGame.TP
         public void Draw(Matrix view, Matrix projection)
         {
             // Dibujo en las coordenadas actuales
-            ModeloTgcitoClassic.Transform(Matrix.CreateTranslation(posicion.X, posicion.Y, posicion.Z));
-            Collision.actualCollision(ModeloTgcitoClassic.Aabb, collisionCallback);
             ModeloTgcitoClassic.Draw(view, projection);
 
         }
-        public int collisionCallback(AABB a, AABB b)
+        private int CollisionCallback(AABB a, AABB b)
         {
             //TODO: Handle Collision
+            Debug.WriteLine("Colisione");
+            posicion = OldPosition;
             return 0;
         }
     }

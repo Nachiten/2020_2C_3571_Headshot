@@ -4,8 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 namespace TGC.MonoGame.TP.Utils{
     public class AABB{
-        Vector3 maxExtents { get; set; }
-        Vector3 minExtents { get; set; }
+        public Vector3 maxExtents { get; set; }
+        public Vector3 minExtents { get; set; }
         //public Matrix world;
         public Vector3 size;
         BoundingBox boundingBox;
