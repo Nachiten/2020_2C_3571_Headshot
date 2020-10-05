@@ -2,6 +2,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.Utils;
+using TGC.MonoGame.TP;
+using TGC.MonoGame.TP.FPS.Scenarios;
+using System.Diagnostics;
 
 namespace TGC.MonoGame.Samples.Cameras
 {
@@ -19,12 +22,14 @@ namespace TGC.MonoGame.Samples.Cameras
         private float yaw = -90f;
         public AABB cameraBox;
         Vector3 oldPosition;
+        IStageBuilder Stage;
 
-        public FreeCamera(float aspectRatio, Vector3 position, Point screenCenter) : this(aspectRatio, position)
+        public FreeCamera(float aspectRatio, Vector3 position, Point screenCenter, IStageBuilder stage) : this(aspectRatio, position)
         {
             lockMouse = true;
             this.screenCenter = screenCenter;
             cameraBox = new AABB(Vector3.One * 20);
+            Stage = stage;
         }
 
         public FreeCamera(float aspectRatio, Vector3 position) : base(aspectRatio)
@@ -53,9 +58,16 @@ namespace TGC.MonoGame.Samples.Cameras
                 CalculateView();
         }
        
-        public int collisionCallback(AABB a, AABB b){
+        public int StaticCollisionCB(AABB a, AABB b){
             Position = oldPosition;
             cameraBox.Translation(Position);
+            return 0;
+        }
+        public int CollectableCollisionCB(Recolectable r)
+        {
+            //TODO: Use recolectable
+            Debug.WriteLine("Collectable Collision: " + r);
+            Stage.RemoveRecolectable(r);
             return 0;
         }
 
@@ -91,9 +103,10 @@ namespace TGC.MonoGame.Samples.Cameras
                 Position += -FrontDirection * currentMovementSpeed * elapsedTime;
                 changed = true;
             }
-            Position = new Vector3(Position.X, 50, Position.Z);
+            Position = new Vector3(Position.X, 30, Position.Z);
             cameraBox.Translation(Position);
-            Collision.Instance.actualCollision(cameraBox, collisionCallback);
+            Collision.Instance.CheckStatic(cameraBox, StaticCollisionCB);
+            Collision.Instance.CheckCollectable(cameraBox, CollectableCollisionCB);
         }
 
         private void ProcessMouseMovement(float elapsedTime)

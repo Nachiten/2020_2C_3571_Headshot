@@ -71,10 +71,12 @@ namespace TGC.MonoGame.TP
             rasterizerState.CullMode = CullMode.None;
             GraphicsDevice.RasterizerState = rasterizerState;
 
+            StageBuilder = new IceWorldStage(this);
+
             //Stage = new Stage();
 
             var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
-            Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(-350, 50, 400), screenSize);
+            Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(-350, 50, 400), screenSize, StageBuilder);
 
 
             // Configuramos nuestras matrices de la escena.
@@ -82,7 +84,7 @@ namespace TGC.MonoGame.TP
             //View = Matrix.CreateLookAt(new Vector3(30, 20, 150), new Vector3(30, 0, 0), Vector3.Up);
             //Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);
 
-            StageBuilder = new IceWorldStage(this);
+            
 
             WorldM4 = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(50, 0, 110);
 
@@ -90,18 +92,7 @@ namespace TGC.MonoGame.TP
 
 
             // Inicializacion de recolectables
-            Recolectable recolectable1 = new Recolectable(new Vector3(-40, 0, 30), TipoRecolectable.vida);
-            Recolectable recolectable2 = new Recolectable(new Vector3(20, 0, 30), TipoRecolectable.vida);
-            Recolectable recolectable3 = new Recolectable(new Vector3(0, 0, 0), TipoRecolectable.vida);
-
-            Recolectable recolectable4 = new Recolectable(new Vector3(0, -75, 0), TipoRecolectable.armor);
-            Recolectable recolectable5 = new Recolectable(new Vector3(-120, -75, 30), TipoRecolectable.armor);
-
-            recolectables.Add(recolectable1);
-            recolectables.Add(recolectable2);
-            recolectables.Add(recolectable3);
-            recolectables.Add(recolectable4);
-            recolectables.Add(recolectable5);
+            
 
             // Inicializacion enemigo
             enemigo1 = new Enemigo(new Vector3(30, 20, 200));
@@ -132,10 +123,10 @@ namespace TGC.MonoGame.TP
 
             //Stage.LoadContent(Content,GraphicsDevice,Collision);
 
-            foreach (Recolectable unRecolectable in recolectables)
+            /*foreach (Recolectable unRecolectable in recolectables)
             {
                 unRecolectable.LoadContent(Content, GraphicsDevice);
-            }
+            }*/
             enemigo1.LoadContent(Content, GraphicsDevice);
             enemigo2.LoadContent(Content, GraphicsDevice);
 
@@ -171,10 +162,8 @@ namespace TGC.MonoGame.TP
                 Exit();
 
             Camera.Update(gameTime);
-            foreach (Recolectable unRecolectable in recolectables)
-            {
-                unRecolectable.Update(gameTime);
-            }
+            StageBuilder.Update(gameTime);
+            
 
             enemigo1.Update(gameTime, Camera.Position);
             enemigo2.Update(gameTime, Camera.Position);
@@ -195,10 +184,7 @@ namespace TGC.MonoGame.TP
             StageBuilder.Draw(gameTime);
 
             // Foreach de la lista de recolectables y dibujarlos
-            foreach (Recolectable unRecolectable in recolectables)
-            {
-                unRecolectable.Draw(Camera.View, Camera.Projection);
-            }
+            
 
             // Dibujar un enemigo
             enemigo1.Draw(Camera.View, Camera.Projection);

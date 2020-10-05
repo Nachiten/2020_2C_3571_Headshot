@@ -11,7 +11,8 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 {
     public class IceWorldStage : DrawableGameComponent, IStageBuilder
     {
-        public GraficsModel.VertexPositionTexture[] floor { get; set; }
+        #region Propiedades de Estructura
+        //public GraficsModel.VertexPositionTexture[] floor { get; set; }
         private QuadPrimitive Floor { get; set; }
         private QuadPrimitive WallXp { get; set; }
         private QuadPrimitive WallZn { get; set; }
@@ -27,12 +28,27 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         List<BoxPrimitiveCollidable> WoodenBoxes { get; set; }
         private Matrix WoodenBoxWorld { get; set; }
         private Matrix SteelBoxWorld { get; set; }
+        #endregion
+
+        #region Propiedades de Elementos
+        private List<Recolectable> Recolectables = new List<Recolectable>();
+        #endregion
+
         public IceWorldStage(Game game) : base(game)
         {
+            // Estructura
             SteelBoxes = new List<BoxPrimitiveCollidable>();
             WoodenBoxes = new List<BoxPrimitiveCollidable>();
             WoodenBoxWorld = Matrix.CreateTranslation(Vector3.UnitY * WoodenBoxSize / 2 - Vector3.UnitX * WoodenBoxSize / 2 - Vector3.UnitZ * WoodenBoxSize / 2);
             SteelBoxWorld = Matrix.CreateTranslation(Vector3.UnitY * SteelBoxSize / 2);
+
+            //Recolectables
+            Recolectables.Add(new Recolectable(new Vector3(-40, 0, 30), TipoRecolectable.vida));
+            Recolectables.Add(new Recolectable(new Vector3(20, 0, 30), TipoRecolectable.vida));
+            Recolectables.Add(new Recolectable(new Vector3(0, 0, 0), TipoRecolectable.vida));
+            Recolectables.Add(new Recolectable(new Vector3(0, -75, 0), TipoRecolectable.armor));
+            Recolectables.Add(new Recolectable(new Vector3(-120, -75, 30), TipoRecolectable.armor));
+
         }
 
         public void CrearEstructura()
@@ -56,6 +72,23 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             {
                 SteelBoxes.Add(new BoxPrimitiveCollidable(GraphicsDevice, Vector3.One * SteelBoxSize, Game.Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "steel")));
             }
+            foreach (Recolectable R in Recolectables)
+            {
+                R.LoadContent(Game.Content, GraphicsDevice);
+            }
+        }
+        public override void Update(GameTime gameTime)
+        {
+            foreach (Recolectable R in Recolectables)
+            {
+                R.Update(gameTime);
+            }
+        }
+
+        public void RemoveRecolectable(Recolectable R)
+        {
+            Collision.Instance.RemoveCollectable(R);
+            Recolectables.Remove(R);
         }
 
         public override void Draw(GameTime gameTime)
@@ -109,6 +142,13 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             WoodenBoxes[10].Draw(WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes + 2 * SteelBoxSize) + Vector3.UnitZ * -(gapMiddleBoxes + 2 * SteelBoxSize - 2 * WoodenBoxSize)), View, Projection);
             WoodenBoxes[11].Draw(WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes + 2 * SteelBoxSize - WoodenBoxSize) + Vector3.UnitZ * -(gapMiddleBoxes + 2 * SteelBoxSize - 2 * WoodenBoxSize)), View, Projection);
             //base.Draw(gameTime);
+
+
+
+            foreach (Recolectable R in Recolectables)
+            {
+                R.Draw(View, Projection);
+            }
         }
 
         public void UbicarObjetos(IList<GameComponent> componentes)

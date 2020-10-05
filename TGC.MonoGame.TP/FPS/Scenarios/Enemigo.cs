@@ -29,7 +29,7 @@ namespace TGC.MonoGame.TP
         public Enemigo(Vector3 posicion)
         {
             this.posicion = posicion;
-            World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateScale(0.5f);
+            World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateScale(0.5f) * Matrix.CreateTranslation(posicion);
         }
 
         //private Vector3 posicionInicial;
@@ -75,12 +75,12 @@ namespace TGC.MonoGame.TP
                 }
 
                 // Aplico la rotacion que corresponde
-                World *= Matrix.CreateRotationY(anguloRotacionRadianes);
+                World = Matrix.CreateScale(0.5f) * Matrix.CreateRotationY(MathHelper.Pi + anguloRotacionRadianes);
                 posicion = posicion + (vectorDireccion * velocidadMovimiento);
                 
                 // Muevo el modelo y chequeo si colisiono con algo
                 ModeloTgcitoClassic.Transform(World * Matrix.CreateTranslation(posicion));
-                Collision.Instance.actualCollision(ModeloTgcitoClassic.Aabb, CollisionCallback);
+                Collision.Instance.CheckStatic(ModeloTgcitoClassic.Aabb, CollisionCallback);
 
             }
         }
@@ -106,7 +106,6 @@ namespace TGC.MonoGame.TP
         private int CollisionCallback(AABB a, AABB b)
         {
             //TODO: Handle Collision
-            Debug.WriteLine("Colisione");
             posicion = OldPosition;
             return 0;
         }

@@ -20,7 +20,7 @@ namespace TGC.MonoGame.TP.Utils
             }
             aabb = new AABB(size);
             aabb.Translation(origin);
-            Collision.Instance.appendStatic(aabb);
+            Collision.Instance.AppendStatic(aabb);
         }
     }
 }
