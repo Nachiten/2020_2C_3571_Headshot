@@ -1,30 +1,3 @@
-﻿using Microsoft.Xna.Framework;
-using Grafics = Microsoft.Xna.Framework.Graphics;
-
-namespace TGC.MonoGame.TP.FPS
-{
-    public class Weapon 
-    { 
-        public Weapon(Grafics.Model weaponModel)
-        {
-            WeaponModel = weaponModel;
-        }
-        public Grafics.Model WeaponModel { get; set; }
-        public int Damage { get; set; }
-
-        public int SpeedFire { get; set; }
-
-        public Grafics.Model bullet { get; set; }
-        //sound!!!
-        //range??
-        public void Fire()
-        {
-            //disparar bala
-        }
-        public void Draw(Matrix world, Matrix view, Matrix projection)
-        {
-            WeaponModel.Draw(world, view, projection);
-        }
-      
-    }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:a706bba710e45cbeaf2858de947da907e6ca8d62ac0cdd93a1762d3c18d921dc
+size 720
