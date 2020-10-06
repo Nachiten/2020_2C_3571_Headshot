@@ -1,3 +1,12 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:f9540bb55a3a18292d57b602435dd1ceacd5c2e7887a6a1863dcb38764cb5efd
-size 243
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace TGC.MonoGame.TP.FPS
+{
+    //interface para agregar un boost a un player
+    public interface IBoost
+    {
+        public void BoostPlayer(Player player);
+    }
+}

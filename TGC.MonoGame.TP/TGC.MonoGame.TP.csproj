@@ -1,3 +1,48 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:5f44601e8a181d3921a3a9e936625b7ddc7ee5b88c35ac451ad3e1dbf67c0122
-size 1762
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <PublishReadyToRun>false</PublishReadyToRun>
+    <TieredCompilation>false</TieredCompilation>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="bin\Debug\netcoreapp3.1\Content\**" />
+    <EmbeddedResource Remove="bin\Debug\netcoreapp3.1\Content\**" />
+    <None Remove="bin\Debug\netcoreapp3.1\Content\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Icon.ico" />
+    <None Remove="Icon.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icon.ico" />
+    <EmbeddedResource Include="Icon.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="Content\Content.mgcb" />
+  </ItemGroup>
+  <ItemGroup>
+    <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="BepuPhysics" Version="2.3.0-beta7" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Debug\netcoreapp3.1\" />
+    <Folder Include="Content\Models\weapons\hands\" />
+    <Folder Include="Content\Sounds\" />
+    <Folder Include="Content\Textures\interface\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TGC.MonoGame.TP.Utils\TGC.MonoGame.TP.Utils.csproj" />
+  </ItemGroup>
+</Project>
