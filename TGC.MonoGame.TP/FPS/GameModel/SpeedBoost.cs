@@ -1,3 +1,15 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:fddef18582c6ca1d94c8902e2dac25c6972b2ca76b85405197b2abe0137bc4b7
-size 364
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace TGC.MonoGame.TP.FPS.GameModel
+{
+    public class SpeedBoost : IBoost
+    {
+        public void BoostPlayer(Player player)
+        {
+            //es complicado lo de la velocidad porque deberia reducirle la velocidad en un tiempo x.
+            player.Speed += 10;
+        }
+    }
+}
