@@ -17,14 +17,19 @@ namespace TGC.MonoGame.TP.Utils{
         }
         public void Transform(Matrix world)
         {
-            World *= world;
+            World = world;
 
             float angleX = VectorsAngle(Vector3.Transform(Vector3.Zero, world),Vector3.UnitX);
             float angleY = VectorsAngle(Vector3.Transform(Vector3.Zero, world), Vector3.UnitY);
             float angleZ = VectorsAngle(Vector3.Transform(Vector3.Zero, world), Vector3.UnitZ);
 
-            Matrix AAWorld = World * Matrix.CreateRotationX(-angleX) * Matrix.CreateRotationY(-angleY) * Matrix.CreateRotationZ(-angleZ);
-            Aabb.Translation(AAWorld);
+            //Matrix AAWorld = World * Matrix.CreateRotationX(-angleX) * Matrix.CreateRotationY(-angleY) * Matrix.CreateRotationZ(-angleZ);
+            Aabb.Translation(world);
+        }
+        public void Translation(Vector3 position)
+        {
+            World *= Matrix.CreateTranslation(position);
+            Aabb.Translation(position);
         }
         private float VectorsAngle(Vector3 v1, Vector3 v2)
         {
@@ -64,6 +69,8 @@ namespace TGC.MonoGame.TP.Utils{
         {
             // TODO: infer the Axis Aligned position from World Matrix & translate it to a matrix/vector
             Model.Draw(World, View, Projection);
+            //Model.Draw(Matrix.CreateTranslation(Aabb.minExtents) * Matrix.CreateScale(0.1f), View, Projection);
+            //Model.Draw(Matrix.CreateTranslation(Aabb.maxExtents) * Matrix.CreateScale(0.1f), View, Projection);
         }
     }
 }

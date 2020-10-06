@@ -1,10 +1,11 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TGC.MonoGame.TP.Utils;
-namespace TGC.MonoGame.Samples.Geometries.Textures {
+namespace TGC.MonoGame.TP.Utils
+{
     public class QuadPrimitiveCollidable : QuadPrimitive {
         public AABB aabb { get; set; }
-        public QuadPrimitiveCollidable(GraphicsDevice graphicsDevice, Vector3 origin, Vector3 normal, Vector3 up, float width, float height, Texture2D texture, Vector2 textureRepeats, Collision Collision)
+        public QuadPrimitiveCollidable(GraphicsDevice graphicsDevice, Vector3 origin, Vector3 normal, Vector3 up, float width, float height, Texture2D texture, Vector2 textureRepeats)
             : base(graphicsDevice,origin,normal,up,width,height,texture,textureRepeats)
         { 
             Vector3 size;
@@ -19,7 +20,7 @@ namespace TGC.MonoGame.Samples.Geometries.Textures {
             }
             aabb = new AABB(size);
             aabb.Translation(origin);
-            Collision.appendStatic(aabb);
+            Collision.Instance.appendStatic(aabb);
         }
     }
 }

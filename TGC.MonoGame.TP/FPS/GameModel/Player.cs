@@ -32,7 +32,7 @@ namespace TGC.MonoGame.TP.FPS
 
         public Weapon[] Weapons { get; set; }
 
-        public Matrix CurrentPosition { get; set; }
+        public Vector3 CurrentPosition { get; set; }
 
         #endregion
         //default 100
@@ -60,8 +60,9 @@ namespace TGC.MonoGame.TP.FPS
             //this.weapon.fire()
         }
 
-        public void Move(Matrix direction)
+        public void Move()
         {
+            //CurrentPosition += moveTo;
             //CurrentPosition.CreateTranslation(direction) algo asi
         }
 

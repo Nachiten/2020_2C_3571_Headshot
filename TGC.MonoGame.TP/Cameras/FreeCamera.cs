@@ -5,7 +5,7 @@ using TGC.MonoGame.TP.Utils;
 
 namespace TGC.MonoGame.Samples.Cameras
 {
-    internal class FreeCamera : Camera
+    public class FreeCamera : Camera
     {
         private readonly bool lockMouse;
 
@@ -42,34 +42,24 @@ namespace TGC.MonoGame.Samples.Cameras
         {
             View = Matrix.CreateLookAt(Position, Position + FrontDirection, UpDirection);
         }
+        /// <inheritdoc />
         public override void Update(GameTime gameTime){
             var elapsedTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
             changed = false;
-            //ProcessKeyboard(elapsedTime);
+            ProcessKeyboard(elapsedTime);
             ProcessMouseMovement(elapsedTime);
 
             if (changed)
                 CalculateView();
         }
-
-        /// <inheritdoc />
-        public void Update(GameTime gameTime, Collision Collision)
-        {
-            var elapsedTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
-            changed = false;
-            ProcessKeyboard(elapsedTime,Collision);
-            ProcessMouseMovement(elapsedTime);
-
-            if (changed)
-                CalculateView();
-        }
+       
         public int collisionCallback(AABB a, AABB b){
             Position = oldPosition;
             cameraBox.Translation(Position);
             return 0;
         }
 
-        private void ProcessKeyboard(float elapsedTime, Collision Collision)
+        private void ProcessKeyboard(float elapsedTime)
         {
             var keyboardState = Keyboard.GetState();
             oldPosition = Position;
@@ -103,7 +93,7 @@ namespace TGC.MonoGame.Samples.Cameras
             }
             Position = new Vector3(Position.X, 50, Position.Z);
             cameraBox.Translation(Position);
-            Collision.actualCollision(cameraBox, collisionCallback);
+            Collision.Instance.actualCollision(cameraBox, collisionCallback);
         }
 
         private void ProcessMouseMovement(float elapsedTime)

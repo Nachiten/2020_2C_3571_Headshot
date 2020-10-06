@@ -2,6 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using TGC.MonoGame.TP.FPS;
 using TGC.MonoGame.TP.FPS.Interface;
+using TGC.MonoGame.TP.Utils;
+using TGC.MonoGame.TP.FPS.Scenarios;
+using TGC.MonoGame.Samples.Cameras;
 
 namespace TGC.MonoGame.TP
 {
@@ -13,6 +16,7 @@ namespace TGC.MonoGame.TP
         public const string ContentFolderSounds = "Sounds/";
         public const string ContentFolderSpriteFonts = "SpriteFonts/";
         public const string ContentFolderTextures = "Textures/";
+
 
         #region Propiedades
         public GraphicsDeviceManager Graphics { get; }
@@ -28,6 +32,10 @@ namespace TGC.MonoGame.TP
         private VertexPositionTexture[] floorVerts { get; set; }
 
         private KeyboardManager PlayerControl { get; set; }
+        public Matrix View { get; set; }
+        public Matrix Projection { get; set; }
+        IStageBuilder StageBuilder { get; set; }
+        public Camera Camera { get; set; }
 
 
         #endregion
@@ -50,9 +58,17 @@ namespace TGC.MonoGame.TP
 
         protected override void Initialize()
         {
-            
+            Collision.Init();
+
+           
             var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
-            //Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(-350, 50, 400), screenSize);
+            Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(-350, 50, 400), screenSize);
+
+            /*View = Matrix.CreateLookAt(new Vector3(30, 20, 150), new Vector3(30, 0, 0), Vector3.Up);
+            Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);*/
+
+            View = Camera.View;
+            Projection = Camera.Projection;
 
             Player = new Player(this);
             Player.Initialize();
@@ -60,35 +76,38 @@ namespace TGC.MonoGame.TP
             PlayerGUI = new PlayerGUI(this);
             PlayerGUI.Initialize(Player);
 
-            PlayerControl = new KeyboardManager(Player);
+            //PlayerControl = new KeyboardManager(Player);
 
 
-            //StageBuilder = new IceWorldStage(this);
-            //StageBuilder.CrearPiso(800, 1000);
+            StageBuilder = new IceWorldStage(this);
 
 
             Effect = new BasicEffect(GraphicsDevice);
+
 
             base.Initialize();
         }
         protected override void LoadContent()
         {
+            StageBuilder.CrearEstructura();
             base.LoadContent();
         }
 
         protected override void Update(GameTime gameTime)
         {
-            //Camera.Update(gameTime);
-            PlayerControl.Update(gameTime);
+            Camera.Update(gameTime);
+            //PlayerControl.Update(gameTime);
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Color.LightBlue);
 
             Player.Draw(gameTime);
             PlayerGUI.Draw(gameTime);
+
+            //StageBuilder.Draw(gameTime);
 
 
             //Vector3 piso4 = new Vector3(20, 20, 0);

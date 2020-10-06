@@ -7,9 +7,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 {
     public interface IStageBuilder
     {
-        public  void CrearPiso(int largo, int ancho);
-
-        public  void CrearParedes(int alto);
+        public void CrearEstructura();
 
         public  void UbicarObjetos(IList<GameComponent> componentes);
 

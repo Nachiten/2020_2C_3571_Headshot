@@ -36,7 +36,7 @@ namespace TGC.MonoGame.TP.FPS.Interface
             if(Keyboard.GetState().IsKeyDown(ControlSettings.Forward))
             {
                 //fake - ver como mover al personaje
-                player.Move(Matrix.CreateTranslation(Vector3.UnitX * 2));
+                player.Move();
             }
             if (Keyboard.GetState().IsKeyDown(ControlSettings.Backward))
             {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace TGC.MonoGame.TP.Utils{
     public class Collision{
+        public static Collision Instance { get; private set; }
         public List<AABB> collidableElements { get; set; }
         public Collision(){
             collidableElements = new List<AABB>();
@@ -17,6 +18,14 @@ namespace TGC.MonoGame.TP.Utils{
                     callback(elem,s);
                 }
             }
+        }
+        public static void Init()
+        {
+            if (Instance is null)
+            {
+                Instance = new Collision();
+            }
+            
         }
     }
 }
