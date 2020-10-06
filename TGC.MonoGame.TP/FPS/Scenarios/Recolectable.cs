@@ -40,7 +40,7 @@ namespace TGC.MonoGame.TP
         public void Update(GameTime gameTime) {
             // Basado en el tiempo que paso se va generando una rotacion.
             Rotation += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds) * 0.7f;
-            Modelo.Turn(World * Matrix.CreateRotationY(Rotation) * Matrix.CreateTranslation(posicion));
+            Modelo.Transform(World * Matrix.CreateRotationY(Rotation) * Matrix.CreateTranslation(posicion),false);
         }
 
         public void LoadContent(ContentManager Content, GraphicsDevice GraphicsDevice)
@@ -49,14 +49,17 @@ namespace TGC.MonoGame.TP
             switch (tipoRecolectable)
             {
                 case TipoRecolectable.armor:
-                    World *= Matrix.CreateScale(0.7f) * Matrix.CreateTranslation(-37, 0, 2);
+                    World *= Matrix.CreateScale(1f) * Matrix.CreateTranslation(-52, 0, 2);
                     Modelo = new ModelCollidable(Content, ContentFolder3D + "healthAndArmor/armadura", World);
+                    Modelo.Aabb.Translation(World * Matrix.CreateTranslation(posicion + new Vector3(66,110,-8)));
+                    Debug.WriteLine("Model: " + ContentFolder3D + "healthAndArmor/corazon" + "min:" + Modelo.Aabb.minExtents + " - max: " + Modelo.Aabb.maxExtents);
                     modelColor = Color.Gray.ToVector3();
                     break;
                 case TipoRecolectable.vida:
-                    World *= Matrix.CreateScale(0.15f);
+                    World *= Matrix.CreateScale(0.25f);
                     Modelo = new ModelCollidable(Content, ContentFolder3D + "healthAndArmor/corazon", World);
-                    Modelo.Aabb.Translation(Vector3.UnitY*30);
+                    Modelo.Aabb.Translation(World * Matrix.CreateTranslation(posicion));
+                    Debug.WriteLine("Model: " + ContentFolder3D + "healthAndArmor/corazon" + "min:" + Modelo.Aabb.minExtents + " - max: " + Modelo.Aabb.maxExtents);
                     modelColor = Color.Red.ToVector3();
                     break;
                 default:

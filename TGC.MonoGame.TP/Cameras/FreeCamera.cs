@@ -28,7 +28,7 @@ namespace TGC.MonoGame.Samples.Cameras
         {
             lockMouse = true;
             this.screenCenter = screenCenter;
-            cameraBox = new AABB(Vector3.One * 20);
+            cameraBox = new AABB(new Vector3(20,50,20));
             Stage = stage;
         }
 
@@ -103,7 +103,7 @@ namespace TGC.MonoGame.Samples.Cameras
                 Position += -FrontDirection * currentMovementSpeed * elapsedTime;
                 changed = true;
             }
-            Position = new Vector3(Position.X, 30, Position.Z);
+            Position = new Vector3(Position.X, 100, Position.Z);
             cameraBox.Translation(Position);
             Collision.Instance.CheckStatic(cameraBox, StaticCollisionCB);
             Collision.Instance.CheckCollectable(cameraBox, CollectableCollisionCB);

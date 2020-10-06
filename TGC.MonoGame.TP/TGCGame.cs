@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.Samples.Cameras;
 using TGC.MonoGame.TP.Utils;
 using TGC.MonoGame.TP.FPS.Scenarios;
+using System.Diagnostics;
+using System;
 
 namespace TGC.MonoGame.TP
 {
@@ -76,7 +78,7 @@ namespace TGC.MonoGame.TP
             //Stage = new Stage();
 
             var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
-            Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(-350, 50, 400), screenSize, StageBuilder);
+            Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(0, 100, 0), screenSize, StageBuilder);
 
 
             // Configuramos nuestras matrices de la escena.
@@ -95,8 +97,8 @@ namespace TGC.MonoGame.TP
             
 
             // Inicializacion enemigo
-            enemigo1 = new Enemigo(new Vector3(30, 20, 200));
-            enemigo2 = new Enemigo(new Vector3(-30, 20, -200));
+            enemigo1 = new Enemigo(new Vector3(30, 50, 200));
+            enemigo2 = new Enemigo(new Vector3(-30, 50, -200));
 
 
             base.Initialize();
@@ -142,7 +144,6 @@ namespace TGC.MonoGame.TP
             modelEffect2.EnableDefaultLighting();
             modelEffect2.TextureEnabled = true;
             modelEffect2.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/fbx/noodas");
-
 
             base.LoadContent();
         }
@@ -216,6 +217,10 @@ namespace TGC.MonoGame.TP
         private void recolectarEnIndice(int index)
         {
             recolectables.RemoveAt(index);
+        }
+        private float VectorsAngle(Vector3 v1, Vector3 v2)
+        {
+            return (float)Math.Acos(Vector3.Dot(v1, v2) / (Vector3.Distance(v1, Vector3.Zero) * Vector3.Distance(v2, Vector3.Zero)));
         }
 
         /// <summary>

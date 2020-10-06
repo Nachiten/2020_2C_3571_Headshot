@@ -22,7 +22,7 @@ namespace TGC.MonoGame.TP.Utils{
             minExtents = min;
             maxExtents = max;
             boundingBox = new BoundingBox(minExtents, maxExtents);
-            //world = Matrix.CreateRotationY(MathHelper.Pi);
+            size = Vector3Abs(maxExtents - minExtents)/3;
         }
         public bool IntersectAABB(AABB other){
             Vector3 distance1 = other.minExtents - maxExtents;
@@ -49,6 +49,10 @@ namespace TGC.MonoGame.TP.Utils{
             } else{
                 return v.Y > v.Z ? v.Y : v.Z;
             }
+        }
+        private Vector3 Vector3Abs(Vector3 v)
+        {
+            return new Vector3(Math.Abs(v.X),Math.Abs(v.Y),Math.Abs(v.Z));
         }
     }
 }

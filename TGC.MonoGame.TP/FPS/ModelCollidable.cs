@@ -9,43 +9,21 @@ namespace TGC.MonoGame.TP.Utils{
         public Model Model { get; set; }
         public AABB Aabb { get; set; }
         public Matrix World { get; set; }
-        private string filepath { get; set; }
         public ModelCollidable(ContentManager Content, string Filepath, Matrix world){
-            filepath = Filepath;
             Model = Content.Load<Model>(Filepath);
             // TODO: infer the size of the model & translate it to a vector
             World = world;
             CreateAABB();
             //Collision.appendStatic(Aabb);
         }
-        public void Transform(Matrix world)
+        public void Transform(Matrix world, bool dynamic)
         {
             World = world;
-
-            float angleX = VectorsAngle(Vector3.Transform(Vector3.Zero, world),Vector3.UnitX);
-            float angleY = VectorsAngle(Vector3.Transform(Vector3.Zero, world), Vector3.UnitY);
-            float angleZ = VectorsAngle(Vector3.Transform(Vector3.Zero, world), Vector3.UnitZ);
-
-            //Matrix AAWorld = World * Matrix.CreateRotationX(-angleX) * Matrix.CreateRotationY(-angleY) * Matrix.CreateRotationZ(-angleZ);
-            Aabb.Translation(World);
-        }
-        public void Turn(Matrix world)
-        {
-            World = world;
-
-        }
-        /*public void Translation(Vector3 position)
-        {
-            World *= Matrix.CreateTranslation(position);
-            float angleX = VectorsAngle(Vector3.Transform(Vector3.Zero, World), Vector3.UnitX);
-            float angleY = VectorsAngle(Vector3.Transform(Vector3.Zero, World), Vector3.UnitY);
-            float angleZ = VectorsAngle(Vector3.Transform(Vector3.Zero, World), Vector3.UnitZ);
-            Matrix AAWorld = World * Matrix.CreateRotationX(-angleX) * Matrix.CreateRotationY(-angleY) * Matrix.CreateRotationZ(-angleZ);
-            Aabb.Translation(AAWorld);
-        }*/
-        private float VectorsAngle(Vector3 v1, Vector3 v2)
-        {
-            return (float)Math.Acos(Vector3.Dot(v1, v2) / (Vector3.Distance(v1, Vector3.Zero) * Vector3.Distance(v2, Vector3.Zero)));
+            if(dynamic)
+            {
+                World.Decompose(out Vector3 scale, out Quaternion rotation, out Vector3 translation);;
+                Aabb.Translation(translation);
+            }
         }
         private void CreateAABB() {
             // Initialize minimum and maximum corners of the bounding box to max and min values
@@ -75,12 +53,10 @@ namespace TGC.MonoGame.TP.Utils{
                     }
                 }
             }
-            Debug.WriteLine("AABB Coords " + filepath + ": min: " + min + " - max: " + max);
             Aabb = new AABB(min, max);
         }
         public void Draw(Matrix View, Matrix Projection)
         {
-            // TODO: infer the Axis Aligned position from World Matrix & translate it to a matrix/vector
             Model.Draw(World, View, Projection);
         }
     }

@@ -29,7 +29,7 @@ namespace TGC.MonoGame.TP
         public Enemigo(Vector3 posicion)
         {
             this.posicion = posicion;
-            World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateScale(0.5f) * Matrix.CreateTranslation(posicion);
+            World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateScale(1f) * Matrix.CreateTranslation(posicion);
         }
 
         //private Vector3 posicionInicial;
@@ -47,7 +47,7 @@ namespace TGC.MonoGame.TP
             //tiempo += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
 
             // Calculo la posicion a la que me voy a mover
-            posicionObjetivo = new Vector3(posicionCamara.X, 20, posicionCamara.Z);
+            posicionObjetivo = new Vector3(posicionCamara.X, 50, posicionCamara.Z);
 
             float distanciaAlObjetivo = Vector3.Distance(posicion, posicionObjetivo);
             // Si la distancia es menor a un margen comienzo a moverme
@@ -75,11 +75,11 @@ namespace TGC.MonoGame.TP
                 }
 
                 // Aplico la rotacion que corresponde
-                World = Matrix.CreateScale(0.5f) * Matrix.CreateRotationY(MathHelper.Pi + anguloRotacionRadianes);
+                World = Matrix.CreateScale(1f) * Matrix.CreateRotationY(MathHelper.Pi + anguloRotacionRadianes);
                 posicion = posicion + (vectorDireccion * velocidadMovimiento);
                 
                 // Muevo el modelo y chequeo si colisiono con algo
-                ModeloTgcitoClassic.Transform(World * Matrix.CreateTranslation(posicion));
+                ModeloTgcitoClassic.Transform(World * Matrix.CreateTranslation(posicion),true);
                 Collision.Instance.CheckStatic(ModeloTgcitoClassic.Aabb, CollisionCallback);
 
             }
@@ -107,6 +107,7 @@ namespace TGC.MonoGame.TP
         {
             //TODO: Handle Collision
             posicion = OldPosition;
+            ModeloTgcitoClassic.Transform(World * Matrix.CreateTranslation(posicion), true);
             return 0;
         }
     }

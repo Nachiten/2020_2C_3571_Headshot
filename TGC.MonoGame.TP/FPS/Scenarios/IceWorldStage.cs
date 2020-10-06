@@ -18,12 +18,12 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         private QuadPrimitive WallZn { get; set; }
         private QuadPrimitive WallXn { get; set; }
         private QuadPrimitive WallZp { get; set; }
-        private int SteelBoxSize = 80;
+        private int SteelBoxSize = 150;
         private int WoodenBoxSize = 40;
-        float xLenFloor = 800;
-        float zLenFloor = 1000;
-        int yLenWall = 100;
-        int gapMiddleBoxes = 100;
+        float xLenFloor = 1500;
+        float zLenFloor = 2000;
+        int yLenWall = 170;
+        int gapMiddleBoxes = 300;
         List<BoxPrimitiveCollidable> SteelBoxes { get; set; }
         List<BoxPrimitiveCollidable> WoodenBoxes { get; set; }
         private Matrix WoodenBoxWorld { get; set; }
@@ -43,11 +43,11 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             SteelBoxWorld = Matrix.CreateTranslation(Vector3.UnitY * SteelBoxSize / 2);
 
             //Recolectables
-            Recolectables.Add(new Recolectable(new Vector3(-40, 0, 30), TipoRecolectable.vida));
-            Recolectables.Add(new Recolectable(new Vector3(20, 0, 30), TipoRecolectable.vida));
-            Recolectables.Add(new Recolectable(new Vector3(0, 0, 0), TipoRecolectable.vida));
-            Recolectables.Add(new Recolectable(new Vector3(0, -75, 0), TipoRecolectable.armor));
-            Recolectables.Add(new Recolectable(new Vector3(-120, -75, 30), TipoRecolectable.armor));
+            Recolectables.Add(new Recolectable(new Vector3(-40, 55, 30), TipoRecolectable.vida));
+            Recolectables.Add(new Recolectable(new Vector3(20, 55, 30), TipoRecolectable.vida));
+            Recolectables.Add(new Recolectable(new Vector3(0, 55, 0), TipoRecolectable.vida));
+            Recolectables.Add(new Recolectable(new Vector3(0, -45, 0), TipoRecolectable.armor));
+            Recolectables.Add(new Recolectable(new Vector3(-120, -45, 30), TipoRecolectable.armor));
 
         }
 
