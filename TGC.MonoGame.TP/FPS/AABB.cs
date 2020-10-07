@@ -43,6 +43,10 @@ namespace TGC.MonoGame.TP.Utils{
             minExtents = pos - size;
             maxExtents = pos + size;
         }
+        public void Rotate(Matrix rotation) {
+            minExtents = Vector3.Transform(Vector3.Zero, Matrix.CreateTranslation(minExtents) * rotation);
+            maxExtents = Vector3.Transform(Vector3.Zero, Matrix.CreateTranslation(maxExtents) * rotation);
+        }
         private float MaxCoord(Vector3 v){
             if(v.X > v.Y && v.X > v.Z) {
                 return v.X;

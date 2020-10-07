@@ -28,10 +28,12 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         List<BoxPrimitiveCollidable> WoodenBoxes { get; set; }
         private Matrix WoodenBoxWorld { get; set; }
         private Matrix SteelBoxWorld { get; set; }
+        
         #endregion
 
         #region Propiedades de Elementos
         private List<Recolectable> Recolectables = new List<Recolectable>();
+        List<Enemigo> Enemigos = new List<Enemigo>();
         #endregion
 
         public IceWorldStage(Game game) : base(game)
@@ -43,11 +45,16 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             SteelBoxWorld = Matrix.CreateTranslation(Vector3.UnitY * SteelBoxSize / 2);
 
             //Recolectables
-            Recolectables.Add(new Recolectable(new Vector3(-40, 55, 30), TipoRecolectable.vida));
-            Recolectables.Add(new Recolectable(new Vector3(20, 55, 30), TipoRecolectable.vida));
-            Recolectables.Add(new Recolectable(new Vector3(0, 55, 0), TipoRecolectable.vida));
-            Recolectables.Add(new Recolectable(new Vector3(0, -45, 0), TipoRecolectable.armor));
-            Recolectables.Add(new Recolectable(new Vector3(-120, -45, 30), TipoRecolectable.armor));
+            Recolectables.Add(new Recolectable(new Vector3(xLenFloor / 2 - 100, 55, zLenFloor / 2 - 100), TipoRecolectable.vida));
+            Recolectables.Add(new Recolectable(new Vector3(-xLenFloor / 2 + 100, 55, zLenFloor / 2 - 100), TipoRecolectable.vida));
+            Recolectables.Add(new Recolectable(new Vector3(xLenFloor / 2 - 100, 55, -zLenFloor / 2 + 100), TipoRecolectable.vida));
+            Recolectables.Add(new Recolectable(new Vector3(-xLenFloor / 2 + 100, 55, -zLenFloor / 2 + 100), TipoRecolectable.vida));
+
+            Recolectables.Add(new Recolectable(new Vector3(xLenFloor / 4, -45, 0), TipoRecolectable.armor));
+            Recolectables.Add(new Recolectable(new Vector3(-xLenFloor / 4, -45, 0), TipoRecolectable.armor));
+
+            Recolectables.Add(new Recolectable(new Vector3(0, 50, zLenFloor / 4), TipoRecolectable.m4));
+            Recolectables.Add(new Recolectable(new Vector3(0, 50, -zLenFloor / 4), TipoRecolectable.cuchillo));
 
         }
 
@@ -72,16 +79,32 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             {
                 SteelBoxes.Add(new BoxPrimitiveCollidable(GraphicsDevice, Vector3.One * SteelBoxSize, Game.Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "steel")));
             }
+
             foreach (Recolectable R in Recolectables)
             {
                 R.LoadContent(Game.Content, GraphicsDevice);
             }
+
+            // Inicializacion enemigo
+            Enemigos.Add(new Enemigo(new Vector3(0, 50, zLenFloor / 2 - 100)));
+            Enemigos.Add(new Enemigo(new Vector3(0, 50, - zLenFloor / 2 + 100)));
+
+            foreach (Enemigo unEnemigo in Enemigos) {
+                unEnemigo.LoadContent(Game.Content, GraphicsDevice);
+            }
+
         }
         public override void Update(GameTime gameTime)
         {
             foreach (Recolectable R in Recolectables)
             {
                 R.Update(gameTime);
+            }
+
+            foreach (Enemigo unEnemigo in Enemigos)
+            {
+                var position = ((TGCGame)Game).Camera.Position;
+                unEnemigo.Update(gameTime, position);
             }
         }
 
@@ -91,6 +114,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             Recolectables.Remove(R);
         }
 
+        #region metodoDraw
         public override void Draw(GameTime gameTime)
         {
             var View = ((TGCGame)Game).Camera.View;
@@ -143,13 +167,17 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             WoodenBoxes[11].Draw(WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes + 2 * SteelBoxSize - WoodenBoxSize) + Vector3.UnitZ * -(gapMiddleBoxes + 2 * SteelBoxSize - 2 * WoodenBoxSize)), View, Projection);
             //base.Draw(gameTime);
 
-
-
             foreach (Recolectable R in Recolectables)
             {
                 R.Draw(View, Projection);
             }
+
+            foreach (Enemigo unEnemigo in Enemigos)
+            {
+                unEnemigo.Draw(View, Projection);
+            }
         }
+        #endregion
 
         public void UbicarObjetos(IList<GameComponent> componentes)
         {

@@ -7,6 +7,7 @@ using TGC.MonoGame.TP.Utils;
 using TGC.MonoGame.TP.FPS.Scenarios;
 using System.Diagnostics;
 using System;
+using TGC.MonoGame.TP.FPS;
 
 namespace TGC.MonoGame.TP
 {
@@ -51,13 +52,15 @@ namespace TGC.MonoGame.TP
         private BasicEffect Effect { get; set; }
         public FreeCamera Camera { get; set; }
         IStageBuilder StageBuilder { get; set; }
+        //private Player jugador { get; set; }
+        private PlayerGUI interfaz { get; set; }
+        private Weapon arma { get; set; }
 
         // Esta lita de recolectables deberia estar en otra clase "recolectables"
-        private List<Recolectable> recolectables = new List<Recolectable>();
+        //private List<Recolectable> recolectables = new List<Recolectable>();
 
-        private Enemigo enemigo1;
-
-        private Enemigo enemigo2;
+        //private Enemigo enemigo1;
+        //private Enemigo enemigo2;
 
         // Array de recolectables
         // Cuando recolecta algo se quita de la lista
@@ -73,32 +76,29 @@ namespace TGC.MonoGame.TP
             rasterizerState.CullMode = CullMode.None;
             GraphicsDevice.RasterizerState = rasterizerState;
 
+            // NOTA: Cambiar esta linea por la de abajo para cargar el otro mapa
             StageBuilder = new Nivel2(this);
-
-            //Stage = new Stage();
+            // StageBuilder = new Nivel2(this); | Mapa 2
+            // StageBuilder = new IceWorldStage(this); | Mapa 1 con objetos
 
             var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
             Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(0, 100, 0), screenSize, StageBuilder);
 
+            Player.Init(this);
+            interfaz = new PlayerGUI(this);
+
+            interfaz.Initialize(Player.Instance);
 
             // Configuramos nuestras matrices de la escena.
             //World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(10, 0, 10);
             //View = Matrix.CreateLookAt(new Vector3(30, 20, 150), new Vector3(30, 0, 0), Vector3.Up);
             //Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);
 
-            
-
             WorldM4 = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(50, 0, 110);
-
             Effect = new BasicEffect(GraphicsDevice);
 
 
-            // Inicializacion de recolectables
             
-
-            // Inicializacion enemigo
-            enemigo1 = new Enemigo(new Vector3(30, 50, 200));
-            enemigo2 = new Enemigo(new Vector3(-30, 50, -200));
 
 
             base.Initialize();
@@ -123,14 +123,17 @@ namespace TGC.MonoGame.TP
             ModeloM4 = Content.Load<Model>(ContentFolder3D + "weapons/fbx/m4a1_s");
             Knife = Content.Load<Model>(ContentFolder3D + "weapons/knife/Karambit");
 
+            //arma = new Weapon(ModeloM4);
+
+            //Player.Instance.AgarrarArma(arma);
+
             //Stage.LoadContent(Content,GraphicsDevice,Collision);
 
             /*foreach (Recolectable unRecolectable in recolectables)
             {
                 unRecolectable.LoadContent(Content, GraphicsDevice);
             }*/
-            enemigo1.LoadContent(Content, GraphicsDevice);
-            enemigo2.LoadContent(Content, GraphicsDevice);
+            
 
             // Obtengo su efecto para cambiarle el color y activar la luz predeterminada que tiene MonoGame.
             //Mesh Silenciador
@@ -164,15 +167,9 @@ namespace TGC.MonoGame.TP
 
             Camera.Update(gameTime);
             StageBuilder.Update(gameTime);
-            
-
-            enemigo1.Update(gameTime, Camera.Position);
-            enemigo2.Update(gameTime, Camera.Position);
 
             base.Update(gameTime);
         }
-
-        bool agarrado = false;
 
         /// <summary>
         ///     Se llama cada vez que hay que refrescar la pantalla.
@@ -187,10 +184,6 @@ namespace TGC.MonoGame.TP
             // Foreach de la lista de recolectables y dibujarlos
             
 
-            // Dibujar un enemigo
-            enemigo1.Draw(Camera.View, Camera.Projection);
-            enemigo2.Draw(Camera.View, Camera.Projection);
-
             // Testing de agarrar un recolectable
             //if (Keyboard.GetState().IsKeyDown(Keys.R))
             //{
@@ -201,23 +194,26 @@ namespace TGC.MonoGame.TP
             //    }
             //}
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Q))
-            {
-                Knife.Draw(WorldM4, View, Projection);
-            }
-            else
-            {
-                ModeloM4.Draw(WorldM4, View, Projection);
-            }
+            //if (Keyboard.GetState().IsKeyDown(Keys.Q))
+            //{
+            //    Knife.Draw(WorldM4, View, Projection);
+            //}
+            //else
+            //{
+            //    ModeloM4.Draw(WorldM4, View, Projection);
+            //}
+
+            Player.Instance.Draw(gameTime);
+            //interfaz.Draw(gameTime);
 
             //Finalmente invocamos al draw del modelo.
             base.Draw(gameTime);
         }
 
-        private void recolectarEnIndice(int index)
-        {
-            recolectables.RemoveAt(index);
-        }
+        //private void recolectarEnIndice(int index)
+        //{
+        //    recolectables.RemoveAt(index);
+        //}
         private float VectorsAngle(Vector3 v1, Vector3 v2)
         {
             return (float)Math.Acos(Vector3.Dot(v1, v2) / (Vector3.Distance(v1, Vector3.Zero) * Vector3.Distance(v2, Vector3.Zero)));

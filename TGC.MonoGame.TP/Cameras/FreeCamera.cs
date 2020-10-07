@@ -5,6 +5,7 @@ using TGC.MonoGame.TP.Utils;
 using TGC.MonoGame.TP;
 using TGC.MonoGame.TP.FPS.Scenarios;
 using System.Diagnostics;
+using TGC.MonoGame.TP.FPS;
 
 namespace TGC.MonoGame.Samples.Cameras
 {
@@ -28,7 +29,7 @@ namespace TGC.MonoGame.Samples.Cameras
         {
             lockMouse = true;
             this.screenCenter = screenCenter;
-            cameraBox = new AABB(new Vector3(20,50,20));
+            cameraBox = new AABB(new Vector3(20,80,20));
             Stage = stage;
         }
 
@@ -68,6 +69,23 @@ namespace TGC.MonoGame.Samples.Cameras
             //TODO: Use recolectable
             Debug.WriteLine("Collectable Collision: " + r);
             Stage.RemoveRecolectable(r);
+
+            switch (r.tipoRecolectable) {
+                case TipoRecolectable.m4:  
+                    Player.Instance.AgarrarArma(new Weapon(r.Modelo.Model));
+                    break;
+                case TipoRecolectable.cuchillo:
+                    Player.Instance.AgarrarArma(new Weapon(r.Modelo.Model));
+                    break;
+                case TipoRecolectable.armor:
+                    // TODO | Sumar armor del player
+                    break;
+                case TipoRecolectable.vida:
+                    // TODO | Sumar vida del player
+                    break;
+
+            }
+
             return 0;
         }
 

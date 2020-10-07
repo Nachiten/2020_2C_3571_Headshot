@@ -10,6 +10,18 @@ namespace TGC.MonoGame.TP.FPS
 {
     public class Player: DrawableGameComponent
     {
+        public static Player Instance { get; private set; }
+
+        public static void Init(Game game)
+        {
+            if (Instance is null)
+            {
+                Instance = new Player(game);
+                Instance.Initialize();
+            }
+
+        }
+
         public Player(Game game) : base(game)
         {
         }

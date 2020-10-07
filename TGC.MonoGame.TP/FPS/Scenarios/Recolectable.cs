@@ -13,6 +13,8 @@ namespace TGC.MonoGame.TP
     {
         vida,
         armor,
+        m4,
+        cuchillo
     }
 
     public class Recolectable
@@ -23,13 +25,10 @@ namespace TGC.MonoGame.TP
         private Matrix World { get; set; }
 
         // armorOVida
-        private TipoRecolectable tipoRecolectable = TipoRecolectable.vida;
+        public TipoRecolectable tipoRecolectable { get; set; }
 
         // Coords
         private Vector3 posicion;
-
-        // Recolectado
-        private bool recolectado = false;
 
         public Recolectable(Vector3 posicion, TipoRecolectable tipoRecolectable) {
             this.posicion = posicion;
@@ -37,11 +36,7 @@ namespace TGC.MonoGame.TP
             World = Matrix.CreateRotationY(MathHelper.Pi);
         }
 
-        public void Update(GameTime gameTime) {
-            // Basado en el tiempo que paso se va generando una rotacion.
-            Rotation += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds) * 0.7f;
-            Modelo.Transform(World * Matrix.CreateRotationY(Rotation) * Matrix.CreateTranslation(posicion),false);
-        }
+        
 
         public void LoadContent(ContentManager Content, GraphicsDevice GraphicsDevice)
         {
@@ -52,15 +47,37 @@ namespace TGC.MonoGame.TP
                     World *= Matrix.CreateScale(1f) * Matrix.CreateTranslation(-52, 0, 2);
                     Modelo = new ModelCollidable(Content, ContentFolder3D + "healthAndArmor/armadura", World);
                     Modelo.Aabb.Translation(World * Matrix.CreateTranslation(posicion + new Vector3(66,110,-8)));
-                    Debug.WriteLine("Model: " + ContentFolder3D + "healthAndArmor/corazon" + "min:" + Modelo.Aabb.minExtents + " - max: " + Modelo.Aabb.maxExtents);
                     modelColor = Color.Gray.ToVector3();
                     break;
                 case TipoRecolectable.vida:
                     World *= Matrix.CreateScale(0.25f);
                     Modelo = new ModelCollidable(Content, ContentFolder3D + "healthAndArmor/corazon", World);
                     Modelo.Aabb.Translation(World * Matrix.CreateTranslation(posicion));
-                    Debug.WriteLine("Model: " + ContentFolder3D + "healthAndArmor/corazon" + "min:" + Modelo.Aabb.minExtents + " - max: " + Modelo.Aabb.maxExtents);
+ 
                     modelColor = Color.Red.ToVector3();
+                    break;
+                case TipoRecolectable.m4:
+                    World *= Matrix.CreateScale(2f);
+                    Modelo = new ModelCollidable(Content, ContentFolder3D + "weapons/fbx/m4a1_s", World);
+                    Modelo.Aabb.Translation(World * Matrix.CreateTranslation(posicion));
+
+                    var modelEffect = (BasicEffect)Modelo.Model.Meshes[0].Effects[0];
+                    modelEffect.TextureEnabled = true;
+                    modelEffect.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/fbx/noodas");
+                    modelEffect.EnableDefaultLighting();
+
+                    //Mesh Arma
+                    var modelEffect2 = (BasicEffect)Modelo.Model.Meshes[1].Effects[0];
+                    modelEffect2.EnableDefaultLighting();
+                    modelEffect2.TextureEnabled = true;
+                    modelEffect2.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/fbx/noodas");
+                    break;
+
+                case TipoRecolectable.cuchillo:
+                    World = World * Matrix.CreateRotationZ(MathHelper.PiOver2) * Matrix.CreateScale(3f);
+                    Modelo = new ModelCollidable(Content, ContentFolder3D + "weapons/knife/Karambit", World);
+                    Modelo.Aabb.Translation(World * Matrix.CreateTranslation(posicion));
+                    //modelColor = Color.Red.ToVector3();
                     break;
                 default:
                     throw new Exception("Unknown Recolectable type");
@@ -72,6 +89,12 @@ namespace TGC.MonoGame.TP
             var modelEffectArmor = (BasicEffect)Modelo.Model.Meshes[0].Effects[0];
             modelEffectArmor.DiffuseColor = modelColor;
             modelEffectArmor.EnableDefaultLighting();
+        }
+        public void Update(GameTime gameTime)
+        {
+            // Basado en el tiempo que paso se va generando una rotacion.
+            Rotation += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds) * 0.7f;
+            Modelo.Transform(World * Matrix.CreateRotationY(Rotation) * Matrix.CreateTranslation(posicion), false);
         }
 
         public void Draw(Matrix view, Matrix projection) {
