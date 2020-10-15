@@ -3,8 +3,8 @@ using GraficsModel = Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TGC.MonoGame.TP.Utils;
 using TGC.MonoGame.Samples.Cameras;
+using TGC.MonoGame.TP.Utils;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace TGC.MonoGame.TP.FPS.Scenarios
@@ -32,7 +32,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         #endregion
 
         #region Propiedades de Elementos
-        private List<Recolectable> Recolectables = new List<Recolectable>();
+        private List<ARecolectable> Recolectables = new List<ARecolectable>();
         List<Enemigo> Enemigos = new List<Enemigo>();
         #endregion
 
@@ -45,16 +45,16 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             SteelBoxWorld = Matrix.CreateTranslation(Vector3.UnitY * SteelBoxSize / 2);
 
             //Recolectables
-            Recolectables.Add(new Recolectable(new Vector3(xLenFloor / 2 - 100, 55, zLenFloor / 2 - 100), TipoRecolectable.vida));
-            Recolectables.Add(new Recolectable(new Vector3(-xLenFloor / 2 + 100, 55, zLenFloor / 2 - 100), TipoRecolectable.vida));
-            Recolectables.Add(new Recolectable(new Vector3(xLenFloor / 2 - 100, 55, -zLenFloor / 2 + 100), TipoRecolectable.vida));
-            Recolectables.Add(new Recolectable(new Vector3(-xLenFloor / 2 + 100, 55, -zLenFloor / 2 + 100), TipoRecolectable.vida));
+            Recolectables.Add(new Health(new Vector3(xLenFloor / 2 - 100, 55 , zLenFloor / 2 - 100)));
+            Recolectables.Add(new Health(new Vector3(-xLenFloor / 2 + 100, 55, zLenFloor / 2 - 100)));
+            Recolectables.Add(new Health(new Vector3(xLenFloor / 2 - 100, 55 , -zLenFloor / 2 + 100)));
+            Recolectables.Add(new Health(new Vector3(-xLenFloor / 2 + 100, 55, -zLenFloor / 2 + 100)));
 
-            Recolectables.Add(new Recolectable(new Vector3(xLenFloor / 4, -45, 0), TipoRecolectable.armor));
-            Recolectables.Add(new Recolectable(new Vector3(-xLenFloor / 4, -45, 0), TipoRecolectable.armor));
+            Recolectables.Add(new Armor(new Vector3(xLenFloor / 4, -45, 0)));
+            Recolectables.Add(new Armor(new Vector3(-xLenFloor / 4, -45, 0)));
 
-            Recolectables.Add(new Recolectable(new Vector3(0, 50, zLenFloor / 4), TipoRecolectable.m4));
-            Recolectables.Add(new Recolectable(new Vector3(0, 50, -zLenFloor / 4), TipoRecolectable.cuchillo));
+            Recolectables.Add(new M4(new Vector3(0, 50, zLenFloor / 4)));
+            //Recolectables.Add(new ARecolectable(new Vector3(0, 50, -zLenFloor / 4), TipoRecolectable.cuchillo));
 
         }
 
@@ -80,7 +80,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
                 SteelBoxes.Add(new BoxPrimitiveCollidable(GraphicsDevice, Vector3.One * SteelBoxSize, Game.Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "steel")));
             }
 
-            foreach (Recolectable R in Recolectables)
+            foreach (ARecolectable R in Recolectables)
             {
                 R.LoadContent(Game.Content, GraphicsDevice);
             }
@@ -96,7 +96,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         }
         public override void Update(GameTime gameTime)
         {
-            foreach (Recolectable R in Recolectables)
+            foreach (ARecolectable R in Recolectables)
             {
                 R.Update(gameTime);
             }
@@ -108,7 +108,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             }
         }
 
-        public void RemoveRecolectable(Recolectable R)
+        public void RemoveRecolectable(ARecolectable R)
         {
             Collision.Instance.RemoveCollectable(R);
             Recolectables.Remove(R);
@@ -167,7 +167,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             WoodenBoxes[11].Draw(WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes + 2 * SteelBoxSize - WoodenBoxSize) + Vector3.UnitZ * -(gapMiddleBoxes + 2 * SteelBoxSize - 2 * WoodenBoxSize)), View, Projection);
             //base.Draw(gameTime);
 
-            foreach (Recolectable R in Recolectables)
+            foreach (ARecolectable R in Recolectables)
             {
                 R.Draw(View, Projection);
             }

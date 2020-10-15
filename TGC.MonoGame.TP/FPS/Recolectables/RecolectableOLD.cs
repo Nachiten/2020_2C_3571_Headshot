@@ -17,7 +17,7 @@ namespace TGC.MonoGame.TP
         cuchillo
     }
 
-    public class Recolectable
+    public class RecolectableOLD
     {
         public const string ContentFolder3D = "Models/";
         public ModelCollidable Modelo { get; set; }
@@ -30,16 +30,29 @@ namespace TGC.MonoGame.TP
         // Coords
         private Vector3 posicion;
 
-        public Recolectable(Vector3 posicion, TipoRecolectable tipoRecolectable) {
+        public RecolectableOLD(Vector3 posicion, TipoRecolectable tipoRecolectable) {
             this.posicion = posicion;
             this.tipoRecolectable = tipoRecolectable;
             World = Matrix.CreateRotationY(MathHelper.Pi);
         }
 
-        
-
         public void LoadContent(ContentManager Content, GraphicsDevice GraphicsDevice)
         {
+
+            /*
+             * Tamanios:
+             * armor: 1
+             * vida: 0.25
+             * m4: 2
+             */
+
+            /*
+             * Paths:
+             * armor: "healthAndArmor/armadura"
+             * vida: "healthAndArmor/corazon"
+             * m4: "weapons/fbx/m4a1_s"
+             */
+
             Vector3 modelColor = Vector3.Zero;
             switch (tipoRecolectable)
             {
@@ -64,7 +77,7 @@ namespace TGC.MonoGame.TP
                     var modelEffect = (BasicEffect)Modelo.Model.Meshes[0].Effects[0];
                     modelEffect.TextureEnabled = true;
                     modelEffect.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/fbx/noodas");
-                    modelEffect.EnableDefaultLighting();
+                    //modelEffect.EnableDefaultLighting();
 
                     //Mesh Arma
                     var modelEffect2 = (BasicEffect)Modelo.Model.Meshes[1].Effects[0];
@@ -83,7 +96,7 @@ namespace TGC.MonoGame.TP
                     throw new Exception("Unknown Recolectable type");
             }
 
-            Collision.Instance.AppendCollectable(this);
+            //Collision.Instance.AppendCollectable(this);
             //Debug.WriteLine("Recolectable Bounding Box: " + Modelo.Aabb.minExtents + " - " + Modelo.Aabb.maxExtents);
             
             var modelEffectArmor = (BasicEffect)Modelo.Model.Meshes[0].Effects[0];
@@ -92,35 +105,13 @@ namespace TGC.MonoGame.TP
         }
         public void Update(GameTime gameTime)
         {
-            // Basado en el tiempo que paso se va generando una rotacion.
+            // Basado en el tiempo que pasa se va generando una rotacion.
             Rotation += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds) * 0.7f;
             Modelo.Transform(World * Matrix.CreateRotationY(Rotation) * Matrix.CreateTranslation(posicion), false);
         }
 
         public void Draw(Matrix view, Matrix projection) {
-            // dibujo dependiendo de que es en las coords que le pase
-
             Modelo.Draw(view, projection);
-
-            /*switch (tipoRecolectable) {
-                case TipoRecolectable.armor:
-                    dibujarArmorEn(posicion.X, posicion.Y, posicion.Z, view, projection);
-                    break;
-                case TipoRecolectable.vida:
-                    dibujarVidaEn(posicion.X, posicion.Y, posicion.Z, view, projection);
-                    break;
-            }*/
-
-            // Si ya esta recolectado esto no se llama (pq el objeto se eliminó de la lista)
         }
-
-        /*private void dibujarVidaEn(float posX, float posY, float posZ, Matrix view, Matrix projection) {
-            ModeloVida.Draw(World * Matrix.CreateRotationY(Rotation) * Matrix.CreateTranslation(posX, posY, posZ), view, projection);
-        }
-
-        private void dibujarArmorEn(float posX, float posY, float posZ, Matrix view, Matrix projection) {
-            // Corrijo offset del modelo (-37 , 0, 2)
-            ModeloArmor.Draw(World * Matrix.CreateRotationY(Rotation) * Matrix.CreateTranslation(posX, posY, posZ), view, projection);
-        }*/
     }
 }

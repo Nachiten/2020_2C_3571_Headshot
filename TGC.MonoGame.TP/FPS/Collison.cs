@@ -7,18 +7,18 @@ namespace TGC.MonoGame.TP.Utils{
     public class Collision{
         public static Collision Instance { get; private set; }
         public List<AABB> StaticElements = new List<AABB>();
-        public List<Recolectable> CollectableElements = new List<Recolectable>();
+        public List<ARecolectable> CollectableElements = new List<ARecolectable>();
         public Collision(){
         }
         public void AppendStatic(AABB elem){
             //Console.WriteLine(elem.size.ToString());
             StaticElements.Add(elem);
         }
-        public void AppendCollectable(Recolectable elem)
+        public void AppendCollectable(ARecolectable elem)
         {
             CollectableElements.Add(elem);
         }
-        public void RemoveCollectable(Recolectable elem)
+        public void RemoveCollectable(ARecolectable elem)
         {
             CollectableElements.Remove(elem);
         }
@@ -32,9 +32,9 @@ namespace TGC.MonoGame.TP.Utils{
                 }
             }
         }
-        public void CheckCollectable(AABB elem, Func<Recolectable, int> callback)
+        public void CheckCollectable(AABB elem, Func<ARecolectable, int> callback)
         {
-            foreach (Recolectable r in CollectableElements.ToArray())
+            foreach (ARecolectable r in CollectableElements.ToArray())
             {
                 if (elem.IntersectAABB(r.Modelo.Aabb))
                 {

@@ -29,23 +29,23 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         List<Model> ColumnasCuadradas = new List<Model>();
 
         #region Propiedades de Elementos
-        private List<Recolectable> Recolectables = new List<Recolectable>();
+        private List<ARecolectable> Recolectables = new List<ARecolectable>();
         List<Enemigo> Enemigos = new List<Enemigo>();
         #endregion
 
         public Nivel2(Game game) : base(game)
         {
             //Recolectables
-            Recolectables.Add(new Recolectable(new Vector3(xLenFloor / 2 - 100, 55, zLenFloor / 2 - 100), TipoRecolectable.vida));
-            Recolectables.Add(new Recolectable(new Vector3(-xLenFloor / 2 + 100, 55, zLenFloor / 2 - 100), TipoRecolectable.vida));
-            Recolectables.Add(new Recolectable(new Vector3(xLenFloor / 2 - 100, 55, -zLenFloor / 2 + 100), TipoRecolectable.vida));
-            Recolectables.Add(new Recolectable(new Vector3(-xLenFloor / 2 + 100, 55, -zLenFloor / 2 + 100), TipoRecolectable.vida));
+            Recolectables.Add(new Health(new Vector3(xLenFloor / 2 - 100, 55, zLenFloor / 2 - 100)));
+            Recolectables.Add(new Health(new Vector3(-xLenFloor / 2 + 100, 55, zLenFloor / 2 - 100)));
+            Recolectables.Add(new Health(new Vector3(xLenFloor / 2 - 100, 55, -zLenFloor / 2 + 100)));
+            Recolectables.Add(new Health(new Vector3(-xLenFloor / 2 + 100, 55, -zLenFloor / 2 + 100)));
 
-            Recolectables.Add(new Recolectable(new Vector3(xLenFloor / 4, -45, 0), TipoRecolectable.armor));
-            Recolectables.Add(new Recolectable(new Vector3(-xLenFloor / 4, -45, 0), TipoRecolectable.armor));
+            Recolectables.Add(new Armor(new Vector3(xLenFloor / 4, -45, 0)));
+            Recolectables.Add(new Armor(new Vector3(-xLenFloor / 4, -45, 0)));
 
-            Recolectables.Add(new Recolectable(new Vector3(0, 50, zLenFloor / 4), TipoRecolectable.m4));
-            Recolectables.Add(new Recolectable(new Vector3(0, 50, -zLenFloor / 4), TipoRecolectable.cuchillo));
+            Recolectables.Add(new M4(new Vector3(0, 50, zLenFloor / 4)));
+            //Recolectables.Add(new M4(new Vector3(0, 50, 0)));
         }
 
         public void CrearEstructura()
@@ -94,7 +94,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
                 modelEffectCilindro.EnableDefaultLighting();
             }
 
-            foreach (Recolectable R in Recolectables)
+            foreach (ARecolectable R in Recolectables)
             {
                 R.LoadContent(Game.Content, GraphicsDevice);
             }
@@ -135,7 +135,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
                 unModelo.Draw(View, Projection);
             }
 
-            foreach (Recolectable R in Recolectables)
+            foreach (ARecolectable R in Recolectables)
             {
                 R.Draw(View, Projection);
             }
@@ -148,7 +148,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
         public override void Update(GameTime gameTime)
         {
-            foreach (Recolectable R in Recolectables)
+            foreach (ARecolectable R in Recolectables)
             {
                 R.Update(gameTime);
             }
@@ -165,7 +165,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             throw new NotImplementedException();
         }
 
-        public void RemoveRecolectable(Recolectable R)
+        public void RemoveRecolectable(ARecolectable R)
         {
             Collision.Instance.RemoveCollectable(R);
             Recolectables.Remove(R);

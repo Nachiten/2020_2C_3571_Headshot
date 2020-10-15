@@ -64,27 +64,15 @@ namespace TGC.MonoGame.Samples.Cameras
             cameraBox.Translation(Position);
             return 0;
         }
-        public int CollectableCollisionCB(Recolectable r)
+        public int CollectableCollisionCB(ARecolectable r)
         {
             //TODO: Use recolectable
             Debug.WriteLine("Collectable Collision: " + r);
             Stage.RemoveRecolectable(r);
 
-            switch (r.tipoRecolectable) {
-                case TipoRecolectable.m4:  
-                    Player.Instance.AgarrarArma(new Weapon(r.Modelo.Model));
-                    break;
-                case TipoRecolectable.cuchillo:
-                    Player.Instance.AgarrarArma(new Weapon(r.Modelo.Model));
-                    break;
-                case TipoRecolectable.armor:
-                    // TODO | Sumar armor del player
-                    break;
-                case TipoRecolectable.vida:
-                    // TODO | Sumar vida del player
-                    break;
-
-            }
+            // Se delega la responsabilidad de recolectar al recolectable
+            r.recolectar();
+            // TODO | Quitado la posibilidad de recolectar para testing
 
             return 0;
         }
