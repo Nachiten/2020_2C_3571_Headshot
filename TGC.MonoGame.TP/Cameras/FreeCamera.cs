@@ -11,7 +11,7 @@ namespace TGC.MonoGame.Samples.Cameras
 {
     public class FreeCamera : Camera
     {
-        private readonly bool lockMouse;
+        //private readonly bool lockMouse;
 
         private readonly Point screenCenter;
         private bool changed;
@@ -27,7 +27,7 @@ namespace TGC.MonoGame.Samples.Cameras
 
         public FreeCamera(float aspectRatio, Vector3 position, Point screenCenter, IStageBuilder stage) : this(aspectRatio, position)
         {
-            lockMouse = true;
+            //lockMouse = Config.bloquearMouse;
             this.screenCenter = screenCenter;
             cameraBox = new AABB(new Vector3(20,80,20));
             Stage = stage;
@@ -64,15 +64,26 @@ namespace TGC.MonoGame.Samples.Cameras
             cameraBox.Translation(Position);
             return 0;
         }
+
+        public static String GetTimestamp(DateTime value)
+        {
+            return value.ToString("dd/MM|HH:mm:ss.ff");
+        }
+
         public int CollectableCollisionCB(ARecolectable r)
         {
-            //TODO: Use recolectable
-            Debug.WriteLine("Collectable Collision: " + r);
-            Stage.RemoveRecolectable(r);
 
-            // Se delega la responsabilidad de recolectar al recolectable
-            r.recolectar();
-            // TODO | Quitado la posibilidad de recolectar para testing
+            String timeStamp = GetTimestamp(DateTime.Now);
+            //TODO: Use recolectable
+            Debug.WriteLine("[" + timeStamp + "] Collectable Collision: " + r);
+
+            if (Config.recolectablesActivados) 
+            {
+                Stage.RemoveRecolectable(r);
+                // Se delega la responsabilidad de recolectar al recolectable
+                r.recolectar();
+            }
+            
 
             return 0;
         }
@@ -109,7 +120,12 @@ namespace TGC.MonoGame.Samples.Cameras
                 Position += -FrontDirection * currentMovementSpeed * elapsedTime;
                 changed = true;
             }
-            Position = new Vector3(Position.X, 100, Position.Z);
+
+            if (Config.fijarYCamara) 
+                Position = new Vector3(Position.X, 100, Position.Z);
+            else
+                Position = new Vector3(Position.X, Position.Y, Position.Z);
+
             cameraBox.Translation(Position);
             Collision.Instance.CheckStatic(cameraBox, StaticCollisionCB);
             Collision.Instance.CheckCollectable(cameraBox, CollectableCollisionCB);
@@ -133,7 +149,7 @@ namespace TGC.MonoGame.Samples.Cameras
             changed = true;
             UpdateCameraVectors();
 
-            if (lockMouse)
+            if (Config.bloquearMouse)
             {
                 Mouse.SetPosition(screenCenter.X, screenCenter.Y);
                 Mouse.SetCursor(MouseCursor.Crosshair);

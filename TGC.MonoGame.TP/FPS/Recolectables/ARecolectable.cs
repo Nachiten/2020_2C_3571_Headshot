@@ -36,7 +36,7 @@ namespace TGC.MonoGame.TP
             // Genero el modelo
             World *= Matrix.CreateScale(tamanioModelo) * matrizOffsetPosicion;
             Modelo = new ModelCollidable(Content, ContentFolder3D + pathModelo, World);
-            Debug.WriteLine("Path: " + pathModelo + " | offset: " + offsetPosicion);
+            //Debug.WriteLine("Path: " + pathModelo + " | offset: " + offsetPosicion);
             Modelo.Aabb.Translation(World * Matrix.CreateTranslation(posicion + offsetPosicion));
 
             // Se agrega el colisionable a la lista
@@ -52,6 +52,10 @@ namespace TGC.MonoGame.TP
         {
             // Basado en el tiempo que pasa se va generando una rotacion.
             Rotation += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds) * 0.7f;
+            
+            if (!Config.rotacionRecolectables)
+                Rotation = 0;
+
             Modelo.Transform(World * Matrix.CreateRotationY(Rotation) * Matrix.CreateTranslation(posicion), false);
         }
 

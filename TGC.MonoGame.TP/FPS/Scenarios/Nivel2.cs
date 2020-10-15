@@ -19,7 +19,6 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         private QuadPrimitive WallZn { get; set; }
         private QuadPrimitive WallXn { get; set; }
         private QuadPrimitive WallZp { get; set; }
-        // TODO | Valores reales: x = 800 , y = 1000
         float xLenFloor = 1200;
         float zLenFloor = 1500;
         int yLenWall = 450;

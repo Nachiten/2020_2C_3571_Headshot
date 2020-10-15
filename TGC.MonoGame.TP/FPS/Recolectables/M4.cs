@@ -19,6 +19,8 @@ namespace TGC.MonoGame.TP
             posicion = posicionModelo;
             World = Matrix.CreateRotationY(MathHelper.Pi);
             Rotation = 0;
+            matrizOffsetPosicion = Matrix.CreateTranslation(new Vector3(0,0,20));
+
         }
 
         // Hago override ya que debo agregar logica extra

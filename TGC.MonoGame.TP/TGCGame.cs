@@ -97,10 +97,6 @@ namespace TGC.MonoGame.TP
             WorldM4 = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(50, 0, 110);
             Effect = new BasicEffect(GraphicsDevice);
 
-
-            
-
-
             base.Initialize();
         }
 
@@ -156,6 +152,7 @@ namespace TGC.MonoGame.TP
         ///     Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones
         ///     ante ellas.
         /// </summary>
+        bool presionadoTeclaQ = false;
         protected override void Update(GameTime gameTime)
         {
             // Aca deberiamos poner toda la logica de actualizacion del juego.
@@ -164,6 +161,15 @@ namespace TGC.MonoGame.TP
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 //Salgo del juego.
                 Exit();
+
+            // Desbloquear el mouse tocando la P
+            if (Keyboard.GetState().IsKeyDown(Keys.P) && !presionadoTeclaQ) { 
+                Config.bloquearMouse = !Config.bloquearMouse;
+                presionadoTeclaQ = true;
+            }
+
+            if (Keyboard.GetState().IsKeyUp(Keys.P))
+                presionadoTeclaQ = false;
 
             Camera.Update(gameTime);
             StageBuilder.Update(gameTime);
