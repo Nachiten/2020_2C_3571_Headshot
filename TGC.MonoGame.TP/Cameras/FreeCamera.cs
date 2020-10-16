@@ -72,19 +72,16 @@ namespace TGC.MonoGame.Samples.Cameras
 
         public int CollectableCollisionCB(ARecolectable r)
         {
-
             String timeStamp = GetTimestamp(DateTime.Now);
             //TODO: Use recolectable
             Debug.WriteLine("[" + timeStamp + "] Collectable Collision: " + r);
 
             if (Config.recolectablesActivados) 
             {
-                Stage.RemoveRecolectable(r);
+                //Stage.RemoveRecolectable(r);
                 // Se delega la responsabilidad de recolectar al recolectable
-                r.recolectar();
+                r.recolectar(Stage);
             }
-            
-
             return 0;
         }
 

@@ -24,6 +24,8 @@ namespace TGC.MonoGame.TP.Utils{
         }
         public void CheckStatic(AABB elem, Func<AABB, AABB, int> callback)
         {
+            if (!Config.colisionesActivadas) return;
+
             foreach(AABB s in StaticElements.Where(x => !x.Equals(elem)).ToList())
             {
                 if (elem.IntersectAABB(s))
@@ -34,6 +36,8 @@ namespace TGC.MonoGame.TP.Utils{
         }
         public void CheckCollectable(AABB elem, Func<ARecolectable, int> callback)
         {
+            if (!Config.colisionesActivadas) return;
+
             foreach (ARecolectable r in CollectableElements.ToArray())
             {
                 if (elem.IntersectAABB(r.Modelo.Aabb))

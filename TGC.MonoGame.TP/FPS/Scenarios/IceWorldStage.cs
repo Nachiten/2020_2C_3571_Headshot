@@ -54,7 +54,6 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             Recolectables.Add(new Armor(new Vector3(-xLenFloor / 4, -45, 0)));
 
             Recolectables.Add(new M4(new Vector3(0, 50, zLenFloor / 4)));
-            //Recolectables.Add(new ARecolectable(new Vector3(0, 50, -zLenFloor / 4), TipoRecolectable.cuchillo));
 
         }
 

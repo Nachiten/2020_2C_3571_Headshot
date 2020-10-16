@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
+using TGC.MonoGame.TP.FPS;
+using TGC.MonoGame.TP.FPS.Scenarios;
 
 namespace TGC.MonoGame.TP
 {
     class Health : ARecolectable
     {
+        private int vidaSumada = 20;
         public Health(Vector3 posicionModelo)
         {
             pathModelo = "healthAndArmor/corazon";
@@ -18,9 +21,17 @@ namespace TGC.MonoGame.TP
             Rotation = 0;
         }
 
-        public override void recolectar()
+        public override void recolectar(IStageBuilder Stage)
         {
-            // TODO | Sumar la vida que corresponde
+
+            bool sumeVida = Player.Instance.sumarVida(vidaSumada);
+            
+            if (sumeVida)
+            eliminarRecolectableDeLista(Stage);
+
+            //if (Player.Instance.Health > 100) { 
+            //}
+
         }
     }
 }

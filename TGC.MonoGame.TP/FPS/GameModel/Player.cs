@@ -8,7 +8,7 @@ using System.Text;
 
 namespace TGC.MonoGame.TP.FPS
 {
-    public class Player: DrawableGameComponent
+    public class Player : DrawableGameComponent
     {
         public static Player Instance { get; private set; }
 
@@ -27,8 +27,8 @@ namespace TGC.MonoGame.TP.FPS
         }
 
         #region Componentes
-        
-        
+
+
         #endregion
 
         #region Propiedades
@@ -37,21 +37,22 @@ namespace TGC.MonoGame.TP.FPS
 
         private Matrix View { get; set; }
         public int Health { get; set; }
+        private int maxHealth = 100;
+        public int Armor { get; set; }
+        private int maxArmor = 100;
         public Weapon CurrentWeapon { get; set; }
         public int Speed { get; set; }
-
-        public int Armor { get; set; }
-
         public Weapon[] Weapons { get; set; }
 
         public Vector3 CurrentPosition { get; set; }
+        
 
         #endregion
-        //default 100
 
         public override void Initialize()
         {
-            Health = 100;
+            Health = maxHealth;
+            Armor = 45;
 
             Weapons = new Weapon[3];
             WorldWeapon = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(50, 0, 110);
@@ -82,6 +83,34 @@ namespace TGC.MonoGame.TP.FPS
             if (this.Health > 0) {
                 this.Health -= cantidadDanio;
             }
+        }
+
+        public bool sumarVida(int cantidadVida)
+        {
+            // Si ya esta en maximo no suma nada
+            if (this.Health == maxHealth)
+            {
+                return false;
+            }
+
+            // Si no esta en el maximo suma algo
+            this.Health = Math.Min(this.Health += cantidadVida, maxHealth);
+
+            return true;
+        }
+
+        public bool sumarArmor(int cantidadArmor)
+        {
+            // Si ya esta en maximo no suma nada
+            if (this.Armor == maxArmor)
+            {
+                return false;
+            }
+
+            // Si no esta en el maximo suma algo
+            this.Armor = Math.Min(this.Armor += cantidadArmor, maxArmor);
+
+            return true;
         }
 
         public void Jump()

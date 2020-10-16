@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using TGC.MonoGame.TP.Utils;
 using System.Diagnostics;
+using TGC.MonoGame.TP.FPS.Scenarios;
 
 namespace TGC.MonoGame.TP
 {
@@ -65,6 +66,10 @@ namespace TGC.MonoGame.TP
             Modelo.Draw(view, projection);
         }
 
-        public abstract void recolectar();
+        public abstract void recolectar(IStageBuilder Stage);
+
+        protected void eliminarRecolectableDeLista(IStageBuilder Stage) {
+            Stage.RemoveRecolectable(this);
+        }
     }
 }

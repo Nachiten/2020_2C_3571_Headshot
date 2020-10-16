@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
+using TGC.MonoGame.TP.FPS.Scenarios;
+using TGC.MonoGame.TP.FPS;
 
 namespace TGC.MonoGame.TP
 {
     class Armor : ARecolectable
     {
+        private int armorSumada = 60;
         public Armor(Vector3 posicionModelo)
         {
             pathModelo = "healthAndArmor/armadura";
@@ -21,9 +24,12 @@ namespace TGC.MonoGame.TP
             matrizOffsetPosicion = Matrix.CreateTranslation(-52, 0, 2);
         }
 
-        public override void recolectar()
+        public override void recolectar(IStageBuilder Stage)
         {
-            // TODO | Sumar el amor que corresponde
+            bool sumeArmor = Player.Instance.sumarArmor(armorSumada);
+
+            if (sumeArmor)
+                eliminarRecolectableDeLista(Stage);
         }
     }
 }
