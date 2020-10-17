@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TGC.MonoGame.TP.FPS.Scenarios
 {
-    public interface IStageBuilder
+    public interface IStage
     {
         public void RemoveRecolectable(ARecolectable R);
         public void CrearEstructura();

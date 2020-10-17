@@ -8,7 +8,7 @@ namespace TGC.MonoGame.TP
 {
     public abstract class AWeaponRecolectable : ARecolectable
     {
-        public override void recolectar(IStageBuilder Stage)
+        public override void recolectar(IStage Stage)
         {
             // Todas las armas recolectables tienen la misma logica
             Player.Instance.AgarrarArma(new Weapon(this.Modelo.Model));

@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TGC.MonoGame.TP.FPS.Scenarios
 {
-    public class IceWorldStage : DrawableGameComponent, IStageBuilder
+    public class IceWorldStage : DrawableGameComponent, IStage
     {
         #region Propiedades de Estructura
         //public GraficsModel.VertexPositionTexture[] floor { get; set; }

@@ -34,7 +34,7 @@ namespace TGC.MonoGame.TP
         private KeyboardManager PlayerControl { get; set; }
         public Matrix View { get; set; }
         public Matrix Projection { get; set; }
-        IStageBuilder StageBuilder { get; set; }
+        IStage StageBuilder { get; set; }
         public Camera Camera { get; set; }
 
 

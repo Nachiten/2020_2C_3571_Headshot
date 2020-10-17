@@ -52,7 +52,7 @@ namespace TGC.MonoGame.TP
         private Matrix Projection { get; set; }
         public BasicEffect Effect { get; set; }
         public FreeCamera Camera { get; set; }
-        IStageBuilder StageBuilder { get; set; }
+        IStage Stage { get; set; }
         //private Player jugador { get; set; }
         private PlayerGUI interfaz { get; set; }
         private Weapon arma { get; set; }
@@ -78,14 +78,14 @@ namespace TGC.MonoGame.TP
             GraphicsDevice.RasterizerState = rasterizerState;
 
             // NOTA: Cambiar esta linea por la de abajo para cargar el otro mapa
-            StageBuilder = new Nivel2(this);
+            Stage = new Nivel2(this);
             // StageBuilder = new Nivel2(this); | Mapa 2
             // StageBuilder = new IceWorldStage(this); | Mapa 1 con objetos
 
             var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
             Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(0, 100, 0), screenSize);
 
-            Player.Init(this, Camera);
+            Player.Init(this, Camera, Stage);
             interfaz = new PlayerGUI(this);
 
             KeyboardManager.Init(Camera);
@@ -114,7 +114,7 @@ namespace TGC.MonoGame.TP
             // Aca es donde deberiamos cargar todos los contenido necesarios antes de iniciar el juego.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
-            StageBuilder.CrearEstructura();
+            Stage.CrearEstructura();
 
             //ModelCollidableStatic m4collidable = new ModelCollidableStatic(Content, ContentFolder3D + "weapons/fbx/m4a1_s",Collision);
             //ModelCollidableStatic knifecollidable = new ModelCollidableStatic(Content, ContentFolder3D + "weapons/knife/Karambit", Collision);
@@ -150,7 +150,7 @@ namespace TGC.MonoGame.TP
 
             Player.Instance.Update(gameTime);
 
-            StageBuilder.Update(gameTime);
+            Stage.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -166,7 +166,7 @@ namespace TGC.MonoGame.TP
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.BlendState = BlendState.Opaque;
 
-            StageBuilder.Draw(gameTime);
+            Stage.Draw(gameTime);
 
             // Foreach de la lista de recolectables y dibujarlos
             

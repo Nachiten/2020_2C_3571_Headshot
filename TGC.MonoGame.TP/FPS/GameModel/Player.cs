@@ -9,6 +9,7 @@ using System.Diagnostics;
 using TGC.MonoGame.TP.Utils;
 using TGC.MonoGame.TP.FPS.Interface;
 using TGC.MonoGame.Samples.Cameras;
+using TGC.MonoGame.TP.FPS.Scenarios;
 
 namespace TGC.MonoGame.TP.FPS
 {
@@ -16,13 +17,14 @@ namespace TGC.MonoGame.TP.FPS
     {
         public static Player Instance { get; private set; }
 
-        public static void Init(Game game, FreeCamera camera)
+        public static void Init(Game game, FreeCamera camera, IStage stage)
         {
             if (Instance is null)
             {
                 Instance = new Player(game);
                 Camera = camera;
                 Instance.Initialize();
+                Stage = stage;
             }
 
         }
@@ -49,8 +51,6 @@ namespace TGC.MonoGame.TP.FPS
 
         public float Speed = 200f;
 
-        public int Armor { get; set; }
-
         public Weapon[] Weapons { get; set; }
 
         public Vector3 CurrentPosition { get; set; }
@@ -63,11 +63,12 @@ namespace TGC.MonoGame.TP.FPS
         public Vector3 PreviousPosition;
 
         static FreeCamera Camera;
+        static IStage Stage;
         #endregion
 
         public override void Initialize()
         {
-            Health = maxHealth;
+            Health = 75;
             Armor = 45;
 
             Weapons = new Weapon[3];
@@ -174,9 +175,9 @@ namespace TGC.MonoGame.TP.FPS
         }
         public int CollectableCollisionCB(ARecolectable r)
         {
-            String timeStamp = GetTimestamp(DateTime.Now);
+            //String timeStamp = GetTimestamp(DateTime.Now);
             //TODO: Use recolectable
-            Debug.WriteLine("[" + timeStamp + "] Collectable Collision: " + r);
+            //Debug.WriteLine("[" + timeStamp + "] Collectable Collision: " + r);
 
             if (Config.recolectablesActivados) 
             {

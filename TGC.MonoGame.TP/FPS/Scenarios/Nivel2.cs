@@ -9,7 +9,7 @@ using TGC.MonoGame.TP.Utils;
 
 namespace TGC.MonoGame.TP.FPS.Scenarios
 {
-    public class Nivel2 : DrawableGameComponent, IStageBuilder
+    public class Nivel2 : DrawableGameComponent, IStage
     {
 
         public VertexPositionTexture[] floor { get; set; }

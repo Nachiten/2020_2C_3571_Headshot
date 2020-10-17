@@ -66,9 +66,9 @@ namespace TGC.MonoGame.TP
             Modelo.Draw(view, projection);
         }
 
-        public abstract void recolectar(IStageBuilder Stage);
+        public abstract void recolectar(IStage Stage);
 
-        protected void eliminarRecolectableDeLista(IStageBuilder Stage) {
+        protected void eliminarRecolectableDeLista(IStage Stage) {
             Stage.RemoveRecolectable(this);
         }
     }
