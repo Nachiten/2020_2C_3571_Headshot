@@ -1,139 +1,41 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using TGC.MonoGame.TP.Utils;
-using TGC.MonoGame.TP;
-using TGC.MonoGame.TP.FPS.Scenarios;
-using System.Diagnostics;
-using TGC.MonoGame.TP.FPS;
+using TGC.MonoGame.TP.FPS.Interface;
 
 namespace TGC.MonoGame.Samples.Cameras
 {
     public class FreeCamera : Camera
     {
-        private readonly bool lockMouse;
+        public readonly Point screenCenter;
 
-        private readonly Point screenCenter;
-        private bool changed;
-
-        private Vector2 pastMousePosition;
         private float pitch;
 
         // Angles
         private float yaw = -90f;
-        public AABB cameraBox;
-        Vector3 oldPosition;
-        IStageBuilder Stage;
 
-        public FreeCamera(float aspectRatio, Vector3 position, Point screenCenter, IStageBuilder stage) : this(aspectRatio, position)
+        public FreeCamera(float aspectRatio, Vector3 position, Point screenCenter) : this(aspectRatio, position)
         {
-            lockMouse = true;
             this.screenCenter = screenCenter;
-            cameraBox = new AABB(new Vector3(20,80,20));
-            Stage = stage;
         }
 
         public FreeCamera(float aspectRatio, Vector3 position) : base(aspectRatio)
         {
             Position = position;
-            pastMousePosition = Mouse.GetState().Position.ToVector2();
             UpdateCameraVectors();
             CalculateView();
         }
 
-        public float MovementSpeed { get; set; } = 200f;
-        public float MouseSensitivity { get; set; } = 10f;
-
-        private void CalculateView()
+        public void CalculateView()
         {
             View = Matrix.CreateLookAt(Position, Position + FrontDirection, UpDirection);
         }
+
         /// <inheritdoc />
         public override void Update(GameTime gameTime){
-            var elapsedTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
-            changed = false;
-            ProcessKeyboard(elapsedTime);
-            ProcessMouseMovement(elapsedTime);
+        }
 
-            if (changed)
-                CalculateView();
-        }
-       
-        public int StaticCollisionCB(AABB a, AABB b){
-            Position = oldPosition;
-            cameraBox.Translation(Position);
-            return 0;
-        }
-        public int CollectableCollisionCB(Recolectable r)
+        public void ProcessMouseMovement(Vector2 mouseDelta)
         {
-            //TODO: Use recolectable
-            Debug.WriteLine("Collectable Collision: " + r);
-            Stage.RemoveRecolectable(r);
-
-            switch (r.tipoRecolectable) {
-                case TipoRecolectable.m4:  
-                    Player.Instance.AgarrarArma(new Weapon(r.Modelo.Model));
-                    break;
-                case TipoRecolectable.cuchillo:
-                    Player.Instance.AgarrarArma(new Weapon(r.Modelo.Model));
-                    break;
-                case TipoRecolectable.armor:
-                    // TODO | Sumar armor del player
-                    break;
-                case TipoRecolectable.vida:
-                    // TODO | Sumar vida del player
-                    break;
-
-            }
-
-            return 0;
-        }
-
-        private void ProcessKeyboard(float elapsedTime)
-        {
-            var keyboardState = Keyboard.GetState();
-            oldPosition = Position;
-
-            var currentMovementSpeed = MovementSpeed;
-            if (keyboardState.IsKeyDown(Keys.LeftShift))
-                currentMovementSpeed *= 5f;
-
-            if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
-            {
-                Position += -RightDirection * currentMovementSpeed * elapsedTime;
-                changed = true;
-            }
-
-            if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
-            {
-                Position += RightDirection * currentMovementSpeed * elapsedTime;
-                changed = true;
-            }
-
-            if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
-            {
-                Position += FrontDirection * currentMovementSpeed * elapsedTime;
-                changed = true;
-            }
-
-            if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
-            {
-                Position += -FrontDirection * currentMovementSpeed * elapsedTime;
-                changed = true;
-            }
-            Position = new Vector3(Position.X, 100, Position.Z);
-            cameraBox.Translation(Position);
-            Collision.Instance.CheckStatic(cameraBox, StaticCollisionCB);
-            Collision.Instance.CheckCollectable(cameraBox, CollectableCollisionCB);
-        }
-
-        private void ProcessMouseMovement(float elapsedTime)
-        {
-            var mouseState = Mouse.GetState();
-
-            var mouseDelta = mouseState.Position.ToVector2() - pastMousePosition;
-            mouseDelta *= MouseSensitivity * elapsedTime;
-
             yaw += mouseDelta.X;
             pitch -= mouseDelta.Y;
 
@@ -142,20 +44,8 @@ namespace TGC.MonoGame.Samples.Cameras
             if (pitch < -89.0f)
                 pitch = -89.0f;
 
-            changed = true;
+            MouseManager.Instance.ViewChanged = true;
             UpdateCameraVectors();
-
-            if (lockMouse)
-            {
-                Mouse.SetPosition(screenCenter.X, screenCenter.Y);
-                Mouse.SetCursor(MouseCursor.Crosshair);
-            }
-            else
-            {
-                Mouse.SetCursor(MouseCursor.Arrow);
-            }
-
-            pastMousePosition = Mouse.GetState().Position.ToVector2();
         }
 
         private void UpdateCameraVectors()

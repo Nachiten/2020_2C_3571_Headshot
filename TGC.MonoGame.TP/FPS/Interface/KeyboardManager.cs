@@ -1,5 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Diagnostics;
+using TGC.MonoGame.Samples.Cameras;
 
 namespace TGC.MonoGame.TP.FPS.Interface
 {
@@ -23,45 +26,64 @@ namespace TGC.MonoGame.TP.FPS.Interface
     }
     public class KeyboardManager
     {
-        private Player player { get; set; }
-        public KeyboardManager(Player player)
-        {
-            this.player = player;
-        }
+       
 
-        public void Update(GameTime gametime)
+        #region Singleton
+        public static KeyboardManager Instance { get; private set; }
+        public static void Init(FreeCamera camera)
         {
-            MouseState state = Mouse.GetState();
-            
-            if(Keyboard.GetState().IsKeyDown(ControlSettings.Forward))
+            if (Instance is null)
             {
-                //fake - ver como mover al personaje
-                player.Move();
+                Instance = new KeyboardManager();
+                Camera = camera;
             }
-            if (Keyboard.GetState().IsKeyDown(ControlSettings.Backward))
+
+        }
+        #endregion
+
+        static FreeCamera Camera;
+
+        public void Update(float elapsedTime, Player Player)
+        {
+            var keyboardState = Keyboard.GetState();
+            Player.PreviousPosition = Player.Position;
+
+            var currentMovementSpeed = Player.Speed;
+
+            if (keyboardState.IsKeyDown(Keys.Escape))
             {
-                
+                //Salgo del juego.
+                //Exit();
             }
-            if (Keyboard.GetState().IsKeyDown(ControlSettings.PrimaryWeapon))
+
+
+            if (keyboardState.IsKeyDown(Keys.LeftShift))
+                currentMovementSpeed *= 5f;
+
+            if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
             {
-                player.ChangeWeapon(1);
+                Player.Position += -Camera.RightDirection * currentMovementSpeed * elapsedTime;
+                MouseManager.Instance.ViewChanged = true;
             }
-            if (Keyboard.GetState().IsKeyDown(ControlSettings.SecondaryWeapon))
+
+            if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
             {
-                player.ChangeWeapon(2);
+                Player.Position += Camera.RightDirection * currentMovementSpeed * elapsedTime;
+                MouseManager.Instance.ViewChanged = true;
             }
-            if (Keyboard.GetState().IsKeyDown(ControlSettings.Knife))
+
+            if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
             {
-                player.ChangeWeapon(3);
+                Player.Position += Camera.FrontDirection * currentMovementSpeed * elapsedTime;
+                MouseManager.Instance.ViewChanged = true;
             }
-            if(state.RightButton == ButtonState.Pressed)
+
+            if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
             {
-                //poner zoom al arma
+                Player.Position += -Camera.FrontDirection * currentMovementSpeed * elapsedTime;
+                MouseManager.Instance.ViewChanged = true;
             }
-            if (state.LeftButton == ButtonState.Pressed)
-            {
-                player.Shoot();
-            }
-        }       
+            Player.Move(new Vector3(Player.Position.X, 100, Player.Position.Z));
+        }
     }
 }

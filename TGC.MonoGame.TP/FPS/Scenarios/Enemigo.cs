@@ -11,7 +11,7 @@ using System.Reflection.Metadata;
 
 namespace TGC.MonoGame.TP
 {
-    class Enemigo
+    public class Enemigo
     {
         private const string ContentFolder3D = "Models/";
 
@@ -19,7 +19,7 @@ namespace TGC.MonoGame.TP
 
         private Matrix World { get; set; }
 
-        private ModelCollidable ModeloTgcitoClassic { get; set; }
+        public ModelCollidable ModeloTgcitoClassic { get; set; }
 
         private Matrix Rotacion;
 

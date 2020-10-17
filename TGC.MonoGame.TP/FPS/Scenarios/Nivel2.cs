@@ -106,6 +106,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             foreach (Enemigo unEnemigo in Enemigos)
             {
                 unEnemigo.LoadContent(Game.Content, GraphicsDevice);
+                Collision.Instance.AppendShootable(unEnemigo);
             }
 
             //foreach (Model unModelo in ColumnasCuadradas)

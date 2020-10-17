@@ -2,17 +2,23 @@ using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
 
 namespace TGC.MonoGame.TP.Utils{
     public class Collision{
         public static Collision Instance { get; private set; }
         public List<AABB> StaticElements = new List<AABB>();
         public List<Recolectable> CollectableElements = new List<Recolectable>();
+        public List<Enemigo> ShootableElements = new List<Enemigo>();
         public Collision(){
         }
         public void AppendStatic(AABB elem){
             //Console.WriteLine(elem.size.ToString());
             StaticElements.Add(elem);
+        }
+        public void AppendShootable(Enemigo elem)
+        {
+            ShootableElements.Add(elem);
         }
         public void AppendCollectable(Recolectable elem)
         {
@@ -39,6 +45,16 @@ namespace TGC.MonoGame.TP.Utils{
                 if (elem.IntersectAABB(r.Modelo.Aabb))
                 {
                     callback(r);
+                }
+            }
+        }
+        public void CheckShootable(Ray Ray, Func<Enemigo, int> callback)
+        {
+            foreach (Enemigo e in ShootableElements.ToArray())
+            {
+                if (e.ModeloTgcitoClassic.Aabb.IntersectRay(Ray))
+                {
+                    callback(e);
                 }
             }
         }

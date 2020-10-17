@@ -8,6 +8,7 @@ using TGC.MonoGame.TP.FPS.Scenarios;
 using System.Diagnostics;
 using System;
 using TGC.MonoGame.TP.FPS;
+using TGC.MonoGame.TP.FPS.Interface;
 
 namespace TGC.MonoGame.TP
 {
@@ -82,10 +83,13 @@ namespace TGC.MonoGame.TP
             // StageBuilder = new IceWorldStage(this); | Mapa 1 con objetos
 
             var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
-            Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(0, 100, 0), screenSize, StageBuilder);
+            Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(0, 100, 0), screenSize);
 
-            Player.Init(this);
+            Player.Init(this, Camera);
             interfaz = new PlayerGUI(this);
+
+            KeyboardManager.Init(Camera);
+            MouseManager.Init(Camera);
 
             interfaz.Initialize(Player.Instance);
 
@@ -96,10 +100,6 @@ namespace TGC.MonoGame.TP
 
             WorldM4 = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(50, 0, 110);
             Effect = new BasicEffect(GraphicsDevice);
-
-
-            
-
 
             base.Initialize();
         }
@@ -158,14 +158,7 @@ namespace TGC.MonoGame.TP
         /// </summary>
         protected override void Update(GameTime gameTime)
         {
-            // Aca deberiamos poner toda la logica de actualizacion del juego.
-
-            // Capturar Input teclado
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-                //Salgo del juego.
-                Exit();
-
-            Camera.Update(gameTime);
+            Player.Instance.Update(gameTime);
             StageBuilder.Update(gameTime);
 
             base.Update(gameTime);

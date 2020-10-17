@@ -31,8 +31,8 @@ namespace TGC.MonoGame.TP.Utils{
             Console.WriteLine(boundingBox.Intersects(other.boundingBox));
             return MaxCoord(distance) < 0;
         }
-        public float? IntersectRay(Ray ray){
-            return boundingBox.Intersects(ray);
+        public bool IntersectRay(Ray ray){
+            return boundingBox.Intersects(ray) != null;
         }
         public void Translation(Vector3 position){
             minExtents = position - size;
