@@ -12,7 +12,7 @@ using TGC.MonoGame.Samples.Cameras;
 
 namespace TGC.MonoGame.TP.FPS
 {
-    public class Player: DrawableGameComponent
+    public class Player : DrawableGameComponent
     {
         public static Player Instance { get; private set; }
 
@@ -32,8 +32,8 @@ namespace TGC.MonoGame.TP.FPS
         }
 
         #region Componentes
-        
-        
+
+
         #endregion
 
         #region Propiedades
@@ -42,6 +42,9 @@ namespace TGC.MonoGame.TP.FPS
 
         private Matrix View { get; set; }
         public int Health { get; set; }
+        private int maxHealth = 100;
+        public int Armor { get; set; }
+        private int maxArmor = 100;
         public Weapon CurrentWeapon { get; set; }
 
         public float Speed = 200f;
@@ -51,6 +54,7 @@ namespace TGC.MonoGame.TP.FPS
         public Weapon[] Weapons { get; set; }
 
         public Vector3 CurrentPosition { get; set; }
+        
 
         public AABB PlayerBox;
 
@@ -60,11 +64,11 @@ namespace TGC.MonoGame.TP.FPS
 
         static FreeCamera Camera;
         #endregion
-        //default 100
 
         public override void Initialize()
         {
-            Health = 100;
+            Health = maxHealth;
+            Armor = 45;
 
             Weapons = new Weapon[3];
             WorldWeapon = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(50, 0, 110);
@@ -110,6 +114,34 @@ namespace TGC.MonoGame.TP.FPS
             }
         }
 
+        public bool sumarVida(int cantidadVida)
+        {
+            // Si ya esta en maximo no suma nada
+            if (this.Health == maxHealth)
+            {
+                return false;
+            }
+
+            // Si no esta en el maximo suma algo
+            this.Health = Math.Min(this.Health += cantidadVida, maxHealth);
+
+            return true;
+        }
+
+        public bool sumarArmor(int cantidadArmor)
+        {
+            // Si ya esta en maximo no suma nada
+            if (this.Armor == maxArmor)
+            {
+                return false;
+            }
+
+            // Si no esta en el maximo suma algo
+            this.Armor = Math.Min(this.Armor += cantidadArmor, maxArmor);
+
+            return true;
+        }
+
         public void Jump()
         {
             //currnt position move y |
@@ -140,29 +172,17 @@ namespace TGC.MonoGame.TP.FPS
             Move(PreviousPosition);
             return 0;
         }
-        public int CollectableCollisionCB(Recolectable r)
+        public int CollectableCollisionCB(ARecolectable r)
         {
-            /*//TODO: Use recolectable
-            Debug.WriteLine("Collectable Collision: " + r);
-            Stage.RemoveRecolectable(r);
+            String timeStamp = GetTimestamp(DateTime.Now);
+            //TODO: Use recolectable
+            Debug.WriteLine("[" + timeStamp + "] Collectable Collision: " + r);
 
-            switch (r.tipoRecolectable)
+            if (Config.recolectablesActivados) 
             {
-                case TipoRecolectable.m4:
-                    Player.Instance.AgarrarArma(new Weapon(r.Modelo.Model));
-                    break;
-                case TipoRecolectable.cuchillo:
-                    Player.Instance.AgarrarArma(new Weapon(r.Modelo.Model));
-                    break;
-                case TipoRecolectable.armor:
-                    // TODO | Sumar armor del player
-                    break;
-                case TipoRecolectable.vida:
-                    // TODO | Sumar vida del player
-                    break;
-
-            }*/
-
+                // Se delega la responsabilidad de recolectar al recolectable
+                r.recolectar(Stage);
+            }
             return 0;
         }
         public int ShootableCollisionCB(Enemigo e)

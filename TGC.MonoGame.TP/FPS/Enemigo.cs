@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.Utils;
-using System.Reflection.Metadata;
 
 namespace TGC.MonoGame.TP
 {
@@ -43,6 +42,8 @@ namespace TGC.MonoGame.TP
 
         public void Update(GameTime gameTime, Vector3 posicionCamara)
         {
+            if (!Config.enemigosFollowActivado) return;
+
             // Tiempo total desde el comienzo del juego
             //tiempo += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
 
@@ -93,9 +94,6 @@ namespace TGC.MonoGame.TP
             var modelEffectArmor = (BasicEffect)ModeloTgcitoClassic.Model.Meshes[0].Effects[0];
             modelEffectArmor.DiffuseColor = Color.White.ToVector3();
             modelEffectArmor.EnableDefaultLighting();
-        }
-
-        public void moverHacia(Vector3 posicionObjetivo, float velocidadMovimiento) {
         }
 
         public void Draw(Matrix view, Matrix projection)

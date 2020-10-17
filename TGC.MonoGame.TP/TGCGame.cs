@@ -34,7 +34,7 @@ namespace TGC.MonoGame.TP
             // Maneja la configuracion y la administracion del dispositivo grafico.
             Graphics = new GraphicsDeviceManager(this);
             // Descomentar para que el juego sea pantalla completa.
-            Graphics.IsFullScreen = false;
+            Graphics.IsFullScreen = Config.pantallaCompleta;
             // Carpeta raiz donde va a estar toda la Media.
             Content.RootDirectory = "Content";
             // Hace que el mouse sea visible.
@@ -50,7 +50,7 @@ namespace TGC.MonoGame.TP
         private Matrix World { get; set; }
         private Matrix View { get; set; }
         private Matrix Projection { get; set; }
-        private BasicEffect Effect { get; set; }
+        public BasicEffect Effect { get; set; }
         public FreeCamera Camera { get; set; }
         IStageBuilder StageBuilder { get; set; }
         //private Player jugador { get; set; }
@@ -123,18 +123,6 @@ namespace TGC.MonoGame.TP
             ModeloM4 = Content.Load<Model>(ContentFolder3D + "weapons/fbx/m4a1_s");
             Knife = Content.Load<Model>(ContentFolder3D + "weapons/knife/Karambit");
 
-            //arma = new Weapon(ModeloM4);
-
-            //Player.Instance.AgarrarArma(arma);
-
-            //Stage.LoadContent(Content,GraphicsDevice,Collision);
-
-            /*foreach (Recolectable unRecolectable in recolectables)
-            {
-                unRecolectable.LoadContent(Content, GraphicsDevice);
-            }*/
-            
-
             // Obtengo su efecto para cambiarle el color y activar la luz predeterminada que tiene MonoGame.
             //Mesh Silenciador
             var modelEffect = (BasicEffect)ModeloM4.Meshes[0].Effects[0];
@@ -156,9 +144,12 @@ namespace TGC.MonoGame.TP
         ///     Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones
         ///     ante ellas.
         /// </summary>
+        bool presionadoTeclaQ = false;
         protected override void Update(GameTime gameTime)
         {
+
             Player.Instance.Update(gameTime);
+
             StageBuilder.Update(gameTime);
 
             base.Update(gameTime);
@@ -171,6 +162,9 @@ namespace TGC.MonoGame.TP
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.LightBlue);
+
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+            GraphicsDevice.BlendState = BlendState.Opaque;
 
             StageBuilder.Draw(gameTime);
 
@@ -197,7 +191,7 @@ namespace TGC.MonoGame.TP
             //}
 
             Player.Instance.Draw(gameTime);
-            //interfaz.Draw(gameTime);
+            interfaz.Draw(gameTime);
 
             //Finalmente invocamos al draw del modelo.
             base.Draw(gameTime);

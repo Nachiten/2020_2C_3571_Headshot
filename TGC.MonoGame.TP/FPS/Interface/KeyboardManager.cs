@@ -56,6 +56,14 @@ namespace TGC.MonoGame.TP.FPS.Interface
                 //Exit();
             }
 
+            // Desbloquear el mouse tocando la P
+            // if (Keyboard.GetState().IsKeyDown(Keys.P) && !presionadoTeclaQ) { 
+            //     Config.bloquearMouse = !Config.bloquearMouse;
+            //     presionadoTeclaQ = true;
+            // }
+
+            // if (Keyboard.GetState().IsKeyUp(Keys.P))
+            //     presionadoTeclaQ = false;
 
             if (keyboardState.IsKeyDown(Keys.LeftShift))
                 currentMovementSpeed *= 5f;

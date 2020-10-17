@@ -13,7 +13,6 @@ namespace TGC.MonoGame.TP.FPS.Interface
         public bool ViewChanged;
         private Vector2 pastMousePosition;
         public float MouseSensitivity { get; set; } = 10f;
-        private readonly bool lockMouse;
         static FreeCamera Camera;
         #region Singleton
         public static MouseManager Instance { get; private set; }
@@ -30,7 +29,6 @@ namespace TGC.MonoGame.TP.FPS.Interface
 
         public MouseManager()
         {
-            lockMouse = true;
             previousMouseState = Mouse.GetState();
             pastMousePosition = Mouse.GetState().Position.ToVector2();
             
@@ -59,7 +57,7 @@ namespace TGC.MonoGame.TP.FPS.Interface
 
             Camera.ProcessMouseMovement(mouseDelta);
 
-            if (lockMouse)
+            if (Config.bloquearMouse)
             {
                 Mouse.SetPosition(Camera.screenCenter.X, Camera.screenCenter.Y);
                 Mouse.SetCursor(MouseCursor.Crosshair);
