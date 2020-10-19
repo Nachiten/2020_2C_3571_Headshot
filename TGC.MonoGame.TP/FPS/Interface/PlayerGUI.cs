@@ -17,17 +17,12 @@ namespace TGC.MonoGame.TP.FPS
         private SpriteFont InterfaceFont { get; set; }
 
         public Player Player { get; set; }
-        Effect effect;
         #endregion
         public override void Initialize()
         {
             SpriteBatch = new SpriteBatch(GraphicsDevice);
             FooterGUI = Game.Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "interface/footer");
             InterfaceFont = Game.Content.Load<SpriteFont>(FPSManager.ContentFolderSpriteFonts + "Arial");
-
-            effect = ((TGCGame)Game).Effect;
-
-            //base.Initialize();
         }
         public void Initialize(Player player)
         {
@@ -38,21 +33,13 @@ namespace TGC.MonoGame.TP.FPS
         
         public override void Draw(GameTime gameTime)
         {
-            
-            //GraphicsDevice.Clear(Color.Magenta);
-
-            SpriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, effect);
-            //SpriteBatch.Begin();
+            SpriteBatch.Begin();
 
             Vector2 location = new Vector2(0, 380);
             Rectangle sourceRectangle = new Rectangle(0, 0, 900, 300);
             Vector2 origin = new Vector2(0, 0);
 
             SpriteBatch.Draw(FooterGUI, location, sourceRectangle, Color.White, 0.01f, origin, .87f, SpriteEffects.None, 1);
-
-            //spriteBatch.Draw(map, new Vector2(10, 10), new Rectangle(0, 0, 500, 500), Color.White, 0.01f, origin, .30f, SpriteEffects.None, 1);
-            //spriteBatch.Draw(bullets, new Vector2(750, 440), new Rectangle(0, 0, 250, 250), Color.White, 0.01f, origin, .095f, SpriteEffects.None, 1);
-
 
             if (Player.Health <= 0)
             {
@@ -63,12 +50,8 @@ namespace TGC.MonoGame.TP.FPS
                 SpriteBatch.DrawString(InterfaceFont, Player.Health.ToString(), new Vector2(50, 432), Color.White);
                 SpriteBatch.DrawString(InterfaceFont, Player.Armor.ToString(), new Vector2(660, 440), Color.White);
             }
-
-            //spriteBatch.DrawString(FontTexture, "50/250", new Vector2(660, 440), Color.White);
             SpriteBatch.End();
 
-            //base.Draw(gameTime);
         }
-
     }
 }

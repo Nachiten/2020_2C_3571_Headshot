@@ -18,9 +18,14 @@ namespace TGC.MonoGame.TP.Utils
             } else {
                 throw new System.Exception("QuadPrimitiveCollidable expects parameter 'normal' to be Axis Aligned");
             }
-            aabb = new AABB(size);
+            aabb = new AABB(graphicsDevice,size);
             aabb.Translation(origin);
             Collision.Instance.AppendStatic(aabb);
+        }
+        public override void Draw(Matrix world, Matrix view, Matrix projection)
+        {
+            aabb.Draw(view, projection);
+            base.Draw(world, view, projection);
         }
     }
 }

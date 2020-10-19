@@ -64,6 +64,7 @@ namespace TGC.MonoGame.TP.FPS
 
         static FreeCamera Camera;
         static IStage Stage;
+
         #endregion
 
         public override void Initialize()
@@ -76,7 +77,7 @@ namespace TGC.MonoGame.TP.FPS
             View = Matrix.CreateLookAt(new Vector3(30, 20, 150), new Vector3(30, 0, 0), Vector3.Up);
             Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);
 
-            PlayerBox = new AABB(new Vector3(20, 80, 20));
+            PlayerBox = new AABB(GraphicsDevice,new Vector3(20, 80, 20));
 
             //inicializar el current weapon con Fist
             base.Initialize();
@@ -163,6 +164,7 @@ namespace TGC.MonoGame.TP.FPS
             if (CurrentWeapon != null) {
                 CurrentWeapon.Draw(WorldWeapon, View, Projection);
             }
+            PlayerBox.Draw(Camera.View,Camera.Projection);
             base.Draw(gameTime);
         }
 
@@ -188,10 +190,11 @@ namespace TGC.MonoGame.TP.FPS
         }
         public int ShootableCollisionCB(Enemigo e)
         {
-            if (CurrentWeapon != null)
+            Debug.WriteLine("Dispare al tgcitoooooo " + Vector3.Transform(Vector3.Zero, e.ModeloTgcitoClassic.World));
+            /*if (CurrentWeapon != null)
             {
                 Debug.WriteLine("Dispare al tgcitoooooo " + Vector3.Transform(Vector3.Zero, e.ModeloTgcitoClassic.World));
-            }
+            }*/
             return 0;
         }
         #endregion

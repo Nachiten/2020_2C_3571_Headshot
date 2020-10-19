@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Collections.Generic;
-using jorge = System.Windows;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.Utils;
 
 namespace TGC.MonoGame.TP
@@ -19,11 +15,6 @@ namespace TGC.MonoGame.TP
         private Matrix World { get; set; }
 
         public ModelCollidable ModeloTgcitoClassic { get; set; }
-
-        private Matrix Rotacion;
-
-        private double tiempo = 0;
-
 
         public Enemigo(Vector3 posicion)
         {
@@ -88,7 +79,7 @@ namespace TGC.MonoGame.TP
 
         public void LoadContent(ContentManager Content, GraphicsDevice GraphicsDevice)
         {
-            ModeloTgcitoClassic = new ModelCollidable(Content, ContentFolder3D + "tgcito-classic/tgcito-classic", World);
+            ModeloTgcitoClassic = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + "tgcito-classic/tgcito-classic", World);
             Collision.Instance.AppendStatic(ModeloTgcitoClassic.Aabb);
 
             var modelEffectArmor = (BasicEffect)ModeloTgcitoClassic.Model.Meshes[0].Effects[0];

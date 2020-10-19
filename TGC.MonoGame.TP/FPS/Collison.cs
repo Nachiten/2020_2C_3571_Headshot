@@ -58,13 +58,44 @@ namespace TGC.MonoGame.TP.Utils{
         }
         public void CheckShootable(Ray Ray, Func<Enemigo, int> callback)
         {
+            Enemigo EnemyShooted = null;
+            float distanceshoot = -1;
+            bool ActualShot = false;
+
             foreach (Enemigo e in ShootableElements.ToArray())
             {
-                if (e.ModeloTgcitoClassic.Aabb.IntersectRay(Ray))
+                var colDis = e.ModeloTgcitoClassic.Aabb.IntersectRay(Ray);
+                if (colDis != null)
                 {
-                    callback(e);
+                    EnemyShooted = e;
+                    distanceshoot = (float)colDis;
+                    ActualShot = true;
+                    Debug.WriteLine("Distance to enemy: " + distanceshoot);
                 }
             }
+            if(EnemyShooted != null)
+            {
+                IEnumerable<AABB> EnemyAABB = ShootableElements.Select(x => x.ModeloTgcitoClassic.Aabb);
+                foreach (AABB s in StaticElements.Where(x => !EnemyAABB.Contains(x)))
+                {
+                    var colDis = s.IntersectRay(Ray);
+                    if (colDis != null)
+                    {
+                        Debug.WriteLine("Distance to Static Element: " + colDis);
+                        Debug.WriteLine("Static Element: " + s.maxExtents + " ; " + s.minExtents);
+                        if (colDis < distanceshoot)
+                        {
+                            ActualShot = false;
+                        }
+                    }
+                }
+            }
+
+            if (ActualShot)
+            {
+                callback(EnemyShooted);
+            }
+
         }
         public static void Init()
         {

@@ -9,11 +9,11 @@ namespace TGC.MonoGame.TP.Utils{
         public Model Model { get; set; }
         public AABB Aabb { get; set; }
         public Matrix World { get; set; }
-        public ModelCollidable(ContentManager Content, string Filepath, Matrix world){
+        public ModelCollidable(GraphicsDevice GraphicsDevice, ContentManager Content, string Filepath, Matrix world){
             Model = Content.Load<Model>(Filepath);
             // TODO: infer the size of the model & translate it to a vector
             World = world;
-            CreateAABB();
+            CreateAABB(GraphicsDevice);
         }
         public void Transform(Matrix world, bool dynamic)
         {
@@ -24,7 +24,7 @@ namespace TGC.MonoGame.TP.Utils{
                 Aabb.Translation(translation);
             }
         }
-        private void CreateAABB() {
+        private void CreateAABB(GraphicsDevice GraphicsDevice) {
             // Initialize minimum and maximum corners of the bounding box to max and min values
             Vector3 min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
             Vector3 max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
@@ -52,11 +52,12 @@ namespace TGC.MonoGame.TP.Utils{
                     }
                 }
             }
-            Aabb = new AABB(min, max);
+            Aabb = new AABB(GraphicsDevice,min, max);
         }
         public void Draw(Matrix View, Matrix Projection)
         {
             Model.Draw(World, View, Projection);
+            Aabb.Draw(View, Projection);
             //Model.Draw(Matrix.CreateScale(0.1f) * Matrix.CreateTranslation(Aabb.minExtents), View, Projection);
             //Model.Draw(Matrix.CreateScale(0.1f) * Matrix.CreateTranslation(Aabb.maxExtents), View, Projection);
         }

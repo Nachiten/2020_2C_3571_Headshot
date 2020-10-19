@@ -191,7 +191,7 @@ namespace TGC.MonoGame.TP
             //}
 
             Player.Instance.Draw(gameTime);
-            interfaz.Draw(gameTime);
+            //interfaz.Draw(gameTime);
 
             //Finalmente invocamos al draw del modelo.
             base.Draw(gameTime);

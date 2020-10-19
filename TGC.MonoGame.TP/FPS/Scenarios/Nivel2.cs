@@ -63,10 +63,10 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             WallZn = new QuadPrimitiveCollidable(GraphicsDevice, new Vector3(0, yLenWall / 2, -zLenFloor / 2), Vector3.UnitZ, Vector3.UnitY, xLenFloor, yLenWall,
                 Game.Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "whiteBricks"), new Vector2(5, 1));
             
-            var modeloCollidable1 = new ModelCollidable(Game.Content, FPSManager.ContentFolder3D + "columnas/columnaCilindro", Matrix.CreateTranslation(new Vector3(distanciaCentroColumna, offsetYCilindro, distanciaCentroColumna)) );
-            var modeloCollidable2 = new ModelCollidable(Game.Content, FPSManager.ContentFolder3D + "columnas/columnaCilindro", Matrix.CreateTranslation(new Vector3(-distanciaCentroColumna, offsetYCilindro, distanciaCentroColumna)));
-            var modeloCollidable3 = new ModelCollidable(Game.Content, FPSManager.ContentFolder3D + "columnas/columnaCilindro", Matrix.CreateTranslation(new Vector3(distanciaCentroColumna, offsetYCilindro, -distanciaCentroColumna)));
-            var modeloCollidable4 = new ModelCollidable(Game.Content, FPSManager.ContentFolder3D + "columnas/columnaCilindro", Matrix.CreateTranslation(new Vector3(-distanciaCentroColumna, offsetYCilindro, -distanciaCentroColumna)));
+            var modeloCollidable1 = new ModelCollidable(GraphicsDevice, Game.Content, FPSManager.ContentFolder3D + "columnas/columnaCilindro", Matrix.CreateTranslation(new Vector3(distanciaCentroColumna, offsetYCilindro, distanciaCentroColumna)) );
+            var modeloCollidable2 = new ModelCollidable(GraphicsDevice, Game.Content, FPSManager.ContentFolder3D + "columnas/columnaCilindro", Matrix.CreateTranslation(new Vector3(-distanciaCentroColumna, offsetYCilindro, distanciaCentroColumna)));
+            var modeloCollidable3 = new ModelCollidable(GraphicsDevice, Game.Content, FPSManager.ContentFolder3D + "columnas/columnaCilindro", Matrix.CreateTranslation(new Vector3(distanciaCentroColumna, offsetYCilindro, -distanciaCentroColumna)));
+            var modeloCollidable4 = new ModelCollidable(GraphicsDevice, Game.Content, FPSManager.ContentFolder3D + "columnas/columnaCilindro", Matrix.CreateTranslation(new Vector3(-distanciaCentroColumna, offsetYCilindro, -distanciaCentroColumna)));
 
             ColumnasCilindros.Add(modeloCollidable1);
             ColumnasCilindros.Add(modeloCollidable2);

@@ -158,7 +158,7 @@ namespace TGC.MonoGame.TP.Utils
         /// <param name="world">The world matrix for this box.</param>
         /// <param name="view">The view matrix, normally from the camera.</param>
         /// <param name="projection">The projection matrix, normally from the application.</param>
-        public void Draw(Matrix world, Matrix view, Matrix projection)
+        public virtual void Draw(Matrix world, Matrix view, Matrix projection)
         {
             // Set BasicEffect parameters.
             Effect.World = world;

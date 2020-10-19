@@ -36,7 +36,7 @@ namespace TGC.MonoGame.TP
         public virtual void LoadContent(ContentManager Content, GraphicsDevice GraphicsDevice) {
             // Genero el modelo
             World *= Matrix.CreateScale(tamanioModelo) * matrizOffsetPosicion;
-            Modelo = new ModelCollidable(Content, ContentFolder3D + pathModelo, World);
+            Modelo = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + pathModelo, World);
             //Debug.WriteLine("Path: " + pathModelo + " | offset: " + offsetPosicion);
             Modelo.Aabb.Translation(World * Matrix.CreateTranslation(posicion + offsetPosicion));
 

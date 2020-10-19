@@ -58,20 +58,20 @@ namespace TGC.MonoGame.TP
             {
                 case TipoRecolectable.armor:
                     World *= Matrix.CreateScale(1f) * Matrix.CreateTranslation(-52, 0, 2);
-                    Modelo = new ModelCollidable(Content, ContentFolder3D + "healthAndArmor/armadura", World);
+                    Modelo = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + "healthAndArmor/armadura", World);
                     Modelo.Aabb.Translation(World * Matrix.CreateTranslation(posicion + new Vector3(66,110,-8)));
                     modelColor = Color.Gray.ToVector3();
                     break;
                 case TipoRecolectable.vida:
                     World *= Matrix.CreateScale(0.25f);
-                    Modelo = new ModelCollidable(Content, ContentFolder3D + "healthAndArmor/corazon", World);
+                    Modelo = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + "healthAndArmor/corazon", World);
                     Modelo.Aabb.Translation(World * Matrix.CreateTranslation(posicion));
  
                     modelColor = Color.Red.ToVector3();
                     break;
                 case TipoRecolectable.m4:
                     World *= Matrix.CreateScale(2f);
-                    Modelo = new ModelCollidable(Content, ContentFolder3D + "weapons/fbx/m4a1_s", World);
+                    Modelo = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + "weapons/fbx/m4a1_s", World);
                     Modelo.Aabb.Translation(World * Matrix.CreateTranslation(posicion));
 
                     var modelEffect = (BasicEffect)Modelo.Model.Meshes[0].Effects[0];
@@ -88,7 +88,7 @@ namespace TGC.MonoGame.TP
 
                 case TipoRecolectable.cuchillo:
                     World = World * Matrix.CreateRotationZ(MathHelper.PiOver2) * Matrix.CreateScale(3f);
-                    Modelo = new ModelCollidable(Content, ContentFolder3D + "weapons/knife/Karambit", World);
+                    Modelo = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + "weapons/knife/Karambit", World);
                     Modelo.Aabb.Translation(World * Matrix.CreateTranslation(posicion));
                     //modelColor = Color.Red.ToVector3();
                     break;
