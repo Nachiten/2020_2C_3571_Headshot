@@ -14,6 +14,9 @@ namespace TGC.MonoGame.TP.Utils{
         BoundingBox boundingBox;
         GraphicsDevice GraphicsDevice;
         private BasicEffect Effect { get; }
+        private bool DrawingEnabled = true;
+
+        public bool PlayerBox = false;
 
         public AABB(GraphicsDevice gd, Vector3 size){
             this.size = size;
@@ -146,22 +149,98 @@ namespace TGC.MonoGame.TP.Utils{
             return MaxCoord(distance) < 0;
         }
         public float? IntersectRay(Ray ray){
+
             return boundingBox.Intersects(ray);
+            /*Vector3 v0 = ray.Position;
+            Vector3 v1 = Vector3.Normalize(ray.Direction) * 15000;
+
+            float f_low = 0;
+            float f_high = 1;
+
+            #region shitcode
+            // X
+
+            float f_dim_low = (minExtents.X - v0.X) / (v1.X - v0.X);
+            float f_dim_high = (maxExtents.X - v0.X) / (v1.X - v0.X);
+
+            if(f_dim_low > f_dim_high)
+            {
+                float aux = f_dim_low;
+                f_dim_low = f_dim_high;
+                f_dim_high = aux;
+            }
+            if (f_dim_high < f_low || f_dim_low > f_high)
+                return null;
+
+            f_low = Math.Max(f_dim_low, f_low);
+            f_high = Math.Max(f_dim_high, f_high);
+
+            if (f_low > f_high)
+                return null;
+
+            // Y
+
+            f_dim_low = (minExtents.X - v0.X) / (v1.X - v0.X);
+            f_dim_high = (maxExtents.X - v0.X) / (v1.X - v0.X);
+
+            if (f_dim_low > f_dim_high)
+            {
+                float aux = f_dim_low;
+                f_dim_low = f_dim_high;
+                f_dim_high = aux;
+            }
+            if (f_dim_high < f_low || f_dim_low > f_high)
+                return null;
+
+            f_low = Math.Max(f_dim_low, f_low);
+            f_high = Math.Max(f_dim_high, f_high);
+
+            if (f_low > f_high)
+                return null;
+
+            // Z
+
+            f_dim_low = (minExtents.X - v0.X) / (v1.X - v0.X);
+            f_dim_high = (maxExtents.X - v0.X) / (v1.X - v0.X);
+
+            if (f_dim_low > f_dim_high)
+            {
+                float aux = f_dim_low;
+                f_dim_low = f_dim_high;
+                f_dim_high = aux;
+            }
+            if (f_dim_high < f_low || f_dim_low > f_high)
+                return null;
+
+            f_low = Math.Max(f_dim_low, f_low);
+            f_high = Math.Max(f_dim_high, f_high);
+
+            if (f_low > f_high)
+                return null;
+            #endregion
+
+            Vector3 IntersectionPoint = v0 + (v1 - v0) * f_low;
+
+            return Vector3.Distance(IntersectionPoint,ray.Position);*/
+
         }
         public void Translation(Vector3 position){
             minExtents = position - size;
             maxExtents = position + size;
+            boundingBox = new BoundingBox(minExtents, maxExtents);
             CreateLines();
         }
         public void Translation(Matrix world){
             Vector3 pos = Vector3.Transform(Vector3.Zero, world);
             minExtents = pos - size;
             maxExtents = pos + size;
+            boundingBox = new BoundingBox(minExtents, maxExtents);
             CreateLines();
         }
         public void Rotate(Matrix rotation) {
             minExtents = Vector3.Transform(Vector3.Zero, Matrix.CreateTranslation(minExtents) * rotation);
             maxExtents = Vector3.Transform(Vector3.Zero, Matrix.CreateTranslation(maxExtents) * rotation);
+            boundingBox = new BoundingBox(minExtents, maxExtents);
             CreateLines();
         }
         private float MaxCoord(Vector3 v){
@@ -177,7 +256,7 @@ namespace TGC.MonoGame.TP.Utils{
         }
         public void Draw(Matrix View, Matrix Projection)
         {
-            if (Config.drawAABB)
+            if (Config.drawAABB && DrawingEnabled)
             {
                 Effect.View = View;
                 Effect.Projection = Projection;
@@ -191,6 +270,10 @@ namespace TGC.MonoGame.TP.Utils{
                     GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.LineList, 0, 0, 36 / 3);
                 }
             }
+        }
+        public void ToggleDraw()
+        {
+            DrawingEnabled = !DrawingEnabled;
         }
     }
 }

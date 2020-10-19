@@ -10,11 +10,11 @@ namespace TGC.MonoGame.TP.Utils
         { 
             Vector3 size;
             if(normal == Vector3.UnitX || normal == -Vector3.UnitX) {
-                size = new Vector3(1,height,width);
+                size = new Vector3(1,height/2,width/2);
             } else if(normal == Vector3.UnitY || normal == -Vector3.UnitY){
-                size = new Vector3(height,1,width);
+                size = new Vector3(height/2,1,width/2);
             } else if(normal == Vector3.UnitZ || normal == -Vector3.UnitZ) {
-                size = new Vector3(width,height,1);
+                size = new Vector3(width/2,height/2,1);
             } else {
                 throw new System.Exception("QuadPrimitiveCollidable expects parameter 'normal' to be Axis Aligned");
             }

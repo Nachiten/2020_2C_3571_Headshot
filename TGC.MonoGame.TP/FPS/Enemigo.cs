@@ -3,10 +3,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using TGC.MonoGame.TP.Utils;
+using TGC.MonoGame.TP.FPS;
 
 namespace TGC.MonoGame.TP
 {
-    public class Enemigo
+    public class Enemigo: Ashootable
     {
         private const string ContentFolder3D = "Models/";
 
@@ -80,7 +81,8 @@ namespace TGC.MonoGame.TP
         public void LoadContent(ContentManager Content, GraphicsDevice GraphicsDevice)
         {
             ModeloTgcitoClassic = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + "tgcito-classic/tgcito-classic", World);
-            Collision.Instance.AppendStatic(ModeloTgcitoClassic.Aabb);
+            Aabb = ModeloTgcitoClassic.Aabb;
+            Collision.Instance.AppendStatic(Aabb);
 
             var modelEffectArmor = (BasicEffect)ModeloTgcitoClassic.Model.Meshes[0].Effects[0];
             modelEffectArmor.DiffuseColor = Color.White.ToVector3();

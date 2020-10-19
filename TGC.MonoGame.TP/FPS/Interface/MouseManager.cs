@@ -33,7 +33,7 @@ namespace TGC.MonoGame.TP.FPS.Interface
             pastMousePosition = Mouse.GetState().Position.ToVector2();
             
         }
-        public void Update(float elapsedTime, Func<Enemigo, int> ShootCallback) {
+        public void Update(float elapsedTime, Func<Ashootable, int> ShootCallback) {
             // Handle Click
             if (previousMouseState.LeftButton == ButtonState.Released && Mouse.GetState().LeftButton == ButtonState.Pressed)
             {

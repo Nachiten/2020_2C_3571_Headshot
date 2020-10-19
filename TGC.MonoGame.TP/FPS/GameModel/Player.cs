@@ -13,7 +13,7 @@ using TGC.MonoGame.TP.FPS.Scenarios;
 
 namespace TGC.MonoGame.TP.FPS
 {
-    public class Player : DrawableGameComponent
+    public class Player : Ashootable
     {
         public static Player Instance { get; private set; }
 
@@ -29,8 +29,9 @@ namespace TGC.MonoGame.TP.FPS
 
         }
 
-        public Player(Game game) : base(game)
+        public Player(Game game)
         {
+            GraphicsDevice = game.GraphicsDevice;
         }
 
         #region Componentes
@@ -39,6 +40,7 @@ namespace TGC.MonoGame.TP.FPS
         #endregion
 
         #region Propiedades
+        GraphicsDevice GraphicsDevice;
         private Matrix WorldWeapon { get; set; }
         private Matrix Projection { get; set; }
 
@@ -54,9 +56,6 @@ namespace TGC.MonoGame.TP.FPS
         public Weapon[] Weapons { get; set; }
 
         public Vector3 CurrentPosition { get; set; }
-        
-
-        public AABB PlayerBox;
 
         public Vector3 Position;
 
@@ -67,7 +66,7 @@ namespace TGC.MonoGame.TP.FPS
 
         #endregion
 
-        public override void Initialize()
+        public void Initialize()
         {
             Health = 75;
             Armor = 45;
@@ -77,10 +76,11 @@ namespace TGC.MonoGame.TP.FPS
             View = Matrix.CreateLookAt(new Vector3(30, 20, 150), new Vector3(30, 0, 0), Vector3.Up);
             Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);
 
-            PlayerBox = new AABB(GraphicsDevice,new Vector3(20, 80, 20));
+            Aabb = new AABB(GraphicsDevice,new Vector3(20, 80, 20));
+            Aabb.PlayerBox = true;
+            Collision.Instance.AppendShootable(this);
 
             //inicializar el current weapon con Fist
-            base.Initialize();
         }
 
         /// <summary>
@@ -97,17 +97,17 @@ namespace TGC.MonoGame.TP.FPS
         {
             Camera.Position = NewPosition;
             Position = NewPosition;
-            PlayerBox.Translation(Position);
+            Aabb.Translation(Position);
         }
-        public override void Update(GameTime GameTime)
+        public void Update(GameTime GameTime)
         {
             var elapsedTime = (float)GameTime.ElapsedGameTime.TotalSeconds;
             MouseManager.Instance.ViewChanged = false;
             KeyboardManager.Instance.Update(elapsedTime, this);
             MouseManager.Instance.Update(elapsedTime, ShootableCollisionCB);
 
-            Collision.Instance.CheckStatic(PlayerBox, StaticCollisionCB);
-            Collision.Instance.CheckCollectable(PlayerBox, CollectableCollisionCB);
+            Collision.Instance.CheckStatic(Aabb, StaticCollisionCB);
+            Collision.Instance.CheckCollectable(Aabb, CollectableCollisionCB);
         }
 
         public void RecibirDisparo(int cantidadDanio) {
@@ -159,13 +159,12 @@ namespace TGC.MonoGame.TP.FPS
             CurrentWeapon = nuevaArma;
         }
         
-        public override void Draw(GameTime gameTime)
+        public void Draw(GameTime gameTime)
         {
             if (CurrentWeapon != null) {
                 CurrentWeapon.Draw(WorldWeapon, View, Projection);
             }
-            PlayerBox.Draw(Camera.View,Camera.Projection);
-            base.Draw(gameTime);
+            Aabb.Draw(Camera.View,Camera.Projection);
         }
 
 
@@ -188,9 +187,10 @@ namespace TGC.MonoGame.TP.FPS
             }
             return 0;
         }
-        public int ShootableCollisionCB(Enemigo e)
+        public int ShootableCollisionCB(Ashootable e)
         {
-            Debug.WriteLine("Dispare al tgcitoooooo " + Vector3.Transform(Vector3.Zero, e.ModeloTgcitoClassic.World));
+            //Debug.WriteLine("!!!!Dispare al tgcitoooooo " + Vector3.Transform(Vector3.Zero, ((Enemigo)e).ModeloTgcitoClassic.World));
+            Debug.WriteLine("!!!!Dispare al tgcitoooooo ");
             /*if (CurrentWeapon != null)
             {
                 Debug.WriteLine("Dispare al tgcitoooooo " + Vector3.Transform(Vector3.Zero, e.ModeloTgcitoClassic.World));

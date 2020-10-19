@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using TGC.MonoGame.TP.FPS;
 
 namespace TGC.MonoGame.TP.Utils{
     public class Collision{
@@ -10,16 +11,15 @@ namespace TGC.MonoGame.TP.Utils{
         public List<AABB> StaticElements = new List<AABB>();
 
         public List<ARecolectable> CollectableElements = new List<ARecolectable>();
-        public List<Enemigo> ShootableElements = new List<Enemigo>();
+        public List<Ashootable> ShootableElements = new List<Ashootable>();
 
         public Collision(){
         }
         public void AppendStatic(AABB elem){
-            //Console.WriteLine(elem.size.ToString());
             StaticElements.Add(elem);
         }
 
-        public void AppendShootable(Enemigo elem)
+        public void AppendShootable(Ashootable elem)
         {
             ShootableElements.Add(elem);
         }
@@ -56,33 +56,32 @@ namespace TGC.MonoGame.TP.Utils{
                 }
             }
         }
-        public void CheckShootable(Ray Ray, Func<Enemigo, int> callback)
+        public void CheckShootable(Ray Ray, Func<Ashootable, int> callback)
         {
-            Enemigo EnemyShooted = null;
+            Ashootable ObjectShooted = null;
             float distanceshoot = -1;
             bool ActualShot = false;
 
-            foreach (Enemigo e in ShootableElements.ToArray())
+            foreach (Ashootable e in ShootableElements.Where(x => !x.Aabb.PlayerBox))
             {
-                var colDis = e.ModeloTgcitoClassic.Aabb.IntersectRay(Ray);
+                var colDis = e.Aabb.IntersectRay(Ray);
                 if (colDis != null)
                 {
-                    EnemyShooted = e;
+                    ObjectShooted = e;
                     distanceshoot = (float)colDis;
                     ActualShot = true;
-                    Debug.WriteLine("Distance to enemy: " + distanceshoot);
                 }
             }
-            if(EnemyShooted != null)
+            if(ObjectShooted != null)
             {
-                IEnumerable<AABB> EnemyAABB = ShootableElements.Select(x => x.ModeloTgcitoClassic.Aabb);
-                foreach (AABB s in StaticElements.Where(x => !EnemyAABB.Contains(x)))
+                IEnumerable<AABB> EnemyAABB = ShootableElements.Select(x => x.Aabb);
+                IEnumerable<AABB> FilteredList = StaticElements.Where(x => !EnemyAABB.Contains(x));
+                foreach (AABB s in FilteredList)
                 {
                     var colDis = s.IntersectRay(Ray);
                     if (colDis != null)
                     {
-                        Debug.WriteLine("Distance to Static Element: " + colDis);
-                        Debug.WriteLine("Static Element: " + s.maxExtents + " ; " + s.minExtents);
+                        s.ToggleDraw();
                         if (colDis < distanceshoot)
                         {
                             ActualShot = false;
@@ -93,7 +92,7 @@ namespace TGC.MonoGame.TP.Utils{
 
             if (ActualShot)
             {
-                callback(EnemyShooted);
+                callback(ObjectShooted);
             }
 
         }
