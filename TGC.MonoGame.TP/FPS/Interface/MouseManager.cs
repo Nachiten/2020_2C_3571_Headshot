@@ -34,9 +34,11 @@ namespace TGC.MonoGame.TP.FPS.Interface
             
         }
         public void Update(float elapsedTime, Func<Ashootable, int> ShootCallback) {
+            
             // Handle Click
             if (previousMouseState.LeftButton == ButtonState.Released && Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
+                Player.Instance.TriggerShot = true;
                 ShotDirection = new Ray(Camera.Position, Camera.FrontDirection);
                 Collision.Instance.CheckShootable(ShotDirection, ShootCallback);
             }

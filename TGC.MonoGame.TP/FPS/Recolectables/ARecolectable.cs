@@ -25,7 +25,7 @@ namespace TGC.MonoGame.TP
         // Path del modelo dentro de Models
         protected string pathModelo;
         // Escala del modelo
-        protected float tamanioModelo;
+        public float tamanioModelo;
         // Color del modelo
         protected Vector3 modelColor;
         // Offset para ajustar el centro correctamente

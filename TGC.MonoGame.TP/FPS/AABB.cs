@@ -14,7 +14,6 @@ namespace TGC.MonoGame.TP.Utils{
         BoundingBox boundingBox;
         GraphicsDevice GraphicsDevice;
         private BasicEffect Effect { get; }
-        private bool DrawingEnabled = true;
 
         public bool PlayerBox = false;
 
@@ -256,7 +255,7 @@ namespace TGC.MonoGame.TP.Utils{
         }
         public void Draw(Matrix View, Matrix Projection)
         {
-            if (Config.drawAABB && DrawingEnabled)
+            if (Config.drawAABB)
             {
                 Effect.View = View;
                 Effect.Projection = Projection;
@@ -270,10 +269,6 @@ namespace TGC.MonoGame.TP.Utils{
                     GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.LineList, 0, 0, 36 / 3);
                 }
             }
-        }
-        public void ToggleDraw()
-        {
-            DrawingEnabled = !DrawingEnabled;
         }
     }
 }

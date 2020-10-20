@@ -1,20 +1,21 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Diagnostics;
 using Grafics = Microsoft.Xna.Framework.Graphics;
 
 namespace TGC.MonoGame.TP.FPS
 {
     public class Weapon 
     { 
-        public Weapon(Grafics.Model weaponModel)
+        public Weapon(AWeaponRecolectable weapon)
         {
-            WeaponModel = weaponModel;
+            Gun = weapon;
         }
-        public Grafics.Model WeaponModel { get; set; }
+        public AWeaponRecolectable Gun { get; set; }
         public int Damage { get; set; }
 
         public int SpeedFire { get; set; }
 
-        public Grafics.Model bullet { get; set; }
+        //public Grafics.Model bullet { get; set; }
         //sound!!!
         //range??
         public void Fire()
@@ -23,7 +24,14 @@ namespace TGC.MonoGame.TP.FPS
         }
         public void Draw(Matrix world, Matrix view, Matrix projection)
         {
-            WeaponModel.Draw(world, view, projection);
+            if (Gun.Scalable)
+            {
+                Gun.Modelo.Model.Draw(world * Matrix.CreateScale(Gun.tamanioModelo*0.8f) * Matrix.CreateTranslation(Vector3.UnitZ * 55 + Vector3.UnitX * 65 - Vector3.UnitY * 15) , view, projection);
+            }
+            else
+            {
+                Gun.Modelo.Model.Draw(world, view, projection);
+            }
         }
       
     }

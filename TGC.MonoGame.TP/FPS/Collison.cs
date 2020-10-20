@@ -81,7 +81,6 @@ namespace TGC.MonoGame.TP.Utils{
                     var colDis = s.IntersectRay(Ray);
                     if (colDis != null)
                     {
-                        s.ToggleDraw();
                         if (colDis < distanceshoot)
                         {
                             ActualShot = false;

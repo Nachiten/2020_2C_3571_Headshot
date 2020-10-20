@@ -43,8 +43,6 @@ namespace TGC.MonoGame.TP
 
         private GraphicsDeviceManager Graphics { get; }
         private SpriteBatch SpriteBatch { get; set; }
-        private Model ModeloM4 { get; set; }
-        private Model Knife { get; set; }
         private Matrix WorldM4 { get; set; }
         //private Model ModeloTgcitoClassic { get; set; }
         private Matrix World { get; set; }
@@ -116,25 +114,6 @@ namespace TGC.MonoGame.TP
 
             Stage.CrearEstructura();
 
-            //ModelCollidableStatic m4collidable = new ModelCollidableStatic(Content, ContentFolder3D + "weapons/fbx/m4a1_s",Collision);
-            //ModelCollidableStatic knifecollidable = new ModelCollidableStatic(Content, ContentFolder3D + "weapons/knife/Karambit", Collision);
-
-            // Armas
-            ModeloM4 = Content.Load<Model>(ContentFolder3D + "weapons/fbx/m4a1_s");
-            Knife = Content.Load<Model>(ContentFolder3D + "weapons/knife/Karambit");
-
-            // Obtengo su efecto para cambiarle el color y activar la luz predeterminada que tiene MonoGame.
-            //Mesh Silenciador
-            var modelEffect = (BasicEffect)ModeloM4.Meshes[0].Effects[0];
-            modelEffect.TextureEnabled = true;
-            modelEffect.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/fbx/noodas");
-            modelEffect.EnableDefaultLighting();
-
-            //Mesh Arma
-            var modelEffect2 = (BasicEffect)ModeloM4.Meshes[1].Effects[0];
-            modelEffect2.EnableDefaultLighting();
-            modelEffect2.TextureEnabled = true;
-            modelEffect2.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/fbx/noodas");
 
             base.LoadContent();
         }
@@ -168,32 +147,10 @@ namespace TGC.MonoGame.TP
 
             Stage.Draw(gameTime);
 
-            // Foreach de la lista de recolectables y dibujarlos
-            
-
-            // Testing de agarrar un recolectable
-            //if (Keyboard.GetState().IsKeyDown(Keys.R))
-            //{
-            //    if (!agarrado)
-            //    {
-            //        recolectarEnIndice(0);
-            //        agarrado = true;
-            //    }
-            //}
-
-            //if (Keyboard.GetState().IsKeyDown(Keys.Q))
-            //{
-            //    Knife.Draw(WorldM4, View, Projection);
-            //}
-            //else
-            //{
-            //    ModeloM4.Draw(WorldM4, View, Projection);
-            //}
 
             Player.Instance.Draw(gameTime);
             //interfaz.Draw(gameTime);
 
-            //Finalmente invocamos al draw del modelo.
             base.Draw(gameTime);
         }
 

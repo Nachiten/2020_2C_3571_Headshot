@@ -39,8 +39,17 @@ namespace TGC.MonoGame.TP.FPS
 
         #endregion
 
+        #region animation
+        public bool TriggerShot = false;
+        double frameTimePlayed = 0; //Amount of time (out of animationTime) that the animation has been playing for
+        bool IsAnimating = false; //Self-Explanitory
+        int animationTime = 500; //For .5 seconds of animation.
+        Matrix PreviousWorldWeapon;
+        #endregion
+
         #region Propiedades
         GraphicsDevice GraphicsDevice;
+
         private Matrix WorldWeapon { get; set; }
         private Matrix Projection { get; set; }
 
@@ -108,6 +117,35 @@ namespace TGC.MonoGame.TP.FPS
 
             Collision.Instance.CheckStatic(Aabb, StaticCollisionCB);
             Collision.Instance.CheckCollectable(Aabb, CollectableCollisionCB);
+
+            //If it is not already animating and there is a trigger, start animating
+            if (!IsAnimating && TriggerShot)
+            {
+                IsAnimating = true;
+                PreviousWorldWeapon = WorldWeapon;
+            }
+
+            //Increment the frameTimePlayed by the time (in milliseconds) since the last frame
+            if (IsAnimating)
+                frameTimePlayed += GameTime.ElapsedGameTime.TotalMilliseconds;
+            //If playing and we have not exceeded the time limit
+            if (IsAnimating && frameTimePlayed < animationTime)
+            {
+                WorldWeapon *= Matrix.CreateTranslation(Vector3.UnitZ * (float)Math.Sin(frameTimePlayed/80)*0.5f);
+                // TODO: Add update logic here, such as animation.Update()
+                // And increment your frames (Using division to figure out how many frames per second)
+            }
+            //If exceeded time, reset variables and stop playing
+            else if (IsAnimating && frameTimePlayed >= animationTime)
+            {
+                WorldWeapon = PreviousWorldWeapon;
+                frameTimePlayed = 0;
+                IsAnimating = false;
+                TriggerShot = false;
+                // TODO: Possibly custom animation.Stop(), depending on your animation class
+            }
+
+
         }
 
         public void RecibirDisparo(int cantidadDanio) {
