@@ -147,9 +147,8 @@ namespace TGC.MonoGame.TP
 
             Stage.Draw(gameTime);
 
-
             Player.Instance.Draw(gameTime);
-            //interfaz.Draw(gameTime);
+            interfaz.Draw(gameTime);
 
             base.Draw(gameTime);
         }
