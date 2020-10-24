@@ -76,7 +76,7 @@ namespace TGC.MonoGame.TP
             GraphicsDevice.RasterizerState = rasterizerState;
 
             // NOTA: Cambiar esta linea por la de abajo para cargar el otro mapa
-            Stage = new LibraryStage(this);
+            Stage = new IceWorldStage(this);
             // StageBuilder = new Nivel2(this); | Mapa 2
             // StageBuilder = new IceWorldStage(this); | Mapa 1 con objetos
 

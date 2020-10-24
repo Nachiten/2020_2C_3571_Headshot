@@ -15,11 +15,14 @@ namespace TGC.MonoGame.TP
          * rotacionRecolectables = true
          * bloquearMouse = true
          * colisionesActivadas = true
+         * pantallaCompleta = false
+         * drawAABB = false
+         * drawAxis = false
          */
 
         public static bool fijarYCamara = true;
         public static bool recolectablesActivados = true;
-        public static bool enemigosFollowActivado = false;
+        public static bool enemigosFollowActivado = true;
         public static bool rotacionRecolectables = true;
         public static bool bloquearMouse = true;
         public static bool colisionesActivadas = true;

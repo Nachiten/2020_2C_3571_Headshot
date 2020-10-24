@@ -28,17 +28,30 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
         public Nivel2(Game game) : base(game)
         {
-            //Recolectables
-            Recolectables.Add(new Health(new Vector3(xLenFloor / 2 - 100, 55, zLenFloor / 2 - 100)));
-            Recolectables.Add(new Health(new Vector3(-xLenFloor / 2 + 100, 55, zLenFloor / 2 - 100)));
-            Recolectables.Add(new Health(new Vector3(xLenFloor / 2 - 100, 55, -zLenFloor / 2 + 100)));
-            Recolectables.Add(new Health(new Vector3(-xLenFloor / 2 + 100, 55, -zLenFloor / 2 + 100)));
-
-            Recolectables.Add(new Armor(new Vector3(xLenFloor / 4, -45, 0)));
-            Recolectables.Add(new Armor(new Vector3(-xLenFloor / 4, -45, 0)));
+            posicionesPosiblesRecolectables.Add(new Vector3(xLenFloor / 2 - 100, 0, zLenFloor / 2 - 100));
+            posicionesPosiblesRecolectables.Add(new Vector3(-xLenFloor / 2 + 100, 0, zLenFloor / 2 - 100));
+            posicionesPosiblesRecolectables.Add(new Vector3(xLenFloor / 2 - 100, 0, -zLenFloor / 2 + 100));
+            posicionesPosiblesRecolectables.Add(new Vector3(-xLenFloor / 2 + 100, 0, -zLenFloor / 2 + 100));
+            posicionesPosiblesRecolectables.Add(new Vector3(xLenFloor / 2 - 100, 0, 0));
+            posicionesPosiblesRecolectables.Add(new Vector3(-xLenFloor / 2 + 100, 0, 0));
+            posicionesPosiblesRecolectables.Add(new Vector3(0, 0, zLenFloor / 2 - 100));
+            posicionesPosiblesRecolectables.Add(new Vector3(0, 0, -zLenFloor / 2 + 100));
+            posicionesPosiblesRecolectables.Add(new Vector3(xLenFloor / 2 - 100, 0, zLenFloor / 4));
+            posicionesPosiblesRecolectables.Add(new Vector3(xLenFloor / 2 - 100, 0, -zLenFloor / 4));
+            posicionesPosiblesRecolectables.Add(new Vector3(-xLenFloor / 2 + 100, 0, zLenFloor / 4));
+            posicionesPosiblesRecolectables.Add(new Vector3(-xLenFloor / 2 + 100, 0, -zLenFloor / 4));
+            int distanciaCentroRecolectable = 230;
+            posicionesPosiblesRecolectables.Add(new Vector3(distanciaCentroRecolectable, 0, distanciaCentroRecolectable));
+            posicionesPosiblesRecolectables.Add(new Vector3(distanciaCentroRecolectable, 0, -distanciaCentroRecolectable));
+            posicionesPosiblesRecolectables.Add(new Vector3(-distanciaCentroRecolectable, 0, distanciaCentroRecolectable));
+            posicionesPosiblesRecolectables.Add(new Vector3(-distanciaCentroRecolectable, 0, -distanciaCentroRecolectable);
 
             Recolectables.Add(new M4(new Vector3(0, 50, zLenFloor / 4)));
+
+            this.generarRecolectablesRandom();
+
         }
+        
 
         public override void LoadContent()
         {

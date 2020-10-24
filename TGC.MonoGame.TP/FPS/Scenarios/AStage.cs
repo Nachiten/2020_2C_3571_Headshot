@@ -18,6 +18,9 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         public LinePrimitive YAxis;
         public LinePrimitive ZAxis;
         public List<ARecolectable> Recolectables = new List<ARecolectable>();
+        protected int cantidadCorazonesRandom = 4;
+        protected int cantidadArmorRandom = 4;
+        protected List<Vector3> posicionesPosiblesRecolectables = new List<Vector3>();
         public List<Enemigo> Enemigos = new List<Enemigo>();
         public Matrix View;
         public Matrix Projection;
@@ -96,6 +99,59 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
                 YAxis.Draw(View, Projection);
                 ZAxis.Draw(View, Projection);
             }
+        }
+        protected void generarRecolectablesRandom()
+        {
+            // Test: Genero corazones en TODAS las posiciones para probar que esten bien
+            // Si se descomenta esto comentar todo el resto del metodo
+            //for (int i = 0; i < posicionesPosiblesRecolectables.Count; i++)
+            //{
+            //    Vector3 vectorActual = posicionesPosiblesRecolectables[i];
+
+            //    Recolectables.Add(new Health(new Vector3(vectorActual.X, 55, vectorActual.Z)));
+            //}
+
+            // Genero valores random que necesito
+            List<int> valoresRandom = generarValoresRandom(cantidadArmorRandom + cantidadCorazonesRandom);
+
+            int i;
+
+            // Itero para generar los Armor en posiciones random ya definidas
+            for (i = 0; i < cantidadArmorRandom; i++)
+            {
+                int index = valoresRandom[i];
+                Vector3 vectorActual = posicionesPosiblesRecolectables[index];
+
+                Recolectables.Add(new Armor(new Vector3(vectorActual.X, -45, vectorActual.Z)));
+            }
+
+            // Itero para generar los Health en posiciones random ya definidas
+            for (int j = i; j < cantidadCorazonesRandom + cantidadArmorRandom; j++)
+            {
+                int index = valoresRandom[j];
+                Vector3 vectorActual = posicionesPosiblesRecolectables[index];
+
+                Recolectables.Add(new Health(new Vector3(vectorActual.X, 55, vectorActual.Z)));
+            }
+        }
+        private List<int> generarValoresRandom(int cantidad)
+        {
+
+            List<int> numerosRandom = new List<int>();
+
+            Random rnd = new Random();
+
+            // Itero para agregar elementos (no repetidos) a la lista de numeros random
+            while (numerosRandom.Count < cantidad)
+            {
+                int numRandom = rnd.Next(1, posicionesPosiblesRecolectables.Count);
+                // Si el numero no existia en la lista lo agrego
+                if (!numerosRandom.Exists(unNum => unNum == numRandom))
+                {
+                    numerosRandom.Add(numRandom);
+                }
+            }
+            return numerosRandom;
         }
     }
 }
