@@ -18,8 +18,10 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         public LinePrimitive YAxis;
         public LinePrimitive ZAxis;
         public List<ARecolectable> Recolectables = new List<ARecolectable>();
+
         protected int cantidadCorazonesRandom = 4;
         protected int cantidadArmorRandom = 4;
+
         protected List<Vector3> posicionesPosiblesRecolectables = new List<Vector3>();
         public List<Enemigo> Enemigos = new List<Enemigo>();
         public Matrix View;
