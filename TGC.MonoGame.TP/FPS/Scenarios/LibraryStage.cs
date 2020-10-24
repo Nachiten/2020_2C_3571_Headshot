@@ -54,43 +54,39 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             Quads.Add(new QuadPrimitiveCollidable(GraphicsDevice, new Vector3(0, yLenWall / 2, zLenFloor / 2), -Vector3.UnitZ, Vector3.UnitY, xLenFloor, yLenWall, TextureBooks, new Vector2(10, 1)));
             Quads.Add(new QuadPrimitiveCollidable(GraphicsDevice, new Vector3(0, yLenWall / 2, -zLenFloor / 2), Vector3.UnitZ, Vector3.UnitY, xLenFloor, yLenWall, TextureBooks, new Vector2(10, 1)));
 
-            // Paredes
-            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(0, yLenWall / 2, -zLenFloor / 10), -Vector3.UnitX, 3 * zLenFloor / 5, yLenWall, thickness, TextureBooks, TextureWood, new Vector2(10, 1), TextureWood));
+            float Y = yLenWall / 2;
+            // Salas
+            #region Sala A
+            // Lado +X de sala A
+            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(0, Y, -zLenFloor / 10), -Vector3.UnitX, 3 * zLenFloor / 5, yLenWall, thickness, TextureBooks, TextureWood, new Vector2(10, 1), TextureWood));
 
-            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(-xLenFloor / 10, yLenWall / 2, -zLenFloor / 2 * 0.8f), Vector3.UnitZ, xLenFloor / 5, yLenWall, thickness, TextureBooks, TextureWood, new Vector2(10, 1), TextureWood));
-            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(-4 * xLenFloor / 10, yLenWall / 2, -zLenFloor / 2 * 0.8f), Vector3.UnitZ, xLenFloor / 5, yLenWall, thickness, TextureBooks, TextureWood, new Vector2(10, 1), TextureWood));
+            // Puerta -Z de sala A
+            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(-xLenFloor / 10, Y, -zLenFloor / 2 * 0.8f), -Vector3.UnitZ, xLenFloor / 5, yLenWall, thickness, TextureWood, TextureBooks, new Vector2(2, 1), TextureWood));
+            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(-4 * xLenFloor / 10, Y, -zLenFloor / 2 * 0.8f), -Vector3.UnitZ, xLenFloor / 5, yLenWall, thickness, TextureWood, TextureBooks, new Vector2(2, 1), TextureWood));
             
-            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(-xLenFloor / 4, yLenWall / 2, zLenFloor / 5), -Vector3.UnitZ, xLenFloor / 2, yLenWall, thickness, TextureBooks, TextureWood, new Vector2(10, 1), TextureWood));
+            // Lado +Z de sala A
+            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(-xLenFloor / 4, Y, zLenFloor / 5), Vector3.UnitZ, xLenFloor / 2, yLenWall, thickness, TextureWood, TextureBooks, new Vector2(10, 1), TextureWood));
+            #endregion
 
-            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(5 * xLenFloor / 16, yLenWall / 2, -zLenFloor / 2 * 0.8f), -Vector3.UnitZ, 3 * xLenFloor / 8, yLenWall, thickness, TextureBooks, TextureWood, new Vector2(10, 1), TextureWood));
+            #region Sala B
+            // Lado +Z de sala B
+            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(5 * xLenFloor / 16, Y, -zLenFloor / 2 * 0.8f), -Vector3.UnitZ, 3 * xLenFloor / 8, yLenWall, thickness, TextureBooks, TextureWood, new Vector2(10, 1), TextureWood));
+            #endregion
 
+            #region Sala C
+            // Lado -X de sala C
+            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(3 * xLenFloor / 16, Y, 3 * zLenFloor / 10), Vector3.UnitX, 2 * zLenFloor / 5, yLenWall, thickness, TextureBooks, TextureWood, new Vector2(10, 1), TextureWood));
 
-            /*Walls.Add(
-                new QuadPrimitiveCollidable(GraphicsDevice, new Vector3(0, yLenWall / 2, - zLenFloor / 10), Vector3.UnitX, Vector3.UnitY, 3 * zLenFloor / 5, yLenWall,
-                Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "library/books"), new Vector2(10, 1))
-                );
-            Walls.Add(
-                new QuadPrimitiveCollidable(GraphicsDevice, new Vector3(-xLenFloor / 10, yLenWall / 2, -zLenFloor /2 * 0.8f), -Vector3.UnitZ, Vector3.UnitY, xLenFloor / 5, yLenWall,
-                Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "library/books"), new Vector2(10, 1))
-                );
-            Walls.Add(
-                new QuadPrimitiveCollidable(GraphicsDevice, new Vector3(-4 * xLenFloor / 10, yLenWall / 2, -zLenFloor /2 * 0.8f), -Vector3.UnitZ, Vector3.UnitY, xLenFloor / 5, yLenWall,
-                Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "library/books"), new Vector2(10, 1))
-                );
-            Walls.Add(
-                new QuadPrimitiveCollidable(GraphicsDevice, new Vector3(-xLenFloor / 4, yLenWall / 2, zLenFloor / 5), -Vector3.UnitZ, Vector3.UnitY, xLenFloor / 2, yLenWall,
-                Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "library/wooden-floor"), new Vector2(10, 1))
-                );
+            // Puerta -Z de sala C
+            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(4 * xLenFloor / 16, Y, 3 * zLenFloor / 10 - zLenFloor / 5), -Vector3.UnitZ, xLenFloor / 8, yLenWall, thickness, TextureWood, TextureBooks, new Vector2(2, 1), TextureWood));
+            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(7 * xLenFloor / 16, Y, 3 * zLenFloor / 10 - zLenFloor / 5), -Vector3.UnitZ, xLenFloor / 8, yLenWall, thickness, TextureWood, TextureBooks, new Vector2(2, 1), TextureWood));
+            #endregion
 
-            Walls.Add(
-                new QuadPrimitiveCollidable(GraphicsDevice, new Vector3(5 * xLenFloor / 16, yLenWall / 2, -zLenFloor / 2 * 0.8f), -Vector3.UnitZ, Vector3.UnitY, 3 * xLenFloor / 8, yLenWall,
-                Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "library/books"), new Vector2(10, 1))
-                );*/
-
-
-
-
-
+            #region Sala D
+            // Puerta +X de sala D
+            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(-xLenFloor / 8, Y, 5 * zLenFloor / 20), Vector3.UnitX, zLenFloor / 10, yLenWall, thickness, TextureWood, TextureBooks, new Vector2(2, 1), TextureWood));
+            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(-xLenFloor / 8, Y, 9 * zLenFloor / 20), Vector3.UnitX, zLenFloor / 10, yLenWall, thickness, TextureWood, TextureBooks, new Vector2(2, 1), TextureWood));
+            #endregion
 
             /*Vector3 Enemy1Pos = new Vector3(200, 50, zLenFloor / 2 - 100);
             Vector3 Enemy2Pos = new Vector3(-200, 50, -zLenFloor / 2 + 100);
