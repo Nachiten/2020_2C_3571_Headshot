@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using TGC.MonoGame.TP.Utils;
 using TGC.MonoGame.TP.FPS;
+using System.Diagnostics;
+using System.Reflection.PortableExecutable;
 
 namespace TGC.MonoGame.TP
 {
@@ -17,65 +19,45 @@ namespace TGC.MonoGame.TP
 
         public ModelCollidable ModeloTgcitoClassic { get; set; }
 
-        public Enemigo(Vector3 posicion)
-        {
-            this.posicion = posicion;
-            World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateScale(1f) * Matrix.CreateTranslation(posicion);
-        }
+        private Weapon Weapon { get; set; }
 
         //private Vector3 posicionInicial;
-        private Vector3 mirandoInicial = new Vector3(0,0,-1);
-        float velocidadMovimiento = 2;
+        private Vector3 mirandoInicial = new Vector3(0, 0, -1);
+        float velocidadMovimiento = 1;
         Vector3 posicionObjetivo = Vector3.Zero;
         Vector3 vectorDireccion = Vector3.Zero;
 
-        float anguloRotacionRadianes = 0;
+        float anguloRotacionRadianes;
         Vector3 OldPosition = Vector3.Zero;
 
-        public void Update(GameTime gameTime, Vector3 posicionCamara)
+        private float health = 100;
+
+        private bool shooting = false;
+        Ray LineOfSight;
+        Ray AabbMaxSight;
+        Ray AabbMinSight;
+        Vector3 InitialDirection;
+        Vector3 GunOffset = new Vector3(15, 40, 0);
+
+        Vector3[] PosibleDirections = new[]
         {
-            if (!Config.enemigosFollowActivado) return;
+            Vector3.UnitX,
+            Vector3.UnitZ,
+            -Vector3.UnitX,
+            -Vector3.UnitZ
+        };
 
-            // Tiempo total desde el comienzo del juego
-            //tiempo += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
+        public Enemigo(Vector3 posicion, AWeaponRecolectable weapon, float Angle)
+        {
+            Weapon = new Weapon(weapon);
+            anguloRotacionRadianes = Angle;
+            this.posicion = posicion;
+            World = Matrix.CreateRotationY(anguloRotacionRadianes) * Matrix.CreateScale(1f) * Matrix.CreateTranslation(posicion);
 
-            // Calculo la posicion a la que me voy a mover
-            posicionObjetivo = new Vector3(posicionCamara.X, 50, posicionCamara.Z);
-
-            float distanciaAlObjetivo = Vector3.Distance(posicion, posicionObjetivo);
-            // Si la distancia es menor a un margen comienzo a moverme
-            if (distanciaAlObjetivo < 200 && distanciaAlObjetivo > 50) {
-                //Guardo la posición anterior
-                OldPosition = posicion;
-
-                vectorDireccion = Vector3.Normalize(posicionObjetivo - posicion);
-
-                // Establezco el giro al inicial
-                World *= Matrix.CreateRotationY(-anguloRotacionRadianes);
-
-                // Calculo angulo de rotacion entre el robot y el objetivo
-                anguloRotacionRadianes = (float)Math.Acos(Vector3.Dot(vectorDireccion, mirandoInicial)
-                    / (Vector3.Distance(vectorDireccion, Vector3.Zero) * Vector3.Distance(mirandoInicial, Vector3.Zero)));
-
-                //Debug.WriteLine("Dot product: " + Vector3.Dot(vectorDireccion, mirandoInicial));
-                //Debug.WriteLine("Angulo rotacion: " + anguloRotacionRadianes);
-
-                // Si posX del objetivo es mayor a posX actual => * -1
-                // Si el objetivo está en el tercer o cuarto cuadrante (angulo > 180) entonces debo invertir el angulo
-                if (posicionObjetivo.X > posicion.X)
-                {
-                    anguloRotacionRadianes *= -1;
-                }
-
-                // Aplico la rotacion que corresponde
-                World = Matrix.CreateScale(1f) * Matrix.CreateRotationY(MathHelper.Pi + anguloRotacionRadianes);
-                posicion = posicion + (vectorDireccion * velocidadMovimiento);
-                
-                // Muevo el modelo y chequeo si colisiono con algo
-                ModeloTgcitoClassic.Transform(World * Matrix.CreateTranslation(posicion),true);
-                Collision.Instance.CheckStatic(ModeloTgcitoClassic.Aabb, CollisionCallback);
-
-            }
+            InitialDirection = new Vector3(MathF.Cos(MathHelper.PiOver2 + anguloRotacionRadianes), 0, MathF.Sin(MathHelper.PiOver2 + anguloRotacionRadianes));
+            LineOfSight = new Ray();
+            AabbMaxSight = new Ray();
+            AabbMinSight = new Ray();
         }
 
         public void LoadContent(ContentManager Content, GraphicsDevice GraphicsDevice)
@@ -87,6 +69,125 @@ namespace TGC.MonoGame.TP
             var modelEffectArmor = (BasicEffect)ModeloTgcitoClassic.Model.Meshes[0].Effects[0];
             modelEffectArmor.DiffuseColor = Color.White.ToVector3();
             modelEffectArmor.EnableDefaultLighting();
+            Weapon.Gun.LoadContent(Content, GraphicsDevice);
+        }
+
+        private bool StartedMoving = false;
+
+        public void Update(GameTime gameTime, Vector3 posicionCamara)
+        {
+            //UpdateLineOfSight();
+
+            // Calculo la posicion a la que me voy a mover
+            posicionObjetivo = new Vector3(posicionCamara.X, 50, posicionCamara.Z);
+
+            float distanciaAlObjetivo = Vector3.Distance(posicion, posicionObjetivo);
+            // Si la distancia es menor a un margen comienzo a moverme
+            if (distanciaAlObjetivo < 500 && Config.enemigosFollowActivado && !StartedMoving) {
+                StartedMoving = true;
+                //Guardo la posición anterior
+                OldPosition = posicion;
+
+                // Establezco el giro al inicial
+                World *= Matrix.CreateRotationY(-anguloRotacionRadianes);
+
+                anguloRotacionRadianes = MoveTowards(posicionObjetivo);
+
+                UpdateWorld(posicion + (vectorDireccion * velocidadMovimiento), anguloRotacionRadianes);
+
+                Collision.Instance.CheckStatic(ModeloTgcitoClassic.Aabb, StaticCollisionCB);
+            }
+
+            if (StartedMoving)
+            {
+                float shortestDistance = GetShortestDistanceToStaticElement();
+
+                var dirIdx = 0;
+                while (shortestDistance < 50 && dirIdx < PosibleDirections.Length)
+                {
+                    anguloRotacionRadianes = PointTo(PosibleDirections[dirIdx]);
+                    UpdateWorld(posicion, anguloRotacionRadianes);
+                    shortestDistance = GetShortestDistanceToStaticElement();
+                    dirIdx++;
+                }
+
+                UpdateWorld(posicion + (vectorDireccion * velocidadMovimiento), anguloRotacionRadianes);
+            }
+
+            if (distanciaAlObjetivo > 500 && distanciaAlObjetivo < 250)
+                StartedMoving = false;
+
+
+            if (Math.Round(gameTime.TotalGameTime.TotalMilliseconds) % 2000 == 0 && !shooting)
+            {
+                shooting = true;
+                Collision.Instance.CheckShootable(LineOfSight, this, ShootableCollisionCB);
+            }
+            else
+            {
+                shooting = false;
+            }
+        }
+        private void UpdateWorld(Vector3 hacia, float angulo)
+        {
+            posicion = hacia;
+            // Aplico la rotacion que corresponde
+            World = Matrix.CreateScale(1f) * Matrix.CreateRotationY(MathHelper.Pi + angulo);
+
+            // Muevo el modelo
+            World *= Matrix.CreateTranslation(posicion);
+            ModeloTgcitoClassic.Transform(World, true);
+
+            // Actualizo la vista
+            UpdateLineOfSight();
+        }
+        private float MoveTowards(Vector3 v)
+        {
+            vectorDireccion = Vector3.Normalize(v - posicion);
+            float angle = (float)Math.Acos(Vector3.Dot(vectorDireccion, mirandoInicial)
+                    / (Vector3.Distance(vectorDireccion, Vector3.Zero) * Vector3.Distance(mirandoInicial, Vector3.Zero)));
+
+            // Si posX del objetivo es mayor a posX actual => * -1
+            // Si el objetivo está en el tercer o cuarto cuadrante (angulo > 180) entonces debo invertir el angulo
+            if (v.X > posicion.X)
+            {
+                angle *= -1;
+            }
+            return angle;
+        }
+        private float PointTo(Vector3 v)
+        {
+            vectorDireccion = v;
+            float angle = (float)Math.Acos(Vector3.Dot(vectorDireccion, mirandoInicial)
+                    / (Vector3.Distance(vectorDireccion, Vector3.Zero) * Vector3.Distance(mirandoInicial, Vector3.Zero)));
+
+            // Si posX del objetivo es mayor a posX actual => * -1
+            // Si el objetivo está en el tercer o cuarto cuadrante (angulo > 180) entonces debo invertir el angulo
+            if (v.X > posicion.X)
+            {
+                angle *= -1;
+            }
+            return angle;
+        }
+
+        private void UpdateLineOfSight()
+        {
+            World.Decompose(out Vector3 scale, out Quaternion rotation, out Vector3 translation);
+
+            Vector3 Direction = Vector3.Transform(InitialDirection, Matrix.CreateFromQuaternion(rotation));
+
+            LineOfSight.Position = posicion + GunOffset;
+            LineOfSight.Direction = Direction;
+
+            AabbMinSight.Position = Aabb.minExtents;
+            AabbMinSight.Direction = Direction;
+
+            AabbMaxSight.Position = Aabb.maxExtents;
+            AabbMaxSight.Direction = Direction;
+        }
+        private float GetShortestDistanceToStaticElement()
+        {
+            return Math.Min(Collision.Instance.GetShortestDistanceToStaticElement(AabbMinSight, Aabb), Collision.Instance.GetShortestDistanceToStaticElement(AabbMaxSight, Aabb));
         }
 
         public void Draw(Matrix view, Matrix projection)
@@ -94,12 +195,39 @@ namespace TGC.MonoGame.TP
             // Dibujo en las coordenadas actuales
             ModeloTgcitoClassic.Draw(view, projection);
 
+            World.Decompose(out Vector3 scale, out Quaternion rotation, out Vector3 translation);
+
+            Matrix ww = Matrix.CreateTranslation(GunOffset) * Matrix.CreateFromQuaternion(rotation) * Matrix.CreateTranslation(translation);
+
+            Weapon.Draw(ww, view, projection);
         }
-        private int CollisionCallback(AABB a, AABB b)
+
+        public override void GetDamaged(int damage)
+        {
+            if (health - damage < 0)
+            {
+                health = 0;
+            } else
+            {
+                health -= damage;
+            }
+        }
+        public bool IsDead()
+        {
+            return health == 0;
+        }
+
+        private int StaticCollisionCB(AABB a, AABB b)
         {
             //TODO: Handle Collision
             posicion = OldPosition;
             ModeloTgcitoClassic.Transform(World * Matrix.CreateTranslation(posicion), true);
+            return 0;
+        }
+        public int ShootableCollisionCB(Ashootable e)
+        {
+            Debug.WriteLine("!!!!Dispare al personaje ");
+            e.GetDamaged(Weapon.Damage);
             return 0;
         }
     }

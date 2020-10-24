@@ -24,6 +24,7 @@ namespace TGC.MonoGame.TP
             Rotation = 0;
             //matrizOffsetPosicion = Matrix.CreateTranslation(new Vector3(0, 0, 20));
             Scalable = true;
+            Damage = 20;
         }
 
         // Hago override ya que debo agregar logica extra

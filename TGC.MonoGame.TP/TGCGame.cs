@@ -50,7 +50,7 @@ namespace TGC.MonoGame.TP
         private Matrix Projection { get; set; }
         public BasicEffect Effect { get; set; }
         public FreeCamera Camera { get; set; }
-        IStage Stage { get; set; }
+        AStage Stage { get; set; }
         //private Player jugador { get; set; }
         private PlayerGUI interfaz { get; set; }
         private Weapon arma { get; set; }
@@ -76,7 +76,7 @@ namespace TGC.MonoGame.TP
             GraphicsDevice.RasterizerState = rasterizerState;
 
             // NOTA: Cambiar esta linea por la de abajo para cargar el otro mapa
-            Stage = new IceWorldStage(this);
+            Stage = new LibraryStage(this);
             // StageBuilder = new Nivel2(this); | Mapa 2
             // StageBuilder = new IceWorldStage(this); | Mapa 1 con objetos
 
@@ -112,7 +112,7 @@ namespace TGC.MonoGame.TP
             // Aca es donde deberiamos cargar todos los contenido necesarios antes de iniciar el juego.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Stage.CrearEstructura();
+            Stage.LoadContent();
 
 
             base.LoadContent();
@@ -123,7 +123,6 @@ namespace TGC.MonoGame.TP
         ///     Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones
         ///     ante ellas.
         /// </summary>
-        bool presionadoTeclaQ = false;
         protected override void Update(GameTime gameTime)
         {
 

@@ -24,7 +24,7 @@ namespace TGC.MonoGame.TP
             matrizOffsetPosicion = Matrix.CreateTranslation(-52, 0, 2);
         }
 
-        public override void recolectar(IStage Stage)
+        public override void recolectar(AStage Stage)
         {
             bool sumeArmor = Player.Instance.sumarArmor(armorSumada);
 

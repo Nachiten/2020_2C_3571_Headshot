@@ -20,9 +20,6 @@ namespace TGC.MonoGame.TP.FPS.Interface
         public static Keys Jump = Keys.Back;
 
         //weapon controller
-        
-
-        
     }
     public class KeyboardManager
     {
@@ -66,7 +63,7 @@ namespace TGC.MonoGame.TP.FPS.Interface
             //     presionadoTeclaQ = false;
 
             if (keyboardState.IsKeyDown(Keys.LeftShift))
-                currentMovementSpeed *= 5f;
+                currentMovementSpeed *= 2f;
 
             if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
             {

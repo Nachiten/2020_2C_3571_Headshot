@@ -1,18 +1,14 @@
-﻿using Microsoft.Xna.Framework;
-using GraficsModel = Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using TGC.MonoGame.Samples.Cameras;
-using TGC.MonoGame.TP.Utils;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using TGC.MonoGame.TP.Utils;
 
 namespace TGC.MonoGame.TP.FPS.Scenarios
 {
-    public class IceWorldStage : DrawableGameComponent, IStage
+    public class IceWorldStage : AStage
     {
         #region Propiedades de Estructura
-        //public GraficsModel.VertexPositionTexture[] floor { get; set; }
         private QuadPrimitive Floor { get; set; }
         private QuadPrimitive WallXp { get; set; }
         private QuadPrimitive WallZn { get; set; }
@@ -21,19 +17,14 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         private int SteelBoxSize = 150;
         private int WoodenBoxSize = 40;
         float xLenFloor = 1500;
-        float zLenFloor = 2000;
+        float zLenFloor = 2500;
         int yLenWall = 170;
         int gapMiddleBoxes = 300;
         List<BoxPrimitiveCollidable> SteelBoxes { get; set; }
         List<BoxPrimitiveCollidable> WoodenBoxes { get; set; }
         private Matrix WoodenBoxWorld { get; set; }
         private Matrix SteelBoxWorld { get; set; }
-        
-        #endregion
 
-        #region Propiedades de Elementos
-        private List<ARecolectable> Recolectables = new List<ARecolectable>();
-        List<Enemigo> Enemigos = new List<Enemigo>();
         #endregion
 
         public IceWorldStage(Game game) : base(game)
@@ -58,68 +49,47 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
         }
 
-        public void CrearEstructura()
+        public override void LoadContent()
         {
             Floor = new QuadPrimitiveCollidable(GraphicsDevice, Vector3.Zero, Vector3.UnitY, Vector3.UnitX, zLenFloor, xLenFloor,
-                Game.Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "sand"), new Vector2(10, 10));
+                Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "sand"), new Vector2(10, 10));
 
             WallXp = new QuadPrimitiveCollidable(GraphicsDevice, new Vector3(xLenFloor / 2, yLenWall / 2, 0), -Vector3.UnitX, Vector3.UnitY, zLenFloor, yLenWall,
-                Game.Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "rusty"), new Vector2(8, 1));
+                Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "rusty"), new Vector2(8, 1));
             WallXn = new QuadPrimitiveCollidable(GraphicsDevice, new Vector3(-xLenFloor / 2, yLenWall / 2, 0), Vector3.UnitX, Vector3.UnitY, zLenFloor, yLenWall,
-                Game.Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "rusty"), new Vector2(8, 1));
+                Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "rusty"), new Vector2(8, 1));
             WallZp = new QuadPrimitiveCollidable(GraphicsDevice, new Vector3(0, yLenWall / 2, zLenFloor / 2), -Vector3.UnitZ, Vector3.UnitY, xLenFloor, yLenWall,
-                Game.Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "ladrillo"), new Vector2(10, 1));
+                Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "ladrillo"), new Vector2(10, 1));
             WallZn = new QuadPrimitiveCollidable(GraphicsDevice, new Vector3(0, yLenWall / 2, -zLenFloor / 2), Vector3.UnitZ, Vector3.UnitY, xLenFloor, yLenWall,
-                Game.Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "ladrillo"), new Vector2(10, 1));
+                Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "ladrillo"), new Vector2(10, 1));
             for (int x = 0; x < 12; x++)
             {
-                WoodenBoxes.Add(new BoxPrimitiveCollidable(GraphicsDevice, Vector3.One * WoodenBoxSize, Game.Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "wood/caja-madera-3")));
+                WoodenBoxes.Add(new BoxPrimitiveCollidable(GraphicsDevice, Vector3.One * WoodenBoxSize, Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "wood/caja-madera-3")));
             }
             for (int x = 0; x < 16; x++)
             {
-                SteelBoxes.Add(new BoxPrimitiveCollidable(GraphicsDevice, Vector3.One * SteelBoxSize, Game.Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "steel")));
+                SteelBoxes.Add(new BoxPrimitiveCollidable(GraphicsDevice, Vector3.One * SteelBoxSize, Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "steel")));
             }
 
-            foreach (ARecolectable R in Recolectables)
-            {
-                R.LoadContent(Game.Content, GraphicsDevice);
-            }
+            Vector3 Enemy1Pos = new Vector3(200, 50, zLenFloor / 2 - 100);
+            Vector3 Enemy2Pos = new Vector3(-200, 50, -zLenFloor / 2 + 100);
 
             // Inicializacion enemigo
-            Enemigos.Add(new Enemigo(new Vector3(0, 50, zLenFloor / 2 - 100)));
-            Enemigos.Add(new Enemigo(new Vector3(0, 50, - zLenFloor / 2 + 100)));
+            Enemigos.Add(new Enemigo(Enemy1Pos, new M4(Enemy1Pos), MathHelper.Pi));
+            Enemigos.Add(new Enemigo(Enemy2Pos, new M4(Enemy2Pos), 0));
 
-            foreach (Enemigo unEnemigo in Enemigos) {
-                unEnemigo.LoadContent(Game.Content, GraphicsDevice);
-                Collision.Instance.AppendShootable(unEnemigo);
-            }
-
+            base.LoadContent();
         }
         public override void Update(GameTime gameTime)
         {
-            foreach (ARecolectable R in Recolectables)
-            {
-                R.Update(gameTime);
-            }
-
-            foreach (Enemigo unEnemigo in Enemigos)
-            {
-                var position = ((TGCGame)Game).Camera.Position;
-                unEnemigo.Update(gameTime, position);
-            }
-        }
-
-        public void RemoveRecolectable(ARecolectable R)
-        {
-            Collision.Instance.RemoveCollectable(R);
-            Recolectables.Remove(R);
+            base.Update(gameTime);
         }
 
         #region metodoDraw
         public override void Draw(GameTime gameTime)
         {
-            var View = ((TGCGame)Game).Camera.View;
-            var Projection = ((TGCGame)Game).Camera.Projection;
+            base.Draw(gameTime);
+
             Floor.Draw(Matrix.CreateTranslation(Vector3.Zero), View, Projection);
             WallXp.Draw(Matrix.CreateTranslation(Vector3.Zero), View, Projection);
             WallXn.Draw(Matrix.CreateTranslation(Vector3.Zero), View, Projection);
@@ -166,17 +136,6 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
             WoodenBoxes[10].Draw(WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes + 2 * SteelBoxSize) + Vector3.UnitZ * -(gapMiddleBoxes + 2 * SteelBoxSize - 2 * WoodenBoxSize)), View, Projection);
             WoodenBoxes[11].Draw(WoodenBoxWorld * Matrix.CreateTranslation(Vector3.UnitX * -(gapMiddleBoxes + 2 * SteelBoxSize - WoodenBoxSize) + Vector3.UnitZ * -(gapMiddleBoxes + 2 * SteelBoxSize - 2 * WoodenBoxSize)), View, Projection);
-            //base.Draw(gameTime);
-
-            foreach (ARecolectable R in Recolectables)
-            {
-                R.Draw(View, Projection);
-            }
-
-            foreach (Enemigo unEnemigo in Enemigos)
-            {
-                unEnemigo.Draw(View, Projection);
-            }
         }
         #endregion
 

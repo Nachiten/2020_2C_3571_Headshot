@@ -17,7 +17,7 @@ namespace TGC.MonoGame.TP.FPS
     {
         public static Player Instance { get; private set; }
 
-        public static void Init(Game game, FreeCamera camera, IStage stage)
+        public static void Init(Game game, FreeCamera camera, AStage stage)
         {
             if (Instance is null)
             {
@@ -60,7 +60,7 @@ namespace TGC.MonoGame.TP.FPS
         private int maxArmor = 100;
         public Weapon CurrentWeapon { get; set; }
 
-        public float Speed = 200f;
+        public float Speed = 300f;
 
         public Weapon[] Weapons { get; set; }
 
@@ -71,13 +71,13 @@ namespace TGC.MonoGame.TP.FPS
         public Vector3 PreviousPosition;
 
         static FreeCamera Camera;
-        static IStage Stage;
+        static AStage Stage;
 
         #endregion
 
         public void Initialize()
         {
-            Health = 75;
+            Health = maxHealth;
             Armor = 45;
 
             Weapons = new Weapon[3];
@@ -86,8 +86,9 @@ namespace TGC.MonoGame.TP.FPS
             Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);
 
             Aabb = new AABB(GraphicsDevice,new Vector3(20, 80, 20));
-            Aabb.PlayerBox = true;
             Collision.Instance.AppendShootable(this);
+
+            Move(new Vector3(100, 100, 100));
 
             //inicializar el current weapon con Fist
         }
@@ -205,6 +206,18 @@ namespace TGC.MonoGame.TP.FPS
             Aabb.Draw(Camera.View,Camera.Projection);
         }
 
+        public override void GetDamaged(int damage)
+        {
+            if (Health - damage < 0)
+            {
+                Health = 0;
+            }
+            else
+            {
+                Health -= damage;
+            }
+        }
+
 
         #region CallBacks
         public int StaticCollisionCB(AABB a, AABB b)
@@ -228,11 +241,12 @@ namespace TGC.MonoGame.TP.FPS
         public int ShootableCollisionCB(Ashootable e)
         {
             //Debug.WriteLine("!!!!Dispare al tgcitoooooo " + Vector3.Transform(Vector3.Zero, ((Enemigo)e).ModeloTgcitoClassic.World));
-            Debug.WriteLine("!!!!Dispare al tgcitoooooo ");
-            /*if (CurrentWeapon != null)
+            
+            if (CurrentWeapon != null)
             {
-                Debug.WriteLine("Dispare al tgcitoooooo " + Vector3.Transform(Vector3.Zero, e.ModeloTgcitoClassic.World));
-            }*/
+                Debug.WriteLine("!!!!Dispare al tgcitoooooo ");
+                e.GetDamaged(CurrentWeapon.Damage);
+            }
             return 0;
         }
         #endregion

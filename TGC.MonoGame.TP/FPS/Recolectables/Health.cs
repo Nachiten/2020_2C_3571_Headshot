@@ -21,7 +21,7 @@ namespace TGC.MonoGame.TP
             Rotation = 0;
         }
 
-        public override void recolectar(IStage Stage)
+        public override void recolectar(AStage Stage)
         {
 
             bool sumeVida = Player.Instance.sumarVida(vidaSumada);

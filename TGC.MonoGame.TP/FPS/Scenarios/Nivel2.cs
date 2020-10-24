@@ -9,7 +9,7 @@ using TGC.MonoGame.TP.Utils;
 
 namespace TGC.MonoGame.TP.FPS.Scenarios
 {
-    public class Nivel2 : DrawableGameComponent, IStage
+    public class Nivel2 : AStage
     {
 
         public VertexPositionTexture[] floor { get; set; }
@@ -25,12 +25,6 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         float offsetYCilindro = 20;
         float distanciaCentroColumna = 300;
         List<ModelCollidable> ColumnasCilindros = new List<ModelCollidable>();
-        List<Model> ColumnasCuadradas = new List<Model>();
-
-        #region Propiedades de Elementos
-        private List<ARecolectable> Recolectables = new List<ARecolectable>();
-        List<Enemigo> Enemigos = new List<Enemigo>();
-        #endregion
 
         public Nivel2(Game game) : base(game)
         {
@@ -46,11 +40,10 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             Recolectables.Add(new M4(new Vector3(0, 50, zLenFloor / 4)));
         }
 
-        public void CrearEstructura()
+        public override void LoadContent()
         {
             Floor = new QuadPrimitiveCollidable(GraphicsDevice, Vector3.Zero, Vector3.UnitY, Vector3.UnitX, zLenFloor, xLenFloor,
                 Game.Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "cemento"), new Vector2(1, 1));
-
             Roof = new QuadPrimitiveCollidable(GraphicsDevice, new Vector3(0, yLenWall, 0), Vector3.UnitY, Vector3.UnitX, zLenFloor, xLenFloor,
                 Game.Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "cemento2"), new Vector2(1, 1));
 
@@ -92,21 +85,6 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
                 modelEffectCilindro.EnableDefaultLighting();
             }
 
-            foreach (ARecolectable R in Recolectables)
-            {
-                R.LoadContent(Game.Content, GraphicsDevice);
-            }
-
-            // Inicializacion enemigo
-            Enemigos.Add(new Enemigo(new Vector3(0, 50, zLenFloor / 2 - 100)));
-            Enemigos.Add(new Enemigo(new Vector3(0, 50, -zLenFloor / 2 + 100)));
-
-            foreach (Enemigo unEnemigo in Enemigos)
-            {
-                unEnemigo.LoadContent(Game.Content, GraphicsDevice);
-                Collision.Instance.AppendShootable(unEnemigo);
-            }
-
             //foreach (Model unModelo in ColumnasCuadradas)
             //{
             //    var modelEffectCuadrado = (BasicEffect)unModelo.Meshes[0].Effects[0];
@@ -116,12 +94,17 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             //    //modelEffectCuadrado.Texture = Game.Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "cuarzo");
             //    //modelEffectCuadrado.TextureEnabled = true;
             //}
+            base.LoadContent();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            var View = ((TGCGame)Game).Camera.View;
-            var Projection = ((TGCGame)Game).Camera.Projection;
+            base.Draw(gameTime);
             Floor.Draw(Matrix.CreateTranslation(Vector3.Zero), View, Projection);
             Roof.Draw(Matrix.CreateTranslation(Vector3.Zero), View, Projection);
             WallXp.Draw(Matrix.CreateTranslation(Vector3.Zero), View, Projection);
@@ -133,41 +116,12 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             {
                 unModelo.Draw(View, Projection);
             }
-
-            foreach (ARecolectable R in Recolectables)
-            {
-                R.Draw(View, Projection);
-            }
-
-            foreach (Enemigo unEnemigo in Enemigos)
-            {
-                unEnemigo.Draw(View, Projection);
-            }
         }
 
-        public override void Update(GameTime gameTime)
-        {
-            foreach (ARecolectable R in Recolectables)
-            {
-                R.Update(gameTime);
-            }
-
-            foreach (Enemigo unEnemigo in Enemigos)
-            {
-                var position = ((TGCGame)Game).Camera.Position;
-                unEnemigo.Update(gameTime, position);
-            }
-        }
 
         public void UbicarObjetos(IList<GameComponent> componentes)
         {
             throw new NotImplementedException();
-        }
-
-        public void RemoveRecolectable(ARecolectable R)
-        {
-            Collision.Instance.RemoveCollectable(R);
-            Recolectables.Remove(R);
         }
     }
 

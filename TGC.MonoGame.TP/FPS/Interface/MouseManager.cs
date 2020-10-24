@@ -40,7 +40,7 @@ namespace TGC.MonoGame.TP.FPS.Interface
             {
                 Player.Instance.TriggerShot = true;
                 ShotDirection = new Ray(Camera.Position, Camera.FrontDirection);
-                Collision.Instance.CheckShootable(ShotDirection, ShootCallback);
+                Collision.Instance.CheckShootable(ShotDirection, Player.Instance, ShootCallback);
             }
             previousMouseState = Mouse.GetState();
 

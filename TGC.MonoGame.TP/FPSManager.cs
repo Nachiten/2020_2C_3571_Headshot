@@ -34,7 +34,7 @@ namespace TGC.MonoGame.TP
         private KeyboardManager PlayerControl { get; set; }
         public Matrix View { get; set; }
         public Matrix Projection { get; set; }
-        IStage StageBuilder { get; set; }
+        AStage StageBuilder { get; set; }
         public Camera Camera { get; set; }
 
 
@@ -89,7 +89,7 @@ namespace TGC.MonoGame.TP
         }
         protected override void LoadContent()
         {
-            StageBuilder.CrearEstructura();
+            StageBuilder.LoadContent();
             base.LoadContent();
         }
 

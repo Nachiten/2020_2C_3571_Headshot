@@ -18,10 +18,18 @@ namespace TGC.MonoGame.TP.Utils{
         public void AppendStatic(AABB elem){
             StaticElements.Add(elem);
         }
+        public void RemoveStatic(AABB elem)
+        {
+            StaticElements.Remove(elem);
+        }
 
         public void AppendShootable(Ashootable elem)
         {
             ShootableElements.Add(elem);
+        }
+        public void RemoveShootable(Ashootable elem)
+        {
+            ShootableElements.Remove(elem);
         }
         public void AppendCollectable(ARecolectable elem)
 
@@ -31,6 +39,19 @@ namespace TGC.MonoGame.TP.Utils{
         public void RemoveCollectable(ARecolectable elem)
         {
             CollectableElements.Remove(elem);
+        }
+        public float GetShortestDistanceToStaticElement(Ray sight, AABB exclude)
+        {
+            float shortestDistance = float.MaxValue;
+            foreach (AABB s in StaticElements.Where(x => !x.Equals(exclude)).ToList())
+            {
+                var colDis = s.IntersectRay(sight);
+                if (colDis != null)
+                {
+                    shortestDistance = Math.Min(shortestDistance, (float)colDis);
+                }
+            }
+            return shortestDistance;
         }
         public void CheckStatic(AABB elem, Func<AABB, AABB, int> callback)
         {
@@ -56,13 +77,13 @@ namespace TGC.MonoGame.TP.Utils{
                 }
             }
         }
-        public void CheckShootable(Ray Ray, Func<Ashootable, int> callback)
+        public void CheckShootable(Ray Ray, Ashootable exclude, Func<Ashootable, int> callback)
         {
             Ashootable ObjectShooted = null;
             float distanceshoot = -1;
             bool ActualShot = false;
 
-            foreach (Ashootable e in ShootableElements.Where(x => !x.Aabb.PlayerBox))
+            foreach (Ashootable e in ShootableElements.Where(x => !x.Equals(exclude)))
             {
                 var colDis = e.Aabb.IntersectRay(Ray);
                 if (colDis != null)

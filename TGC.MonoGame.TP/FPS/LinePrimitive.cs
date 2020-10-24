@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TGC.MonoGame.TP.Utils
 {
-    class LinePrimitive
+    public class LinePrimitive
     {
         BasicEffect BasicEffect;
         public Vector3 StartPoint;

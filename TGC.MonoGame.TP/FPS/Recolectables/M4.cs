@@ -15,6 +15,8 @@ namespace TGC.MonoGame.TP
             tamanioModelo = 2;
             modelColor = Color.Gray.ToVector3();
 
+            Damage = 40;
+
             posicion = posicionModelo;
             World = Matrix.CreateRotationY(MathHelper.Pi);
             Rotation = 0;

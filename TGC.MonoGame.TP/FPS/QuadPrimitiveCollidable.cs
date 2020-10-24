@@ -22,8 +22,9 @@ namespace TGC.MonoGame.TP.Utils
             aabb.Translation(origin);
             Collision.Instance.AppendStatic(aabb);
         }
-        public override void Draw(Matrix world, Matrix view, Matrix projection)
+        public void Draw(Matrix view, Matrix projection)
         {
+            Matrix world = Matrix.CreateTranslation(Vector3.Zero);
             aabb.Draw(view, projection);
             base.Draw(world, view, projection);
         }

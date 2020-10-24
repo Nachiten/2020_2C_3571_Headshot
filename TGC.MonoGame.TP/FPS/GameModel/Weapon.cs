@@ -9,6 +9,7 @@ namespace TGC.MonoGame.TP.FPS
         public Weapon(AWeaponRecolectable weapon)
         {
             Gun = weapon;
+            Damage = Gun.Damage;
         }
         public AWeaponRecolectable Gun { get; set; }
         public int Damage { get; set; }

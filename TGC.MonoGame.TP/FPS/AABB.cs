@@ -15,8 +15,6 @@ namespace TGC.MonoGame.TP.Utils{
         GraphicsDevice GraphicsDevice;
         private BasicEffect Effect { get; }
 
-        public bool PlayerBox = false;
-
         public AABB(GraphicsDevice gd, Vector3 size){
             this.size = size;
             minExtents = -size;
