@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System;
 using TGC.MonoGame.TP.FPS;
 using TGC.MonoGame.TP.FPS.Interface;
+using System.Threading;
 
 namespace TGC.MonoGame.TP
 {
@@ -41,8 +42,44 @@ namespace TGC.MonoGame.TP
             IsMouseVisible = true;
         }
 
-        private GraphicsDeviceManager Graphics { get; }
+        public enum GameState
+        {
+            StartMenu,
+            Loading,
+            Playing,
+            Paused
+        }
+
+
+        private Texture2D startButton;
+
+        private Texture2D loadingScreen;
+
+        private Texture2D resumeButton;
+
+        private Texture2D exitButton;
+
+        private Vector2 startButtonPosition;
+
+        private Vector2 exitButtonPosition;
+
+        private Vector2 resumeButtonPosition;
+
+
+        private Thread backgroundThreat;
+
+        private bool isLoading = false;
+
+        MouseState mouseState;
+
+        MouseState previousMouseState;
+
+        private GameState gameState;
+
         private SpriteBatch SpriteBatch { get; set; }
+
+        private GraphicsDeviceManager Graphics { get; }
+
         private Matrix WorldM4 { get; set; }
         //private Model ModeloTgcitoClassic { get; set; }
         private Matrix World { get; set; }
@@ -74,6 +111,14 @@ namespace TGC.MonoGame.TP
             var rasterizerState = new RasterizerState();
             rasterizerState.CullMode = CullMode.None;
             GraphicsDevice.RasterizerState = rasterizerState;
+
+            startButtonPosition = new Vector2((GraphicsDevice.Viewport.Height / 2), 200);
+
+            resumeButtonPosition = new Vector2((GraphicsDevice.Viewport.Height / 2), 200);
+
+            exitButtonPosition = new Vector2((GraphicsDevice.Viewport.Height / 2), 300);
+
+            gameState = GameState.StartMenu;
 
             // NOTA: Cambiar esta linea por la de abajo para cargar el otro mapa
             Stage = new IceWorldStage(this);
@@ -112,8 +157,15 @@ namespace TGC.MonoGame.TP
             // Aca es donde deberiamos cargar todos los contenido necesarios antes de iniciar el juego.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Stage.LoadContent();
+            //Menu
 
+            startButton = Content.Load<Texture2D>(ContentFolderTextures + "otroStart");
+
+            exitButton = Content.Load<Texture2D>(ContentFolderTextures + "exit");
+
+            resumeButton = Content.Load<Texture2D>(ContentFolderTextures + "resume");
+
+            loadingScreen = Content.Load<Texture2D>(ContentFolderTextures + "loading");
 
             base.LoadContent();
         }
@@ -126,11 +178,92 @@ namespace TGC.MonoGame.TP
         protected override void Update(GameTime gameTime)
         {
 
-            Player.Instance.Update(gameTime);
+            
+            mouseState = Mouse.GetState();
 
-            Stage.Update(gameTime);
+            if (previousMouseState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Released)
+            {
+                MouseClicked(mouseState.X, mouseState.Y);
+            }
+
+            previousMouseState = mouseState;
+
+
+            if (gameState == GameState.Loading && !isLoading)
+            {
+                backgroundThreat = new Thread(LoadGame);
+                isLoading = true;
+                backgroundThreat.Start();
+
+            }
+
+            if (gameState == GameState.Playing)
+            {
+                Player.Instance.Update(gameTime);
+
+                Stage.Update(gameTime);
+
+                if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+                {
+                    gameState = GameState.Paused;
+                }
+            }
+
+            if (gameState == GameState.Playing && isLoading)
+            {
+                LoadGame();
+                
+                isLoading = false;
+            }
 
             base.Update(gameTime);
+        }
+        void MouseClicked(int x, int y)
+        {
+            var mouseClickRect = new Rectangle(x, y, 10, 10);
+
+            if (gameState == GameState.StartMenu)
+            {
+                var startButtonRect = new Rectangle((int)startButtonPosition.X + 50, (int)startButtonPosition.Y, 200, 100);
+
+                //var exitButtonRect = new Rectangle((int)exitButtonPosition.X + 50, (int)exitButtonPosition.Y, 200, 100);
+
+                if (mouseClickRect.Intersects(startButtonRect))
+                {
+                    gameState = GameState.Loading;
+                    isLoading = false;
+                }
+
+                //if (mouseClickRect.Intersects(exitButtonRect)) 
+                //{
+                //    Exit();
+                //}
+            }
+            //deberia 
+            if (gameState == GameState.Paused) {
+
+                var resumeButtonRect = new Rectangle((int)resumeButtonPosition.X + 50, (int)resumeButtonPosition.Y, 200, 100);
+
+                var exitButtonRect = new Rectangle((int)exitButtonPosition.X + 50, (int)exitButtonPosition.Y, 200, 100);
+
+                if (mouseClickRect.Intersects(resumeButtonRect))
+                {
+                    gameState = GameState.Playing;
+                }
+
+                if (mouseClickRect.Intersects(exitButtonRect))
+                {
+                    Exit();
+                }
+            }
+        }
+
+        void LoadGame()
+        {
+            //cargo el mapa etc..
+            Stage.LoadContent();
+            gameState = GameState.Playing;
+            isLoading = false;
         }
 
         /// <summary>
@@ -139,15 +272,46 @@ namespace TGC.MonoGame.TP
         /// </summary>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.LightBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.BlendState = BlendState.Opaque;
 
-            Stage.Draw(gameTime);
+            SpriteBatch.Begin(samplerState: GraphicsDevice.SamplerStates[0], rasterizerState: GraphicsDevice.RasterizerState);
 
-            Player.Instance.Draw(gameTime);
-            interfaz.Draw(gameTime);
+            //Handle game state
+            if (gameState == GameState.StartMenu)
+            {
+                var startRectangule = new Rectangle((int)startButtonPosition.X + 50, (int)startButtonPosition.Y, 200, 100);
+                SpriteBatch.Draw(startButton, startRectangule, Color.White);
+
+                //var exitRectangule = new Rectangle((int)exitButtonPosition.X + 50, (int)exitButtonPosition.Y, 200, 100);
+                //spriteBatch.Draw(exitButton, exitRectangule, Color.White);
+            }
+
+            if (gameState == GameState.Paused) {
+                var resumeRectangule = new Rectangle((int)resumeButtonPosition.X + 50, (int)startButtonPosition.Y, 200, 100);
+                SpriteBatch.Draw(resumeButton, resumeRectangule, Color.White);
+
+                var exitRectangule = new Rectangle((int)exitButtonPosition.X + 50, (int)exitButtonPosition.Y, 200, 100);
+                SpriteBatch.Draw(exitButton, exitRectangule, Color.White);
+            }
+
+            if (gameState == GameState.Loading)
+            {
+                SpriteBatch.Draw(loadingScreen, new Vector2((GraphicsDevice.Viewport.Width / 2) - loadingScreen.Width / 2, (GraphicsDevice.Viewport.Height / 2) - loadingScreen.Height / 2), Color.White);
+            }
+
+            if (gameState == GameState.Playing)
+            {
+                isLoading = false;
+                Stage.Draw(gameTime);
+                Player.Instance.Draw(gameTime);
+                interfaz.Draw(gameTime);
+            }
+
+            SpriteBatch.End();
+            
 
             base.Draw(gameTime);
         }

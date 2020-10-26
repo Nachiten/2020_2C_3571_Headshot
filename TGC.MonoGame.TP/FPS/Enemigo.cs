@@ -19,15 +19,14 @@ namespace TGC.MonoGame.TP
 
         public ModelCollidable ModeloTgcitoClassic { get; set; }
 
-<<<<<<< Updated upstream
         private Weapon Weapon { get; set; }
-=======
+
         public Enemigo(Vector3 posicion)
         {
             this.posicion =  posicion;
             World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateScale(.7f) * Matrix.CreateTranslation(posicion + Vector3.UnitY * 50 );
         }
->>>>>>> Stashed changes
+
 
         //private Vector3 posicionInicial;
         private Vector3 mirandoInicial = new Vector3(0, 0, -1);
