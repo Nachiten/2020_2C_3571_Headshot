@@ -57,7 +57,6 @@ namespace TGC.MonoGame.TP.Utils{
         public void Draw(Matrix View, Matrix Projection)
         {
             Model.Draw(World, View, Projection);
-            Aabb.Draw(View, Projection);
             //Model.Draw(Matrix.CreateScale(0.1f) * Matrix.CreateTranslation(Aabb.minExtents), View, Projection);
             //Model.Draw(Matrix.CreateScale(0.1f) * Matrix.CreateTranslation(Aabb.maxExtents), View, Projection);
         }

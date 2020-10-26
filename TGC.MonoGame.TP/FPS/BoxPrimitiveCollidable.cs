@@ -11,7 +11,6 @@ namespace TGC.MonoGame.TP.Utils
         }
         public override void Draw(Matrix world, Matrix view, Matrix projection) {
             aabb.Translation(world);
-            aabb.Draw(view, projection);
             base.Draw(world,view,projection);
         }
     }

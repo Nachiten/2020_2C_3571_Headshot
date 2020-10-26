@@ -18,6 +18,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         public LinePrimitive YAxis;
         public LinePrimitive ZAxis;
         public List<ARecolectable> Recolectables = new List<ARecolectable>();
+        public List<AABB> Boxes = new List<AABB>();
 
         protected int cantidadCorazonesRandom = 4;
         protected int cantidadArmorRandom = 4;
@@ -99,6 +100,38 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
                 XAxis.Draw(View, Projection);
                 YAxis.Draw(View, Projection);
                 ZAxis.Draw(View, Projection);
+            }
+
+            DrawAABBs();
+        }
+        public void DrawAABBs()
+        {
+            if (Config.drawAABB)
+            {
+                RasterizerState rasterizerStateLines = new RasterizerState();
+                rasterizerStateLines.FillMode = FillMode.WireFrame;
+                rasterizerStateLines.CullMode = CullMode.None;
+                GraphicsDevice.RasterizerState = rasterizerStateLines;
+
+                BoxPrimitive AABBDraw = new BoxPrimitive(GraphicsDevice, Vector3.One);
+                var scaleFactor = 3;
+
+                foreach (ARecolectable R in Recolectables)
+                {
+                    AABBDraw.Draw(Matrix.CreateScale(R.Modelo.Aabb.size.X * scaleFactor, R.Modelo.Aabb.size.Y * scaleFactor, R.Modelo.Aabb.size.Z * scaleFactor) * Matrix.CreateTranslation(R.Modelo.Aabb.Position), View, Projection);
+                }
+                foreach (Enemigo unEnemigo in Enemigos)
+                {
+                    AABBDraw.Draw(Matrix.CreateScale(unEnemigo.Model.Aabb.size.X * scaleFactor, unEnemigo.Model.Aabb.size.Y * scaleFactor, unEnemigo.Model.Aabb.size.Z * scaleFactor) * Matrix.CreateTranslation(unEnemigo.Model.Aabb.Position), View, Projection);
+                }
+                foreach (AABB aabb in Boxes)
+                {
+                    AABBDraw.Draw(Matrix.CreateScale(aabb.size.X * scaleFactor, aabb.size.Y * scaleFactor, aabb.size.Z * scaleFactor) * Matrix.CreateTranslation(aabb.Position), View, Projection);
+                }
+
+                var rasterizerStateSolid = new RasterizerState();
+                rasterizerStateSolid.CullMode = CullMode.None;
+                GraphicsDevice.RasterizerState = rasterizerStateSolid;
             }
         }
         protected void generarRecolectablesRandom()

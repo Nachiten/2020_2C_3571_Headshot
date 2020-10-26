@@ -25,7 +25,6 @@ namespace TGC.MonoGame.TP.Utils
         public void Draw(Matrix view, Matrix projection)
         {
             Matrix world = Matrix.CreateTranslation(Vector3.Zero);
-            aabb.Draw(view, projection);
             base.Draw(world, view, projection);
         }
     }

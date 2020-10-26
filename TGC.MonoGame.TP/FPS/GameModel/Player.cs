@@ -203,7 +203,6 @@ namespace TGC.MonoGame.TP.FPS
             if (CurrentWeapon != null) {
                 CurrentWeapon.Draw(WorldWeapon, View, Projection);
             }
-            Aabb.Draw(Camera.View,Camera.Projection);
         }
 
         public override void GetDamaged(int damage)

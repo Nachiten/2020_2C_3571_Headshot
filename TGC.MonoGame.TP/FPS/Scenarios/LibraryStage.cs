@@ -173,6 +173,8 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             float zOffset = 50;
             table.Aabb.SetManually(new Vector3(Position.X - xOffset, 0, Position.Y - zOffset), new Vector3(Position.X + xOffset, 60, Position.Y + zOffset));
 
+            Boxes.Add(table.Aabb);
+
             Collision.Instance.AppendStatic(table.Aabb);
 
             Tables.Add(table);

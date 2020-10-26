@@ -115,8 +115,6 @@ namespace TGC.MonoGame.TP
         {
             //UpdateLineOfSight();
 
-            Aabb = Model.Aabb;
-
             // Calculo la posicion a la que me voy a mover
             posicionObjetivo = new Vector3(posicionCamara.X, 50, posicionCamara.Z);
 

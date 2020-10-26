@@ -8,6 +8,7 @@ namespace TGC.MonoGame.TP
         static void Main()
         {
             using (var game = new TGCGame())
+            //using (var game = new FPSManager())
                 game.Run();
         }
     }

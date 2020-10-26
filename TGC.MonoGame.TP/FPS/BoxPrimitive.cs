@@ -26,6 +26,13 @@ namespace TGC.MonoGame.TP.Utils
             CreateVertexBuffer(graphicsDevice, size);
             CreateIndexBuffer(graphicsDevice);
         }
+        public BoxPrimitive(GraphicsDevice graphicsDevice, Vector3 size)
+        {
+            Effect = new BasicEffect(graphicsDevice);
+
+            CreateVertexBuffer(graphicsDevice, size);
+            CreateIndexBuffer(graphicsDevice);
+        }
         /// <summary>
         ///     Represents a list of 3D vertices to be streamed to the graphics device.
         /// </summary>
