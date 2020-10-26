@@ -24,7 +24,7 @@ namespace TGC.MonoGame.TP
         public Enemigo(Vector3 posicion)
         {
             this.posicion =  posicion;
-            World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateScale(.7f) * Matrix.CreateTranslation(posicion + Vector3.UnitY * 100);
+            World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateScale(.7f) * Matrix.CreateTranslation(posicion);
         }
 
         //private Vector3 posicionInicial;

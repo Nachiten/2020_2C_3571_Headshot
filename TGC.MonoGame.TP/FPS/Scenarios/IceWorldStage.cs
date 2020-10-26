@@ -87,8 +87,8 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
             // Inicializacion enemigo
             //ToDo: modificar porque esta alto y se hunde para adentro.
-            Enemigos.Add(new Enemigo(Enemy1Pos + Vector3.UnitY * 100, new M4(Enemy1Pos), MathHelper.Pi));
-            Enemigos.Add(new Enemigo(Enemy2Pos + Vector3.UnitY * 100, new M4(Enemy2Pos), 0));
+            Enemigos.Add(new Enemigo(Enemy1Pos, new M4(Enemy1Pos), MathHelper.Pi));
+            Enemigos.Add(new Enemigo(Enemy2Pos, new M4(Enemy2Pos), 0));
 
             base.LoadContent();
         }

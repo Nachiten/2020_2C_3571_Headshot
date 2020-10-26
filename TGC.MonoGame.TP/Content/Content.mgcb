@@ -726,6 +726,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/iceworld.jpg
 
+#begin Textures/iceworld.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/iceworld.jpg
+
 #begin Textures/interface/282133-de_dust2.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -822,6 +834,41 @@
 /processorParam:TextureFormat=Color
 /build:Textures/library/books.jpg
 
+#begin Textures/library/wooden-floor.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/library/wooden-floor.png
+
+#begin Textures/loading.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/loading.png
+
+#begin Textures/otroStart.gif
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/otroStart.gif
 
 #begin Textures/otroStart.gif
 /importer:TextureImporter
@@ -847,7 +894,7 @@
 /processorParam:TextureFormat=Color
 /build:Textures/resume.png
 
-#begin Textures/library/wooden-floor.png
+#begin Textures/resume.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -857,8 +904,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/library/wooden-floor.png
-
+/build:Textures/resume.png
 
 #begin Textures/round-table/_NRM.jpg
 /importer:TextureImporter
@@ -932,6 +978,29 @@
 /processorParam:TextureFormat=Color
 /build:Textures/rusty.jpg
 
+#begin Textures/sand.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/sand.jpg
+
+#begin Textures/spaceship.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/spaceship.jpg
 
 #begin Textures/spaceship.jpg
 /importer:TextureImporter
@@ -957,8 +1026,7 @@
 /processorParam:TextureFormat=Color
 /build:Textures/startButton.png
 
-
-#begin Textures/sand.jpg
+#begin Textures/startButton.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -968,7 +1036,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/sand.jpg
+/build:Textures/startButton.png
 
 #begin Textures/steel.jpg
 /importer:TextureImporter
