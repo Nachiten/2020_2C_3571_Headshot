@@ -165,9 +165,9 @@ namespace TGC.MonoGame.TP
 
             //Menu
 
-            startButton = Content.Load<Texture2D>(ContentFolderTextures + "iceworld");
+            startButton = Content.Load<Texture2D>(ContentFolderTextures + "library");
 
-            otroMapa = Content.Load<Texture2D>(ContentFolderTextures + "spaceship");
+            otroMapa = Content.Load<Texture2D>(ContentFolderTextures + "iceworld");
 
             exitButton = Content.Load<Texture2D>(ContentFolderTextures + "exit");
 
