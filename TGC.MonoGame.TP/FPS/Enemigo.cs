@@ -19,7 +19,15 @@ namespace TGC.MonoGame.TP
 
         public ModelCollidable ModeloTgcitoClassic { get; set; }
 
+<<<<<<< Updated upstream
         private Weapon Weapon { get; set; }
+=======
+        public Enemigo(Vector3 posicion)
+        {
+            this.posicion =  posicion;
+            World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateScale(.7f) * Matrix.CreateTranslation(posicion + Vector3.UnitY * 50 );
+        }
+>>>>>>> Stashed changes
 
         //private Vector3 posicionInicial;
         private Vector3 mirandoInicial = new Vector3(0, 0, -1);
@@ -62,14 +70,38 @@ namespace TGC.MonoGame.TP
 
         public void LoadContent(ContentManager Content, GraphicsDevice GraphicsDevice)
         {
-            ModeloTgcitoClassic = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + "tgcito-classic/tgcito-classic", World);
+            ModeloTgcitoClassic = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + "enemy/Hellknight_LATEST", World);
             Aabb = ModeloTgcitoClassic.Aabb;
             Collision.Instance.AppendStatic(Aabb);
+            Weapon.Gun.LoadContent(Content, GraphicsDevice);
 
             var modelEffectArmor = (BasicEffect)ModeloTgcitoClassic.Model.Meshes[0].Effects[0];
-            modelEffectArmor.DiffuseColor = Color.White.ToVector3();
+            modelEffectArmor.DiffuseColor = Color.Pink.ToVector3();
             modelEffectArmor.EnableDefaultLighting();
-            Weapon.Gun.LoadContent(Content, GraphicsDevice);
+
+            var modelAlgo = (BasicEffect)ModeloTgcitoClassic.Model.Meshes[1].Effects[0];
+            modelAlgo.DiffuseColor = Color.Brown.ToVector3();
+            modelAlgo.EnableDefaultLighting();
+
+            //Mandibula
+            var dindare2 = (BasicEffect)ModeloTgcitoClassic.Model.Meshes[1].Effects[1];
+            dindare2.DiffuseColor = Color.WhiteSmoke.ToVector3();
+            dindare2.EnableDefaultLighting();
+
+            //Ojos
+            var dindare = (BasicEffect)ModeloTgcitoClassic.Model.Meshes[1].Effects[2];
+            dindare.DiffuseColor = Color.Yellow.ToVector3();
+            dindare.EnableDefaultLighting();
+
+            //Cuerpo
+            var dindare3 = (BasicEffect)ModeloTgcitoClassic.Model.Meshes[1].Effects[3];
+            dindare3.DiffuseColor = Color.DarkGray.ToVector3();
+            dindare3.EnableDefaultLighting();
+
+            //torso
+            var dindare4 = (BasicEffect)ModeloTgcitoClassic.Model.Meshes[1].Effects[4];
+            dindare4.DiffuseColor = Color.Black.ToVector3();
+            dindare4.EnableDefaultLighting();
         }
 
         private bool StartedMoving = false;
@@ -186,7 +218,7 @@ namespace TGC.MonoGame.TP
             AabbMaxSight.Direction = Direction;
         }
         private float GetShortestDistanceToStaticElement()
-        {
+        {   
             return Math.Min(Collision.Instance.GetShortestDistanceToStaticElement(AabbMinSight, Aabb), Collision.Instance.GetShortestDistanceToStaticElement(AabbMaxSight, Aabb));
         }
 
