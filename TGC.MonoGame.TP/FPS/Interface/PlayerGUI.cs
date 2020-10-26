@@ -18,8 +18,6 @@ namespace TGC.MonoGame.TP.FPS
         private Texture2D ArmorTexture { get; set; }
 
         private SpriteFont InterfaceFont { get; set; }
-
-        public Player Player { get; set; }
         #endregion
         public override void Initialize()
         {
@@ -29,12 +27,6 @@ namespace TGC.MonoGame.TP.FPS
             ArmorTexture = Game.Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "interface/Armor");
             InterfaceFont = Game.Content.Load<SpriteFont>(FPSManager.ContentFolderSpriteFonts + "Arial");
         }
-        public void Initialize(Player player)
-        {
-            Player = player;
-            Initialize();
-        }
-
         
         public override void Draw(GameTime gameTime)
         {
@@ -49,14 +41,14 @@ namespace TGC.MonoGame.TP.FPS
             SpriteBatch.Draw(HeartTexture, new Vector2(60, 440), new Rectangle(0, 0, 32, 32), Color.White, 0.01f, origin, .87f, SpriteEffects.None, 1);
             SpriteBatch.Draw(ArmorTexture, new Vector2(710, 440), new Rectangle(0, 0, 32, 32), Color.White, 0.01f, origin, .87f, SpriteEffects.None, 1);
 
-            if (Player.Health <= 0)
+            if (Player.Instance.Health <= 0)
             {
                 SpriteBatch.DrawString(InterfaceFont, "Dead", new Vector2(50, 432), Color.White);
             }
             else
             {
-                SpriteBatch.DrawString(InterfaceFont, Player.Health.ToString(), new Vector2(100, 440), Color.White);
-                SpriteBatch.DrawString(InterfaceFont, Player.Armor.ToString(), new Vector2(660, 440), Color.White);
+                SpriteBatch.DrawString(InterfaceFont, Player.Instance.Health.ToString(), new Vector2(100, 440), Color.White);
+                SpriteBatch.DrawString(InterfaceFont, Player.Instance.Armor.ToString(), new Vector2(660, 440), Color.White);
             }
             SpriteBatch.End();
 

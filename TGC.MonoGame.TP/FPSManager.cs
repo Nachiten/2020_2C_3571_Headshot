@@ -46,11 +46,6 @@ namespace TGC.MonoGame.TP
         private Thread backgroundThreat;
 
         private bool isLoading = false;
-        private KeyboardManager PlayerControl { get; set; }
-        public Matrix View { get; set; }
-        public Matrix Projection { get; set; }
-        AStage StageBuilder { get; set; }
-        public Camera Camera { get; set; }
 
         MouseState mouseState;
 
@@ -59,6 +54,13 @@ namespace TGC.MonoGame.TP
         private SpriteBatch spriteBatch;
 
         private GameState gameState;
+        private KeyboardManager PlayerControl { get; set; }
+        public Matrix View { get; set; }
+        public Matrix Projection { get; set; }
+        AStage StageBuilder { get; set; }
+        public Camera Camera { get; set; }
+
+        private SpriteFont font { get; set; }
 
         #endregion
 
@@ -92,6 +94,8 @@ namespace TGC.MonoGame.TP
         }
         protected override void LoadContent()
         {
+
+            font = Content.Load<SpriteFont>("Arial");
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
 

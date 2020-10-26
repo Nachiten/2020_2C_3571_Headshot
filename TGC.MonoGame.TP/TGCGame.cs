@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System;
 using TGC.MonoGame.TP.FPS;
 using TGC.MonoGame.TP.FPS.Interface;
+using System.Threading;
 
 namespace TGC.MonoGame.TP
 {
@@ -41,8 +42,48 @@ namespace TGC.MonoGame.TP
             IsMouseVisible = true;
         }
 
-        private GraphicsDeviceManager Graphics { get; }
+        public enum GameState
+        {
+            StartMenu,
+            Loading,
+            Playing,
+            Paused
+        }
+
+
+        private Texture2D startButton;
+
+        private Texture2D loadingScreen;
+
+        private Texture2D resumeButton;
+
+        private Texture2D exitButton;
+
+        private Texture2D otroMapa;
+
+        private Vector2 startButtonPosition;
+
+        private Vector2 otroMapaPosition2;
+
+        private Vector2 exitButtonPosition;
+
+        private Vector2 resumeButtonPosition;
+
+
+        private Thread backgroundThreat;
+
+        private bool isLoading = false;
+
+        MouseState mouseState;
+
+        MouseState previousMouseState;
+
+        private GameState gameState;
+
         private SpriteBatch SpriteBatch { get; set; }
+
+        private GraphicsDeviceManager Graphics { get; }
+
         private Matrix WorldM4 { get; set; }
         //private Model ModeloTgcitoClassic { get; set; }
         private Matrix World { get; set; }
@@ -54,6 +95,8 @@ namespace TGC.MonoGame.TP
         //private Player jugador { get; set; }
         private PlayerGUI interfaz { get; set; }
         private Weapon arma { get; set; }
+
+        private SpriteFont font { get; set; }
 
         // Esta lita de recolectables deberia estar en otra clase "recolectables"
         //private List<Recolectable> recolectables = new List<Recolectable>();
@@ -75,21 +118,28 @@ namespace TGC.MonoGame.TP
             rasterizerState.CullMode = CullMode.None;
             GraphicsDevice.RasterizerState = rasterizerState;
 
-            // NOTA: Cambiar esta linea por la de abajo para cargar el otro mapa
-            Stage = new LibraryStage(this);
-            // StageBuilder = new Nivel2(this); | Mapa 2
-            // StageBuilder = new IceWorldStage(this); | Mapa 1 con objetos
+            font = Content.Load<SpriteFont>(ContentFolderSpriteFonts + "Arial");
+
+            startButtonPosition = new Vector2((GraphicsDevice.Viewport.Height / 2), 150);
+
+            otroMapaPosition2 = new Vector2((GraphicsDevice.Viewport.Height / 2), 300);
+
+            resumeButtonPosition = new Vector2((GraphicsDevice.Viewport.Height / 2), 200);
+
+            exitButtonPosition = new Vector2((GraphicsDevice.Viewport.Height / 2), 300);
+
+            gameState = GameState.StartMenu;
+
 
             var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
             Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(0, 100, 0), screenSize);
 
-            Player.Init(this, Camera, Stage);
             interfaz = new PlayerGUI(this);
 
             KeyboardManager.Init(Camera);
             MouseManager.Init(Camera);
 
-            interfaz.Initialize(Player.Instance);
+            interfaz.Initialize();
 
             // Configuramos nuestras matrices de la escena.
             //World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(10, 0, 10);
@@ -112,8 +162,17 @@ namespace TGC.MonoGame.TP
             // Aca es donde deberiamos cargar todos los contenido necesarios antes de iniciar el juego.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Stage.LoadContent();
+            //Menu
 
+            startButton = Content.Load<Texture2D>(ContentFolderTextures + "library");
+
+            otroMapa = Content.Load<Texture2D>(ContentFolderTextures + "iceworld");
+
+            exitButton = Content.Load<Texture2D>(ContentFolderTextures + "exit");
+
+            resumeButton = Content.Load<Texture2D>(ContentFolderTextures + "resume");
+
+            loadingScreen = Content.Load<Texture2D>(ContentFolderTextures + "loading");
 
             base.LoadContent();
         }
@@ -125,12 +184,93 @@ namespace TGC.MonoGame.TP
         /// </summary>
         protected override void Update(GameTime gameTime)
         {
+            mouseState = Mouse.GetState();
 
-            Player.Instance.Update(gameTime);
+            if (previousMouseState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Released)
+            {
+                MouseClicked(mouseState.X, mouseState.Y);
+            }
 
-            Stage.Update(gameTime);
+            previousMouseState = mouseState;
+
+
+            if (gameState == GameState.Loading && !isLoading)
+            {
+                backgroundThreat = new Thread(LoadGame);
+                isLoading = true;
+                backgroundThreat.Start();
+
+            }
+
+            if (gameState == GameState.Playing)
+            {
+                Player.Instance.Update(gameTime);
+
+                Stage.Update(gameTime);
+
+                if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+                {
+                    gameState = GameState.Paused;
+                }
+            }
+
+            if (gameState == GameState.Playing && isLoading)
+            {
+                LoadGame();
+                
+                isLoading = false;
+            }
 
             base.Update(gameTime);
+        }
+        void MouseClicked(int x, int y)
+        {
+            var mouseClickRect = new Rectangle(x, y, 10, 10);
+
+            if (gameState == GameState.StartMenu)
+            {
+                var startButtonRect = new Rectangle((int)startButtonPosition.X + 50, (int)startButtonPosition.Y, 200, 100);
+
+                var otroMapaRect = new Rectangle((int)otroMapaPosition2.X + 50, (int)otroMapaPosition2.Y, 200, 100);
+
+                if (mouseClickRect.Intersects(startButtonRect))
+                {
+                    Stage = new LibraryStage(this);
+                    gameState = GameState.Loading;
+                    isLoading = false;
+                }
+                if (mouseClickRect.Intersects(otroMapaRect)) {
+                    Stage = new Nivel2(this);
+                    gameState = GameState.Loading;
+                    isLoading = false;
+                }
+                Player.Init(this, Camera, Stage);
+            }
+
+            if (gameState == GameState.Paused) {
+
+                var resumeButtonRect = new Rectangle((int)resumeButtonPosition.X + 50, (int)resumeButtonPosition.Y, 200, 100);
+
+                var exitButtonRect = new Rectangle((int)exitButtonPosition.X + 50, (int)exitButtonPosition.Y, 200, 100);
+
+                if (mouseClickRect.Intersects(resumeButtonRect))
+                {
+                    gameState = GameState.Playing;
+                }
+
+                if (mouseClickRect.Intersects(exitButtonRect))
+                {
+                    Exit();
+                }
+            }
+        }
+
+        void LoadGame()
+        {
+            //cargo el mapa etc..
+            Stage.LoadContent();
+            gameState = GameState.Playing;
+            isLoading = false;
         }
 
         /// <summary>
@@ -139,15 +279,49 @@ namespace TGC.MonoGame.TP
         /// </summary>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.LightBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.BlendState = BlendState.Opaque;
 
-            Stage.Draw(gameTime);
+            SpriteBatch.Begin(samplerState: GraphicsDevice.SamplerStates[0], rasterizerState: GraphicsDevice.RasterizerState);
 
-            Player.Instance.Draw(gameTime);
-            interfaz.Draw(gameTime);
+            //Handle game state
+            if (gameState == GameState.StartMenu)
+            {
+                SpriteBatch.DrawString(font, "Seleccione un mapa", new Vector2((GraphicsDevice.Viewport.Width / 2) - 150, 75), Color.White);
+
+                var startRectangule = new Rectangle((int)startButtonPosition.X + 50, (int)startButtonPosition.Y, 200, 100);
+                SpriteBatch.Draw(startButton, startRectangule, Color.White);
+
+                //cambiar este boton por un seleccionar mapa
+                var otroMapaRect = new Rectangle((int)otroMapaPosition2.X + 50, (int)otroMapaPosition2.Y, 200, 100);
+                SpriteBatch.Draw(otroMapa, otroMapaRect, Color.White);
+            }
+
+            if (gameState == GameState.Paused) {
+                var resumeRectangule = new Rectangle((int)resumeButtonPosition.X + 50, (int)startButtonPosition.Y, 200, 100);
+                SpriteBatch.Draw(resumeButton, resumeRectangule, Color.White);
+
+                var exitRectangule = new Rectangle((int)exitButtonPosition.X + 50, (int)exitButtonPosition.Y, 200, 100);
+                SpriteBatch.Draw(exitButton, exitRectangule, Color.White);
+            }
+
+            if (gameState == GameState.Loading)
+            {
+                SpriteBatch.Draw(loadingScreen, new Vector2((GraphicsDevice.Viewport.Width / 2) - loadingScreen.Width / 2, (GraphicsDevice.Viewport.Height / 2) - loadingScreen.Height / 2), Color.White);
+            }
+
+            if (gameState == GameState.Playing)
+            {
+                isLoading = false;
+                Stage.Draw(gameTime);
+                Player.Instance.Draw(gameTime);
+                interfaz.Draw(gameTime);
+            }
+
+            SpriteBatch.End();
+            
 
             base.Draw(gameTime);
         }

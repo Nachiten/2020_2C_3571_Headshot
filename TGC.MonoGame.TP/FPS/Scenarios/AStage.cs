@@ -118,7 +118,8 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
                 foreach (ARecolectable R in Recolectables)
                 {
-                    AABBDraw.Draw(Matrix.CreateScale(R.Modelo.Aabb.size.X * scaleFactor, R.Modelo.Aabb.size.Y * scaleFactor, R.Modelo.Aabb.size.Z * scaleFactor) * Matrix.CreateTranslation(R.Modelo.Aabb.Position), View, Projection);
+                    R.Modelo.World.Decompose(out Vector3 scale, out Quaternion rotation, out Vector3 translation);
+                    AABBDraw.Draw(Matrix.CreateScale(R.Modelo.Aabb.size.X * scaleFactor, R.Modelo.Aabb.size.Y * scaleFactor, R.Modelo.Aabb.size.Z * scaleFactor) * Matrix.CreateTranslation(translation), View, Projection);
                 }
                 foreach (Enemigo unEnemigo in Enemigos)
                 {

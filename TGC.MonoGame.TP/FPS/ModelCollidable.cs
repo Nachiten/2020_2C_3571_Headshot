@@ -52,7 +52,7 @@ namespace TGC.MonoGame.TP.Utils{
                     }
                 }
             }
-            Aabb = new AABB(GraphicsDevice,min, max);
+            Aabb = new AABB(GraphicsDevice, min, max);
         }
         public void Draw(Matrix View, Matrix Projection)
         {

@@ -20,10 +20,11 @@ namespace TGC.MonoGame.TP
         public ModelCollidable Model { get; set; }
 
         private Weapon Weapon { get; set; }
+
         public Enemigo(Vector3 posicion)
         {
             this.posicion =  posicion;
-            World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateScale(.7f) * Matrix.CreateTranslation(posicion + Vector3.UnitY * 50 );
+            World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateScale(.7f) * Matrix.CreateTranslation(posicion);
         }
 
         //private Vector3 posicionInicial;
@@ -57,6 +58,7 @@ namespace TGC.MonoGame.TP
             Weapon = new Weapon(weapon);
             anguloRotacionRadianes = Angle;
             this.posicion = posicion;
+
             World = Matrix.CreateRotationY(anguloRotacionRadianes) * Matrix.CreateScale(.7f) * Matrix.CreateTranslation(posicion);
 
             InitialDirection = new Vector3(MathF.Cos(MathHelper.PiOver2 + anguloRotacionRadianes), 0, MathF.Sin(MathHelper.PiOver2 + anguloRotacionRadianes));
