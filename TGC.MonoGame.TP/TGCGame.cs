@@ -131,7 +131,6 @@ namespace TGC.MonoGame.TP
             gameState = GameState.StartMenu;
 
 
-
             var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
             Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(0, 100, 0), screenSize);
 
