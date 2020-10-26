@@ -236,7 +236,7 @@ namespace TGC.MonoGame.TP
 
                 if (mouseClickRect.Intersects(startButtonRect))
                 {
-                    Stage = new IceWorldStage(this);
+                    Stage = new LibraryStage(this);
                     gameState = GameState.Loading;
                     isLoading = false;
                 }
