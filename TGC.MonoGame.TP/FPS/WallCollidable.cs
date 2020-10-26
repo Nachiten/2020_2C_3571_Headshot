@@ -13,6 +13,7 @@ namespace TGC.MonoGame.TP.FPS
         QuadPrimitiveCollidable Back;
         QuadPrimitiveCollidable Left;
         QuadPrimitiveCollidable Right;
+        QuadPrimitiveCollidable Bottom;
         public WallCollidable(GraphicsDevice gd, Vector3 Origin, Vector3 Normal, float Width, float Height, float Thickness, Texture2D TextureFront, Texture2D TextureBack, Vector2 TextureRepeats, Texture2D TextureSide)
         {
             Front = new QuadPrimitiveCollidable(gd, Origin, Normal, Vector3.UnitY, Width, Height, TextureFront, TextureRepeats);
@@ -20,8 +21,9 @@ namespace TGC.MonoGame.TP.FPS
 
             Vector3 SideOrigin = (Origin - Thickness * Normal / 2);
             Vector3 SideNormal = Vector3.Cross(Normal,-Vector3.UnitY);
-            Left = new QuadPrimitiveCollidable(gd, SideOrigin + Width/2 * SideNormal, SideNormal, Vector3.UnitY, Thickness, Height, TextureSide, new Vector2(1, Height/50));
-            Right = new QuadPrimitiveCollidable(gd, SideOrigin - Width/2 * SideNormal, -SideNormal, Vector3.UnitY, Thickness, Height, TextureSide, new Vector2(1, Height/50));
+            Left = new QuadPrimitiveCollidable(gd, SideOrigin + Width/2 * SideNormal, SideNormal, Vector3.UnitY, Thickness, Height, TextureSide, new Vector2(1, Height / 100));
+            Right = new QuadPrimitiveCollidable(gd, SideOrigin - Width/2 * SideNormal, -SideNormal, Vector3.UnitY, Thickness, Height, TextureSide, new Vector2(1, Height / 100));
+            Bottom = new QuadPrimitiveCollidable(gd, SideOrigin - Height/2 * Vector3.UnitY, -Vector3.UnitY, Normal, Width, Thickness, TextureSide, new Vector2(1, 1 / Thickness));
         }
         public void Draw(Matrix view, Matrix projection)
         {
@@ -29,6 +31,7 @@ namespace TGC.MonoGame.TP.FPS
             Back.Draw(view, projection);
             Left.Draw(view, projection);
             Right.Draw(view, projection);
+            Bottom.Draw(view, projection);
         }
     }
 }

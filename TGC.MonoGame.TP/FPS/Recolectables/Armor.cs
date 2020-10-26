@@ -14,7 +14,7 @@ namespace TGC.MonoGame.TP
         {
             pathModelo = "healthAndArmor/armadura";
             tamanioModelo = 1;
-            modelColor = Color.Gray.ToVector3();
+            modelColor = Color.Blue.ToVector3();
 
             posicion = posicionModelo;
             World = Matrix.CreateRotationY(MathHelper.Pi);
