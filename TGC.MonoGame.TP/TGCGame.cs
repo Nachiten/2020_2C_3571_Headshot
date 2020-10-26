@@ -59,7 +59,11 @@ namespace TGC.MonoGame.TP
 
         private Texture2D exitButton;
 
+        private Texture2D otroMapa;
+
         private Vector2 startButtonPosition;
+
+        private Vector2 otroMapaPosition2;
 
         private Vector2 exitButtonPosition;
 
@@ -114,16 +118,15 @@ namespace TGC.MonoGame.TP
 
             startButtonPosition = new Vector2((GraphicsDevice.Viewport.Height / 2), 200);
 
+            otroMapaPosition2 = new Vector2((GraphicsDevice.Viewport.Height / 2), 300);
+
             resumeButtonPosition = new Vector2((GraphicsDevice.Viewport.Height / 2), 200);
 
             exitButtonPosition = new Vector2((GraphicsDevice.Viewport.Height / 2), 300);
 
             gameState = GameState.StartMenu;
 
-            // NOTA: Cambiar esta linea por la de abajo para cargar el otro mapa
-            Stage = new IceWorldStage(this);
-            // StageBuilder = new Nivel2(this); | Mapa 2
-            // StageBuilder = new IceWorldStage(this); | Mapa 1 con objetos
+
 
             var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
             Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(0, 100, 0), screenSize);
@@ -161,6 +164,8 @@ namespace TGC.MonoGame.TP
 
             startButton = Content.Load<Texture2D>(ContentFolderTextures + "otroStart");
 
+            otroMapa = Content.Load<Texture2D>(ContentFolderTextures + "startButton");
+
             exitButton = Content.Load<Texture2D>(ContentFolderTextures + "exit");
 
             resumeButton = Content.Load<Texture2D>(ContentFolderTextures + "resume");
@@ -177,8 +182,6 @@ namespace TGC.MonoGame.TP
         /// </summary>
         protected override void Update(GameTime gameTime)
         {
-
-            
             mouseState = Mouse.GetState();
 
             if (previousMouseState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Released)
@@ -226,20 +229,22 @@ namespace TGC.MonoGame.TP
             {
                 var startButtonRect = new Rectangle((int)startButtonPosition.X + 50, (int)startButtonPosition.Y, 200, 100);
 
-                //var exitButtonRect = new Rectangle((int)exitButtonPosition.X + 50, (int)exitButtonPosition.Y, 200, 100);
+                var otroMapaRect = new Rectangle((int)otroMapaPosition2.X + 50, (int)otroMapaPosition2.Y, 200, 100);
 
                 if (mouseClickRect.Intersects(startButtonRect))
                 {
+                    Stage = new IceWorldStage(this);
+                    gameState = GameState.Loading;
+                    isLoading = false;
+                }
+                if (mouseClickRect.Intersects(otroMapaRect)) {
+                    Stage = new Nivel2(this);
                     gameState = GameState.Loading;
                     isLoading = false;
                 }
 
-                //if (mouseClickRect.Intersects(exitButtonRect)) 
-                //{
-                //    Exit();
-                //}
             }
-            //deberia 
+
             if (gameState == GameState.Paused) {
 
                 var resumeButtonRect = new Rectangle((int)resumeButtonPosition.X + 50, (int)resumeButtonPosition.Y, 200, 100);
@@ -285,8 +290,9 @@ namespace TGC.MonoGame.TP
                 var startRectangule = new Rectangle((int)startButtonPosition.X + 50, (int)startButtonPosition.Y, 200, 100);
                 SpriteBatch.Draw(startButton, startRectangule, Color.White);
 
-                //var exitRectangule = new Rectangle((int)exitButtonPosition.X + 50, (int)exitButtonPosition.Y, 200, 100);
-                //spriteBatch.Draw(exitButton, exitRectangule, Color.White);
+                //cambiar este boton por un seleccionar mapa
+                var otroMapaRect = new Rectangle((int)otroMapaPosition2.X + 50, (int)otroMapaPosition2.Y, 200, 100);
+                SpriteBatch.Draw(otroMapa, otroMapaRect, Color.White);
             }
 
             if (gameState == GameState.Paused) {

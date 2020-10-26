@@ -24,7 +24,7 @@ namespace TGC.MonoGame.TP
         public Enemigo(Vector3 posicion)
         {
             this.posicion =  posicion;
-            World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateScale(.7f) * Matrix.CreateTranslation(posicion + Vector3.UnitY * 50 );
+            World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateScale(.7f) * Matrix.CreateTranslation(posicion + Vector3.UnitY * 100);
         }
 
 
@@ -59,7 +59,7 @@ namespace TGC.MonoGame.TP
             Weapon = new Weapon(weapon);
             anguloRotacionRadianes = Angle;
             this.posicion = posicion;
-            World = Matrix.CreateRotationY(anguloRotacionRadianes) * Matrix.CreateScale(1f) * Matrix.CreateTranslation(posicion);
+            World = Matrix.CreateRotationY(anguloRotacionRadianes) * Matrix.CreateScale(1f) * Matrix.CreateTranslation(this.posicion);
 
             InitialDirection = new Vector3(MathF.Cos(MathHelper.PiOver2 + anguloRotacionRadianes), 0, MathF.Sin(MathHelper.PiOver2 + anguloRotacionRadianes));
             LineOfSight = new Ray();
