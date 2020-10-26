@@ -17,9 +17,14 @@ namespace TGC.MonoGame.TP
 
         private Matrix World { get; set; }
 
-        public ModelCollidable ModeloTgcitoClassic { get; set; }
+        public ModelCollidable Model { get; set; }
 
         private Weapon Weapon { get; set; }
+        public Enemigo(Vector3 posicion)
+        {
+            this.posicion =  posicion;
+            World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateScale(.7f) * Matrix.CreateTranslation(posicion + Vector3.UnitY * 50 );
+        }
 
         //private Vector3 posicionInicial;
         private Vector3 mirandoInicial = new Vector3(0, 0, -1);
@@ -37,7 +42,7 @@ namespace TGC.MonoGame.TP
         Ray AabbMaxSight;
         Ray AabbMinSight;
         Vector3 InitialDirection;
-        Vector3 GunOffset = new Vector3(15, 40, 0);
+        Vector3 GunOffset = new Vector3(77, 15, -10);
 
         Vector3[] PosibleDirections = new[]
         {
@@ -52,7 +57,7 @@ namespace TGC.MonoGame.TP
             Weapon = new Weapon(weapon);
             anguloRotacionRadianes = Angle;
             this.posicion = posicion;
-            World = Matrix.CreateRotationY(anguloRotacionRadianes) * Matrix.CreateScale(1f) * Matrix.CreateTranslation(posicion);
+            World = Matrix.CreateRotationY(anguloRotacionRadianes) * Matrix.CreateScale(.7f) * Matrix.CreateTranslation(posicion);
 
             InitialDirection = new Vector3(MathF.Cos(MathHelper.PiOver2 + anguloRotacionRadianes), 0, MathF.Sin(MathHelper.PiOver2 + anguloRotacionRadianes));
             LineOfSight = new Ray();
@@ -62,14 +67,46 @@ namespace TGC.MonoGame.TP
 
         public void LoadContent(ContentManager Content, GraphicsDevice GraphicsDevice)
         {
-            ModeloTgcitoClassic = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + "tgcito-classic/tgcito-classic", World);
-            Aabb = ModeloTgcitoClassic.Aabb;
-            Collision.Instance.AppendStatic(Aabb);
+            Model = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + "enemy/Hellknight_LATEST", World);
+            // Correccion de AABB
+            float offsetX = 50;
+            float offsetZ = 30;
+            float offsetY = 190;
+            Model.Aabb.SetManually(new Vector3(posicion.X - offsetX, 0, posicion.Z - offsetZ), new Vector3(posicion.X + offsetX, offsetY, posicion.Z + offsetZ));
 
-            var modelEffectArmor = (BasicEffect)ModeloTgcitoClassic.Model.Meshes[0].Effects[0];
-            modelEffectArmor.DiffuseColor = Color.White.ToVector3();
-            modelEffectArmor.EnableDefaultLighting();
+            Aabb = Model.Aabb;
+
+            Collision.Instance.AppendStatic(Model.Aabb);
+            Collision.Instance.AppendShootable(this);
             Weapon.Gun.LoadContent(Content, GraphicsDevice);
+
+            var modelEffectArmor = (BasicEffect)Model.Model.Meshes[0].Effects[0];
+            modelEffectArmor.DiffuseColor = Color.Pink.ToVector3();
+            modelEffectArmor.EnableDefaultLighting();
+
+            var modelAlgo = (BasicEffect)Model.Model.Meshes[1].Effects[0];
+            modelAlgo.DiffuseColor = Color.Brown.ToVector3();
+            modelAlgo.EnableDefaultLighting();
+
+            //Mandibula
+            var dindare2 = (BasicEffect)Model.Model.Meshes[1].Effects[1];
+            dindare2.DiffuseColor = Color.WhiteSmoke.ToVector3();
+            dindare2.EnableDefaultLighting();
+
+            //Ojos
+            var dindare = (BasicEffect)Model.Model.Meshes[1].Effects[2];
+            dindare.DiffuseColor = Color.Yellow.ToVector3();
+            dindare.EnableDefaultLighting();
+
+            //Cuerpo
+            var dindare3 = (BasicEffect)Model.Model.Meshes[1].Effects[3];
+            dindare3.DiffuseColor = Color.DarkGray.ToVector3();
+            dindare3.EnableDefaultLighting();
+
+            //torso
+            var dindare4 = (BasicEffect)Model.Model.Meshes[1].Effects[4];
+            dindare4.DiffuseColor = Color.Black.ToVector3();
+            dindare4.EnableDefaultLighting();
         }
 
         private bool StartedMoving = false;
@@ -77,6 +114,8 @@ namespace TGC.MonoGame.TP
         public void Update(GameTime gameTime, Vector3 posicionCamara)
         {
             //UpdateLineOfSight();
+
+            Aabb = Model.Aabb;
 
             // Calculo la posicion a la que me voy a mover
             posicionObjetivo = new Vector3(posicionCamara.X, 50, posicionCamara.Z);
@@ -95,7 +134,7 @@ namespace TGC.MonoGame.TP
 
                 UpdateWorld(posicion + (vectorDireccion * velocidadMovimiento), anguloRotacionRadianes);
 
-                Collision.Instance.CheckStatic(ModeloTgcitoClassic.Aabb, StaticCollisionCB);
+                Collision.Instance.CheckStatic(Model.Aabb, StaticCollisionCB);
             }
 
             if (StartedMoving)
@@ -136,7 +175,7 @@ namespace TGC.MonoGame.TP
 
             // Muevo el modelo
             World *= Matrix.CreateTranslation(posicion);
-            ModeloTgcitoClassic.Transform(World, true);
+            Model.Transform(World, true);
 
             // Actualizo la vista
             UpdateLineOfSight();
@@ -179,21 +218,21 @@ namespace TGC.MonoGame.TP
             LineOfSight.Position = posicion + GunOffset;
             LineOfSight.Direction = Direction;
 
-            AabbMinSight.Position = Aabb.minExtents;
+            AabbMinSight.Position = Model.Aabb.minExtents;
             AabbMinSight.Direction = Direction;
 
-            AabbMaxSight.Position = Aabb.maxExtents;
+            AabbMaxSight.Position = Model.Aabb.maxExtents;
             AabbMaxSight.Direction = Direction;
         }
         private float GetShortestDistanceToStaticElement()
-        {
-            return Math.Min(Collision.Instance.GetShortestDistanceToStaticElement(AabbMinSight, Aabb), Collision.Instance.GetShortestDistanceToStaticElement(AabbMaxSight, Aabb));
+        {   
+            return Math.Min(Collision.Instance.GetShortestDistanceToStaticElement(AabbMinSight, Model.Aabb), Collision.Instance.GetShortestDistanceToStaticElement(AabbMaxSight, Model.Aabb));
         }
 
         public void Draw(Matrix view, Matrix projection)
         {
             // Dibujo en las coordenadas actuales
-            ModeloTgcitoClassic.Draw(view, projection);
+            Model.Draw(view, projection);
 
             World.Decompose(out Vector3 scale, out Quaternion rotation, out Vector3 translation);
 
@@ -221,7 +260,7 @@ namespace TGC.MonoGame.TP
         {
             //TODO: Handle Collision
             posicion = OldPosition;
-            ModeloTgcitoClassic.Transform(World * Matrix.CreateTranslation(posicion), true);
+            Model.Transform(World * Matrix.CreateTranslation(posicion), true);
             return 0;
         }
         public int ShootableCollisionCB(Ashootable e)

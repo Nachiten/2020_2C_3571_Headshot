@@ -121,12 +121,12 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             posicionesPosiblesRecolectables.Add(new Vector3(-7 * xLenFloor / 16, 0, 9 * zLenFloor / 20));
             #endregion
 
-            /*Vector3 Enemy1Pos = new Vector3(200, 50, zLenFloor / 2 - 100);
-            Vector3 Enemy2Pos = new Vector3(-200, 50, -zLenFloor / 2 + 100);
+            Vector3 Enemy1Pos = new Vector3(50, 100, zLenFloor / 2 - 100);
+            Vector3 Enemy2Pos = new Vector3(-200, 100, -zLenFloor / 2 + 100);
 
             // Inicializacion enemigo
             Enemigos.Add(new Enemigo(Enemy1Pos, new M4(Enemy1Pos), MathHelper.Pi));
-            Enemigos.Add(new Enemigo(Enemy2Pos, new M4(Enemy2Pos), 0));*/
+            //Enemigos.Add(new Enemigo(Enemy2Pos, new M4(Enemy2Pos), 0));
 
             //generarRecolectablesRandom();
 

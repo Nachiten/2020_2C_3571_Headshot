@@ -5,6 +5,8 @@ using TGC.MonoGame.TP.FPS.Interface;
 using TGC.MonoGame.TP.Utils;
 using TGC.MonoGame.TP.FPS.Scenarios;
 using TGC.MonoGame.Samples.Cameras;
+using System.Threading;
+using Microsoft.Xna.Framework.Input;
 
 namespace TGC.MonoGame.TP
 {
@@ -17,26 +19,46 @@ namespace TGC.MonoGame.TP
         public const string ContentFolderSpriteFonts = "SpriteFonts/";
         public const string ContentFolderTextures = "Textures/";
 
+        public enum GameState
+        {
+            StartMenu,
+            Loading,
+            Playing,
+            Paused
+        }
 
         #region Propiedades
         public GraphicsDeviceManager Graphics { get; }
-        private Player Player { get; set; }
 
-        private PlayerGUI  PlayerGUI {get;set;}
-
-        //private FreeCamera Camera { get; set; }
-
-        
         private BasicEffect Effect { get; set; }
 
-        private VertexPositionTexture[] floorVerts { get; set; }
+        private Texture2D startButton;
 
+        private Texture2D loadingScreen;
+
+        private Texture2D exitButton;
+
+        private Vector2 startButtonPosition;
+
+        private Vector2 exitButtonPosition;
+
+
+        private Thread backgroundThreat;
+
+        private bool isLoading = false;
         private KeyboardManager PlayerControl { get; set; }
         public Matrix View { get; set; }
         public Matrix Projection { get; set; }
         AStage StageBuilder { get; set; }
         public Camera Camera { get; set; }
 
+        MouseState mouseState;
+
+        MouseState previousMouseState;
+
+        private SpriteBatch spriteBatch;
+
+        private GameState gameState;
 
         #endregion
 
@@ -58,104 +80,128 @@ namespace TGC.MonoGame.TP
 
         protected override void Initialize()
         {
-            Collision.Init();
+            startButtonPosition = new Vector2((GraphicsDevice.Viewport.Height / 2), 200);
 
-           
-            var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
-            //Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(-350, 50, 400), screenSize);
+            exitButtonPosition = new Vector2((GraphicsDevice.Viewport.Height / 2), 250);
 
-            /*View = Matrix.CreateLookAt(new Vector3(30, 20, 150), new Vector3(30, 0, 0), Vector3.Up);
-            Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);*/
-
-            View = Camera.View;
-            Projection = Camera.Projection;
-
-            Player = new Player(this);
-            Player.Initialize();
-
-            PlayerGUI = new PlayerGUI(this);
-            PlayerGUI.Initialize(Player);
-
-            //PlayerControl = new KeyboardManager(Player);
-
-
-            StageBuilder = new IceWorldStage(this);
-
+            gameState = GameState.StartMenu;
 
             Effect = new BasicEffect(GraphicsDevice);
-
 
             base.Initialize();
         }
         protected override void LoadContent()
         {
-            StageBuilder.LoadContent();
+
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            startButton = Content.Load<Texture2D>(ContentFolderTextures + "otroStart");
+            
+            exitButton = Content.Load<Texture2D>(ContentFolderTextures + "startButton");
+
+            loadingScreen = Content.Load<Texture2D>(ContentFolderTextures + "loading");
+
             base.LoadContent();
         }
 
         protected override void Update(GameTime gameTime)
         {
-            Camera.Update(gameTime);
-            //PlayerControl.Update(gameTime);
+
+            mouseState = Mouse.GetState();
+
+            if (previousMouseState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Released)
+            {
+                MouseClicked(mouseState.X, mouseState.Y);
+            }
+
+            previousMouseState = mouseState;
+
+
+            if (gameState == GameState.Loading && !isLoading) 
+            {
+                backgroundThreat = new Thread(LoadGame);
+                isLoading = true;
+                backgroundThreat.Start();
+            
+            }
+
+            if (gameState == GameState.Playing) 
+            { 
+                //hacer algo con el juego
+            }
+
+            if (gameState == GameState.Playing && isLoading)
+            {
+                LoadGame();
+                isLoading = false;
+            }
+
             base.Update(gameTime);
+        }
+
+        void MouseClicked(int x, int y) 
+        {
+            var mouseClickRect = new Rectangle(x, y, 10, 10);
+
+            if(gameState == GameState.StartMenu)
+            {
+                var startButtonRect = new Rectangle((int)startButtonPosition.X + 50, (int)startButtonPosition.Y, 200, 100);
+
+                //var exitButtonRect = new Rectangle((int)exitButtonPosition.X + 50, (int)exitButtonPosition.Y, 200, 100);
+
+                if (mouseClickRect.Intersects(startButtonRect))
+                {
+                    gameState = GameState.Loading;
+                    isLoading = false;
+                }
+
+                //if (mouseClickRect.Intersects(exitButtonRect)) 
+                //{
+                //    Exit();
+                //}
+            }
+        }
+
+        void LoadGame() 
+        {
+            StageBuilder.LoadContent();
+            Thread.Sleep(3000);
+            //cargo el mapa etc..
+            gameState = GameState.Playing;
+            isLoading = false;
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.LightBlue);
+            GraphicsDevice.Clear(Color.Black);
 
-            Player.Draw(gameTime);
-            PlayerGUI.Draw(gameTime);
+            //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed) { }
 
-            //StageBuilder.Draw(gameTime);
+        
 
+            spriteBatch.Begin();
 
-            //Vector3 piso4 = new Vector3(20, 20, 0);
-            //Vector3 piso1 = new Vector3(-20, -20, 0);
-            //Vector3 piso2 = new Vector3(-20, 20, 0);
-            //Vector3 piso3 = new Vector3(20, -20, 0);
+            //Handle game state
+            if (gameState == GameState.StartMenu) 
+            {
+                var startRectangule = new Rectangle((int)startButtonPosition.X + 50, (int)startButtonPosition.Y, 200, 100);
+                spriteBatch.Draw(startButton, startRectangule, Color.White);
 
+                //var exitRectangule = new Rectangle((int)exitButtonPosition.X + 50, (int)exitButtonPosition.Y, 200, 100);
+                //spriteBatch.Draw(exitButton, exitRectangule, Color.White);
+            }
+            
 
-            //var textura = new Vector2(5, 10);
-            //floorVerts = TP.Utils.ShapeCreatorHelper.CreatePlane(piso1, piso2, piso3, piso4, textura);
-            //// The assignment of effect.View and effect.Projection
-            //// are nearly identical to the code in the Model drawing code.
-            //var cameraPosition = new Vector3(0, 40, 20);
-            //var cameraLookAtVector = Vector3.Zero;
-            //var cameraUpVector = Vector3.UnitZ;
+            if (gameState == GameState.Loading) {
+                spriteBatch.Draw(loadingScreen, new Vector2((GraphicsDevice.Viewport.Width / 2) - loadingScreen.Width / 2, (GraphicsDevice.Viewport.Height / 2) - loadingScreen.Height / 2), Color.White);
+            }
 
-            //Effect.View = Matrix.CreateLookAt(
-            //    cameraPosition, cameraLookAtVector, cameraUpVector);
-
-            //float aspectRatio =
-            //    Graphics.PreferredBackBufferWidth / (float)Graphics.PreferredBackBufferHeight;
-            //float fieldOfView = Microsoft.Xna.Framework.MathHelper.PiOver4;
-            //float nearClipPlane = 1;
-            //float farClipPlane = 200;
-
-            //Effect.Projection = Matrix.CreatePerspectiveFieldOfView(
-            //    fieldOfView, aspectRatio, nearClipPlane, farClipPlane);
-            //Effect.TextureEnabled = true;
-
-            //Effect.Texture = Content.Load<Texture2D>(ContentFolderTextures + "ice_rink");
-
-
-            //foreach (var pass in Effect.CurrentTechnique.Passes)
-            //{
-            //    pass.Apply();
-
-            //    Graphics.GraphicsDevice.DrawUserPrimitives(
-            //        // We’ll be rendering two trinalges
-            //        PrimitiveType.TriangleList,
-            //        // The array of verts that we want to render
-            //        floorVerts,
-            //        // The offset, which is 0 since we want to start
-            //        // at the beginning of the floorVerts array
-            //        0,
-            //        // The number of triangles to draw
-            //        2);
-            //}
-
+            if (gameState == GameState.Playing && isLoading)
+            {
+                isLoading = false;
+            }
+            
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

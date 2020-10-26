@@ -52,7 +52,6 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             foreach (Enemigo unEnemigo in Enemigos)
             {
                 unEnemigo.LoadContent(Content, GraphicsDevice);
-                Collision.Instance.AppendShootable(unEnemigo);
             }
         }
 
@@ -69,7 +68,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
                 if (unEnemigo.IsDead())
                 {
                     Collision.Instance.RemoveShootable(unEnemigo);
-                    Collision.Instance.RemoveStatic(unEnemigo.Aabb);
+                    Collision.Instance.RemoveStatic(unEnemigo.Model.Aabb);
                 }
             }
 

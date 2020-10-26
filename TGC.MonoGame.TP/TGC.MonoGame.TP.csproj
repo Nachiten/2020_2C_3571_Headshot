@@ -41,6 +41,7 @@
     <Folder Include="Content\Models\weapons\hands\" />
     <Folder Include="Content\Sounds\" />
     <Folder Include="Content\Textures\interface\" />
+    <Folder Include="FPS\Menu\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TGC.MonoGame.TP.Utils\TGC.MonoGame.TP.Utils.csproj" />
