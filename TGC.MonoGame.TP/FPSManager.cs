@@ -60,7 +60,7 @@ namespace TGC.MonoGame.TP
         AStage StageBuilder { get; set; }
         public Camera Camera { get; set; }
 
-        
+        private SpriteFont font { get; set; }
 
         #endregion
 
@@ -94,6 +94,8 @@ namespace TGC.MonoGame.TP
         }
         protected override void LoadContent()
         {
+
+            font = Content.Load<SpriteFont>("Arial");
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
 

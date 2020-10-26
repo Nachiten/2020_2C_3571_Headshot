@@ -96,6 +96,8 @@ namespace TGC.MonoGame.TP
         private PlayerGUI interfaz { get; set; }
         private Weapon arma { get; set; }
 
+        private SpriteFont font { get; set; }
+
         // Esta lita de recolectables deberia estar en otra clase "recolectables"
         //private List<Recolectable> recolectables = new List<Recolectable>();
 
@@ -116,7 +118,9 @@ namespace TGC.MonoGame.TP
             rasterizerState.CullMode = CullMode.None;
             GraphicsDevice.RasterizerState = rasterizerState;
 
-            startButtonPosition = new Vector2((GraphicsDevice.Viewport.Height / 2), 200);
+            font = Content.Load<SpriteFont>(ContentFolderSpriteFonts + "Arial");
+
+            startButtonPosition = new Vector2((GraphicsDevice.Viewport.Height / 2), 150);
 
             otroMapaPosition2 = new Vector2((GraphicsDevice.Viewport.Height / 2), 300);
 
@@ -162,9 +166,9 @@ namespace TGC.MonoGame.TP
 
             //Menu
 
-            startButton = Content.Load<Texture2D>(ContentFolderTextures + "otroStart");
+            startButton = Content.Load<Texture2D>(ContentFolderTextures + "iceworld");
 
-            otroMapa = Content.Load<Texture2D>(ContentFolderTextures + "startButton");
+            otroMapa = Content.Load<Texture2D>(ContentFolderTextures + "spaceship");
 
             exitButton = Content.Load<Texture2D>(ContentFolderTextures + "exit");
 
@@ -287,6 +291,8 @@ namespace TGC.MonoGame.TP
             //Handle game state
             if (gameState == GameState.StartMenu)
             {
+                SpriteBatch.DrawString(font, "Seleccione un mapa", new Vector2((GraphicsDevice.Viewport.Width / 2) - 150, 75), Color.White);
+
                 var startRectangule = new Rectangle((int)startButtonPosition.X + 50, (int)startButtonPosition.Y, 200, 100);
                 SpriteBatch.Draw(startButton, startRectangule, Color.White);
 

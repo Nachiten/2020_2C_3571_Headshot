@@ -676,6 +676,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/ice_rink.jpg
 
+#begin Textures/iceworld.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/iceworld.jpg
+
 #begin Textures/interface/282133-de_dust2.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -807,6 +819,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/sand.jpg
+
+#begin Textures/spaceship.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/spaceship.jpg
 
 #begin Textures/startButton.png
 /importer:TextureImporter
