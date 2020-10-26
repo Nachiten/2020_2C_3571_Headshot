@@ -238,13 +238,14 @@ namespace TGC.MonoGame.TP
                     Stage = new LibraryStage(this);
                     gameState = GameState.Loading;
                     isLoading = false;
+                    Player.Init(this, Camera, Stage);
                 }
                 if (mouseClickRect.Intersects(otroMapaRect)) {
                     Stage = new Nivel2(this);
                     gameState = GameState.Loading;
                     isLoading = false;
+                    Player.Init(this, Camera, Stage);
                 }
-                Player.Init(this, Camera, Stage);
             }
 
             if (gameState == GameState.Paused) {

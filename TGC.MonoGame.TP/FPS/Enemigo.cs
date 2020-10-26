@@ -24,14 +24,16 @@ namespace TGC.MonoGame.TP
         public Enemigo(Vector3 posicion)
         {
             this.posicion =  posicion;
-            World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateScale(.7f) * Matrix.CreateTranslation(posicion);
+            World = Matrix.CreateRotationY(MathHelper.Pi) * ScaleFactor * Matrix.CreateTranslation(posicion);
         }
 
         //private Vector3 posicionInicial;
         private Vector3 mirandoInicial = new Vector3(0, 0, -1);
-        float velocidadMovimiento = 1;
+        float velocidadMovimiento = 2;
         Vector3 posicionObjetivo = Vector3.Zero;
         Vector3 vectorDireccion = Vector3.Zero;
+
+        private Matrix ScaleFactor = Matrix.CreateScale(.7f);
 
         float anguloRotacionRadianes;
         Vector3 OldPosition = Vector3.Zero;
@@ -59,7 +61,7 @@ namespace TGC.MonoGame.TP
             anguloRotacionRadianes = Angle;
             this.posicion = posicion;
 
-            World = Matrix.CreateRotationY(anguloRotacionRadianes) * Matrix.CreateScale(.7f) * Matrix.CreateTranslation(posicion);
+            World = Matrix.CreateRotationY(anguloRotacionRadianes) * ScaleFactor * Matrix.CreateTranslation(posicion);
 
             InitialDirection = new Vector3(MathF.Cos(MathHelper.PiOver2 + anguloRotacionRadianes), 0, MathF.Sin(MathHelper.PiOver2 + anguloRotacionRadianes));
             LineOfSight = new Ray();
@@ -118,7 +120,7 @@ namespace TGC.MonoGame.TP
             //UpdateLineOfSight();
 
             // Calculo la posicion a la que me voy a mover
-            posicionObjetivo = new Vector3(posicionCamara.X, 50, posicionCamara.Z);
+            posicionObjetivo = new Vector3(posicionCamara.X, posicion.Y, posicionCamara.Z);
 
             float distanciaAlObjetivo = Vector3.Distance(posicion, posicionObjetivo);
             // Si la distancia es menor a un margen comienzo a moverme
@@ -131,9 +133,7 @@ namespace TGC.MonoGame.TP
                 World *= Matrix.CreateRotationY(-anguloRotacionRadianes);
 
                 anguloRotacionRadianes = MoveTowards(posicionObjetivo);
-
                 UpdateWorld(posicion + (vectorDireccion * velocidadMovimiento), anguloRotacionRadianes);
-
                 Collision.Instance.CheckStatic(Model.Aabb, StaticCollisionCB);
             }
 
@@ -141,13 +141,22 @@ namespace TGC.MonoGame.TP
             {
                 float shortestDistance = GetShortestDistanceToStaticElement();
 
-                var dirIdx = 0;
-                while (shortestDistance < 50 && dirIdx < PosibleDirections.Length)
+                if(shortestDistance < 50)
                 {
-                    anguloRotacionRadianes = PointTo(PosibleDirections[dirIdx]);
-                    UpdateWorld(posicion, anguloRotacionRadianes);
-                    shortestDistance = GetShortestDistanceToStaticElement();
-                    dirIdx++;
+                    var dirIdx = 0;
+                    while (shortestDistance < 50 && dirIdx < PosibleDirections.Length)
+                    {
+                        anguloRotacionRadianes = PointTo(PosibleDirections[dirIdx]);
+                        UpdateWorld(posicion, anguloRotacionRadianes);
+                        shortestDistance = GetShortestDistanceToStaticElement();
+                        dirIdx++;
+                    }
+                }
+                else
+                {
+                    anguloRotacionRadianes = MoveTowards(posicionObjetivo);
+                    UpdateWorld(posicion + (vectorDireccion * velocidadMovimiento), anguloRotacionRadianes);
+                    Collision.Instance.CheckStatic(Model.Aabb, StaticCollisionCB);
                 }
 
                 UpdateWorld(posicion + (vectorDireccion * velocidadMovimiento), anguloRotacionRadianes);
@@ -167,11 +176,11 @@ namespace TGC.MonoGame.TP
                 shooting = false;
             }
         }
-        private void UpdateWorld(Vector3 hacia, float angulo)
+        public void UpdateWorld(Vector3 hacia, float angulo)
         {
             posicion = hacia;
             // Aplico la rotacion que corresponde
-            World = Matrix.CreateScale(1f) * Matrix.CreateRotationY(MathHelper.Pi + angulo);
+            World = ScaleFactor * Matrix.CreateRotationY(MathHelper.Pi + angulo);
 
             // Muevo el modelo
             World *= Matrix.CreateTranslation(posicion);
@@ -254,6 +263,10 @@ namespace TGC.MonoGame.TP
         public bool IsDead()
         {
             return health == 0;
+        }
+        public void Revivir()
+        {
+            health = 100;
         }
 
         private int StaticCollisionCB(AABB a, AABB b)

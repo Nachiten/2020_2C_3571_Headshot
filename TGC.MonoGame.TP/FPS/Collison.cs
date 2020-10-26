@@ -65,6 +65,19 @@ namespace TGC.MonoGame.TP.Utils{
                 }
             }
         }
+        public bool CheckStatic(AABB elem)
+        {
+            if (!Config.colisionesActivadas) return false;
+            bool res = false;
+            foreach (AABB s in StaticElements.Where(x => !x.Equals(elem)).ToList())
+            {
+                if (elem.IntersectAABB(s))
+                {
+                    res = true;
+                }
+            }
+            return res;
+        }
         public void CheckCollectable(AABB elem, Func<ARecolectable, int> callback)
         {
             if (!Config.colisionesActivadas) return;

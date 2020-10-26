@@ -80,7 +80,7 @@ namespace TGC.MonoGame.TP.FPS
             Health = maxHealth;
             Armor = 45;
 
-            Weapons = new Weapon[3];
+            Weapons = new Weapon[2];
             WorldWeapon = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(50, 0, 110);
             View = Matrix.CreateLookAt(new Vector3(30, 20, 150), new Vector3(30, 0, 0), Vector3.Up);
             Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);
@@ -190,12 +190,16 @@ namespace TGC.MonoGame.TP.FPS
 
         public void ChangeWeapon(int index)
         {
-            CurrentWeapon = Weapons[index];
+            if(Weapons[index-1] != null)
+            {
+                CurrentWeapon = Weapons[index-1];
+            }   
         }
 
         public void AgarrarArma(Weapon nuevaArma)
         {
-            CurrentWeapon = nuevaArma;
+            Weapons[nuevaArma.Index-1] = nuevaArma;
+            CurrentWeapon = nuevaArma;   
         }
         
         public void Draw(GameTime gameTime)

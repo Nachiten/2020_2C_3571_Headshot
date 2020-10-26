@@ -10,6 +10,7 @@ namespace TGC.MonoGame.TP
     {
         public bool Scalable = false;
         public int Damage;
+        public int Index;
         public override void recolectar(AStage Stage)
         {
             // Todas las armas recolectables tienen la misma logica

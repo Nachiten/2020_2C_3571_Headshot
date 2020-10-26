@@ -79,6 +79,8 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             AddTable(new Vector2(-6 * xLenFloor / 16, -1 * zLenFloor / 5));
             posicionesPosiblesRecolectables.Add(new Vector3(-5 * xLenFloor / 20, 0, 0));
             posicionesPosiblesRecolectables.Add(new Vector3(-5 * xLenFloor / 20, 0, -1 * zLenFloor / 5));
+
+            posicionesPosiblesEnemigos.Add(new Vector3(-5 * xLenFloor / 20, 0, zLenFloor / 10));
             #endregion
 
             #region Sala B
@@ -86,8 +88,11 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(5 * xLenFloor / 16, Y, -zLenFloor / 2 * 0.6f), -Vector3.UnitZ, 3 * xLenFloor / 8, yLenWall, thickness, TextureBooks, TextureWood, new Vector2(10, 1), TextureWood));
             // Mesa
             AddTable(new Vector2(5 * xLenFloor / 16, -zLenFloor / 2 * 0.8f));
+
             posicionesPosiblesRecolectables.Add(new Vector3(7 * xLenFloor / 16, 0, -zLenFloor / 2 * 0.9f));
             posicionesPosiblesRecolectables.Add(new Vector3(7 * xLenFloor / 16, 0, -zLenFloor / 2 * 0.7f));
+
+            posicionesPosiblesEnemigos.Add(new Vector3(4 * xLenFloor / 16, 0, -zLenFloor / 2 * 0.8f));
             #endregion
 
             // Pared Separadora
@@ -104,8 +109,11 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(11 * xLenFloor / 32, 5 * yLenWall / 6, 3 * zLenFloor / 10 - zLenFloor / 5), -Vector3.UnitZ, xLenFloor / 16, yLenWall/3, thickness, TextureWood, TextureBooks, new Vector2(1, 0.33f), TextureWood));
             // Mesa
             AddTable(new Vector2(11 * xLenFloor / 32, 3 * zLenFloor / 10));
+
             posicionesPosiblesRecolectables.Add(new Vector3(4 * xLenFloor / 16, 0, 4 * zLenFloor / 10));
             posicionesPosiblesRecolectables.Add(new Vector3(7 * xLenFloor / 16, 0, 4 * zLenFloor / 10));
+
+            posicionesPosiblesEnemigos.Add(new Vector3(11 * xLenFloor / 32, 0, 2 * zLenFloor / 10));
             #endregion
 
             #region Sala D
@@ -119,16 +127,15 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             AddTable(new Vector2(-5 * xLenFloor / 16, 9 * zLenFloor / 20));
             posicionesPosiblesRecolectables.Add(new Vector3(-7 * xLenFloor / 16, 0, 5 * zLenFloor / 20));
             posicionesPosiblesRecolectables.Add(new Vector3(-7 * xLenFloor / 16, 0, 9 * zLenFloor / 20));
+            posicionesPosiblesEnemigos.Add(new Vector3(-5 * xLenFloor / 16, 0, 7 * zLenFloor / 20));
             #endregion
 
-            Vector3 Enemy1Pos = new Vector3(50, 100, zLenFloor / 2 - 100);
-            Vector3 Enemy2Pos = new Vector3(-200, 100, -zLenFloor / 2 + 100);
 
-            // Inicializacion enemigo
-            Enemigos.Add(new Enemigo(Enemy1Pos, new M4(Enemy1Pos), MathHelper.Pi));
-            //Enemigos.Add(new Enemigo(Enemy2Pos, new M4(Enemy2Pos), 0));
 
-            //generarRecolectablesRandom();
+
+
+            generarRecolectablesRandom();
+            generarEnemigosRandom(-1);
 
             base.LoadContent();
         }

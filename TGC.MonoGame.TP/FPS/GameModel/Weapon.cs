@@ -5,11 +5,13 @@ using Grafics = Microsoft.Xna.Framework.Graphics;
 namespace TGC.MonoGame.TP.FPS
 {
     public class Weapon 
-    { 
+    {
+        public int Index;
         public Weapon(AWeaponRecolectable weapon)
         {
             Gun = weapon;
             Damage = Gun.Damage;
+            Index = Gun.Index;
         }
         public AWeaponRecolectable Gun { get; set; }
         public int Damage { get; set; }

@@ -21,9 +21,11 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         public List<AABB> Boxes = new List<AABB>();
 
         protected int cantidadCorazonesRandom = 4;
-        protected int cantidadArmorRandom = 4;
+        protected int cantidadArmorRandom = 2;
+        protected int cantidadEnemigos = 2;
 
         protected List<Vector3> posicionesPosiblesRecolectables = new List<Vector3>();
+        protected List<Vector3> posicionesPosiblesEnemigos = new List<Vector3>();
         public List<Enemigo> Enemigos = new List<Enemigo>();
         public Matrix View;
         public Matrix Projection;
@@ -68,12 +70,16 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             {
                 if (unEnemigo.IsDead())
                 {
-                    Collision.Instance.RemoveShootable(unEnemigo);
-                    Collision.Instance.RemoveStatic(unEnemigo.Model.Aabb);
+                    for(int i=0; i< posicionesPosiblesEnemigos.Count; i++)
+                    {
+                        unEnemigo.Revivir();
+                        Vector3 posAleatoria = posicionesPosiblesEnemigos[i];
+                        unEnemigo.UpdateWorld(new Vector3(posAleatoria.X, 100, posAleatoria.Z), MathHelper.Pi);
+                        if (!Collision.Instance.CheckStatic(unEnemigo.Aabb))
+                            break;
+                    }
                 }
             }
-
-            Enemigos = Enemigos.Where(x => !x.IsDead()).ToList();
 
             foreach (Enemigo unEnemigo in Enemigos)
             {
@@ -147,7 +153,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             //}
 
             // Genero valores random que necesito
-            List<int> valoresRandom = generarValoresRandom(cantidadArmorRandom + cantidadCorazonesRandom);
+            List<int> valoresRandom = generarValoresRandom(cantidadArmorRandom + cantidadCorazonesRandom, posicionesPosiblesRecolectables.Count);
 
             int i;
 
@@ -169,7 +175,24 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
                 Recolectables.Add(new Health(new Vector3(vectorActual.X, 55, vectorActual.Z)));
             }
         }
-        private List<int> generarValoresRandom(int cantidad)
+        protected void generarEnemigosRandom(int cantidad)
+        {
+            if (cantidad == -1)
+                cantidad = cantidadEnemigos;
+            // Genero valores random que necesito
+            List<int> valoresRandom = generarValoresRandom(cantidadEnemigos, posicionesPosiblesEnemigos.Count);
+
+            // Itero para generar los Armor en posiciones random ya definidas
+            for (int i = 0; i < cantidad; i++)
+            {
+                int index = valoresRandom[i];
+                Vector3 vectorActual = posicionesPosiblesEnemigos[index];
+                Vector3 pos = new Vector3(vectorActual.X, 100, vectorActual.Z);
+
+                Enemigos.Add(new Enemigo(pos, new M4(pos), MathHelper.Pi));
+            }
+        }
+        private List<int> generarValoresRandom(int cantidad, int hasta)
         {
 
             List<int> numerosRandom = new List<int>();
@@ -179,7 +202,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             // Itero para agregar elementos (no repetidos) a la lista de numeros random
             while (numerosRandom.Count < cantidad)
             {
-                int numRandom = rnd.Next(1, posicionesPosiblesRecolectables.Count);
+                int numRandom = rnd.Next(1, hasta);
                 // Si el numero no existia en la lista lo agrego
                 if (!numerosRandom.Exists(unNum => unNum == numRandom))
                 {

@@ -65,6 +65,12 @@ namespace TGC.MonoGame.TP.FPS.Interface
             if (keyboardState.IsKeyDown(Keys.LeftShift))
                 currentMovementSpeed *= 2f;
 
+            if (keyboardState.IsKeyDown(Keys.D1))
+                Player.Instance.ChangeWeapon(1);
+
+            if (keyboardState.IsKeyDown(Keys.D2))
+                Player.Instance.ChangeWeapon(2);
+
             if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
             {
                 Player.Position += -Camera.RightDirection * currentMovementSpeed * elapsedTime;

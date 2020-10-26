@@ -22,12 +22,12 @@ namespace TGC.MonoGame.TP
 
         public static bool fijarYCamara = true;
         public static bool recolectablesActivados = true;
-        public static bool enemigosFollowActivado = false;
+        public static bool enemigosFollowActivado = true;
         public static bool rotacionRecolectables = true;
         public static bool bloquearMouse = true;
         public static bool colisionesActivadas = true;
         public static bool pantallaCompleta = false;
-        public static bool drawAABB = true;
+        public static bool drawAABB = false;
         public static bool drawAxis = true;
 
 
