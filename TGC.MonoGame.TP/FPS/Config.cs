@@ -27,7 +27,7 @@ namespace TGC.MonoGame.TP
         public static bool bloquearMouse = true;
         public static bool colisionesActivadas = true;
         public static bool pantallaCompleta = false;
-        public static bool drawAABB = false;
+        public static bool drawAABB = true;
         public static bool drawAxis = true;
 
 

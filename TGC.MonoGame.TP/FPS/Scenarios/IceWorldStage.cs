@@ -85,10 +85,13 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             Vector3 Enemy1Pos = new Vector3(200, 50, zLenFloor / 2 - 100);
             Vector3 Enemy2Pos = new Vector3(-200, 50, -zLenFloor / 2 + 100);
 
+            enemyPath.Add(new PathTrace { posicion = new Vector2(0, 0), normal = Vector3.UnitX }); //1
+            enemyPath.Add(new PathTrace { posicion = new Vector2(0, 0), normal = -Vector3.UnitZ }); //2
+
             // Inicializacion enemigo
             //ToDo: modificar porque esta alto y se hunde para adentro.
-            Enemigos.Add(new Enemigo(Enemy1Pos, new M4(Enemy1Pos), MathHelper.Pi, null));
-            Enemigos.Add(new Enemigo(Enemy2Pos, new M4(Enemy2Pos), 0, null));
+            Enemigos.Add(new Enemigo(Enemy1Pos, new M4(Enemy1Pos), MathHelper.Pi, enemyPath));
+            Enemigos.Add(new Enemigo(Enemy2Pos, new M4(Enemy2Pos), 0, enemyPath));
 
             base.LoadContent();
         }
