@@ -9,6 +9,10 @@ using System.Linq;
 
 namespace TGC.MonoGame.TP.FPS.Scenarios
 {
+    public struct PathTrace {
+        public Vector2 posicion;
+        public Vector3 normal;
+    }
     public abstract class AStage
     {
         public Game Game;
@@ -24,6 +28,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         protected int cantidadArmorRandom = 2;
         protected int cantidadEnemigos = 2;
 
+        protected List<PathTrace> enemyPath = new List<PathTrace>();
         protected List<Vector3> posicionesPosiblesRecolectables = new List<Vector3>();
         protected List<Vector3> posicionesPosiblesEnemigos = new List<Vector3>();
         public List<Enemigo> Enemigos = new List<Enemigo>();
@@ -173,23 +178,6 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
                 Vector3 vectorActual = posicionesPosiblesRecolectables[index];
 
                 Recolectables.Add(new Health(new Vector3(vectorActual.X, 55, vectorActual.Z)));
-            }
-        }
-        protected void generarEnemigosRandom(int cantidad)
-        {
-            if (cantidad == -1)
-                cantidad = cantidadEnemigos;
-            // Genero valores random que necesito
-            List<int> valoresRandom = generarValoresRandom(cantidadEnemigos, posicionesPosiblesEnemigos.Count);
-
-            // Itero para generar los Armor en posiciones random ya definidas
-            for (int i = 0; i < cantidad; i++)
-            {
-                int index = valoresRandom[i];
-                Vector3 vectorActual = posicionesPosiblesEnemigos[index];
-                Vector3 pos = new Vector3(vectorActual.X, 100, vectorActual.Z);
-
-                Enemigos.Add(new Enemigo(pos, new M4(pos), MathHelper.Pi));
             }
         }
         private List<int> generarValoresRandom(int cantidad, int hasta)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TGC.MonoGame.TP.Utils;
@@ -67,7 +68,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(-xLenFloor / 10, Y, -zLenFloor / 2 * 0.8f), -Vector3.UnitZ, xLenFloor / 5, yLenWall, thickness, TextureWood, TextureBooks, new Vector2(2, 1), TextureWood));
             Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(-4 * xLenFloor / 10, Y, -zLenFloor / 2 * 0.8f), -Vector3.UnitZ, xLenFloor / 5, yLenWall, thickness, TextureWood, TextureBooks, new Vector2(2, 1), TextureWood));
             // Puerta
-            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(-5 * xLenFloor / 20, 5 * yLenWall / 6, -zLenFloor / 2 * 0.8f), -Vector3.UnitZ, xLenFloor / 10, yLenWall/3, thickness, TextureWood, TextureBooks, new Vector2(1, 0.33f), TextureWood));
+            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(-5 * xLenFloor / 20, 5 * yLenWall / 6, -zLenFloor / 2 * 0.8f), -Vector3.UnitZ, xLenFloor / 10, yLenWall / 3, thickness, TextureWood, TextureBooks, new Vector2(1, 0.33f), TextureWood));
 
             // Lado +Z de sala A
             Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(-xLenFloor / 4, Y, zLenFloor / 5), Vector3.UnitZ, xLenFloor / 2, yLenWall, thickness, TextureWood, TextureBooks, new Vector2(10, 1), TextureWood));
@@ -106,7 +107,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(4 * xLenFloor / 16, Y, 3 * zLenFloor / 10 - zLenFloor / 5), -Vector3.UnitZ, xLenFloor / 8, yLenWall, thickness, TextureWood, TextureBooks, new Vector2(2, 1), TextureWood));
             Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(7 * xLenFloor / 16, Y, 3 * zLenFloor / 10 - zLenFloor / 5), -Vector3.UnitZ, xLenFloor / 8, yLenWall, thickness, TextureWood, TextureBooks, new Vector2(2, 1), TextureWood));
             // Puerta
-            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(11 * xLenFloor / 32, 5 * yLenWall / 6, 3 * zLenFloor / 10 - zLenFloor / 5), -Vector3.UnitZ, xLenFloor / 16, yLenWall/3, thickness, TextureWood, TextureBooks, new Vector2(1, 0.33f), TextureWood));
+            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(11 * xLenFloor / 32, 5 * yLenWall / 6, 3 * zLenFloor / 10 - zLenFloor / 5), -Vector3.UnitZ, xLenFloor / 16, yLenWall / 3, thickness, TextureWood, TextureBooks, new Vector2(1, 0.33f), TextureWood));
             // Mesa
             AddTable(new Vector2(11 * xLenFloor / 32, 3 * zLenFloor / 10));
 
@@ -121,7 +122,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(-xLenFloor / 8, Y, 5 * zLenFloor / 20), Vector3.UnitX, zLenFloor / 10, yLenWall, thickness, TextureWood, TextureBooks, new Vector2(2, 1), TextureWood));
             Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(-xLenFloor / 8, Y, 9 * zLenFloor / 20), Vector3.UnitX, zLenFloor / 10, yLenWall, thickness, TextureWood, TextureBooks, new Vector2(2, 1), TextureWood));
             // Puerta
-            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(-xLenFloor / 8, 5 * yLenWall / 6, 7 * zLenFloor / 20), Vector3.UnitX, zLenFloor / 10, yLenWall/3, thickness, TextureWood, TextureBooks, new Vector2(2, 0.33f), TextureWood));
+            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(-xLenFloor / 8, 5 * yLenWall / 6, 7 * zLenFloor / 20), Vector3.UnitX, zLenFloor / 10, yLenWall / 3, thickness, TextureWood, TextureBooks, new Vector2(2, 0.33f), TextureWood));
             // Mesas
             AddTable(new Vector2(-5 * xLenFloor / 16, 5 * zLenFloor / 20));
             AddTable(new Vector2(-5 * xLenFloor / 16, 9 * zLenFloor / 20));
@@ -131,11 +132,28 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             #endregion
 
 
+            enemyPath.Add(new PathTrace { posicion = new Vector2(-5 * xLenFloor / 16, 7 * zLenFloor / 20), normal = Vector3.UnitX }); //1
+
+            enemyPath.Add(new PathTrace { posicion = new Vector2(3* xLenFloor / 32 , 7 * zLenFloor / 20), normal = -Vector3.UnitZ });//2
+
+            enemyPath.Add(new PathTrace { posicion = new Vector2(3 * xLenFloor / 32, 0), normal = Vector3.UnitX });//3
+
+            enemyPath.Add(new PathTrace { posicion = new Vector2(7 * xLenFloor / 16, 0), normal = -Vector3.UnitZ });//4
+
+            enemyPath.Add(new PathTrace { posicion = new Vector2(7 * xLenFloor / 16, -zLenFloor / 2 * 0.4f), normal = -Vector3.UnitX });//5
+
+            enemyPath.Add(new PathTrace { posicion = new Vector2(1 * xLenFloor / 16, -zLenFloor / 2 * 0.4f), normal = -Vector3.UnitZ });//6
+
+            enemyPath.Add(new PathTrace { posicion = new Vector2(1 * xLenFloor / 16, -zLenFloor / 2 * 0.9f), normal = -Vector3.UnitX});//7
+
+            enemyPath.Add(new PathTrace { posicion = new Vector2(-5 * xLenFloor / 20, -zLenFloor / 2 * 0.9f), normal = Vector3.UnitZ });//8
+
+            enemyPath.Add(new PathTrace { posicion = new Vector2(-5 * xLenFloor / 20, 0), normal = Vector3.UnitZ });//9
 
 
+            Enemigos.Add(new Enemigo(Vector3.Zero, null, 0, enemyPath));
 
             generarRecolectablesRandom();
-            generarEnemigosRandom(-1);
 
             base.LoadContent();
         }

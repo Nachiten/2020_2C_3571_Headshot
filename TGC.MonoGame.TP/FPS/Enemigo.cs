@@ -6,6 +6,9 @@ using TGC.MonoGame.TP.Utils;
 using TGC.MonoGame.TP.FPS;
 using System.Diagnostics;
 using System.Reflection.PortableExecutable;
+using System.Collections.Generic;
+using TGC.MonoGame.TP.FPS.Scenarios;
+using System.Linq;
 
 namespace TGC.MonoGame.TP
 {
@@ -40,6 +43,7 @@ namespace TGC.MonoGame.TP
 
         private float health = 100;
 
+        private int offSetY = 100;
         private bool shooting = false;
         Ray LineOfSight;
         Ray AabbMaxSight;
@@ -55,18 +59,26 @@ namespace TGC.MonoGame.TP
             -Vector3.UnitZ
         };
 
-        public Enemigo(Vector3 posicion, AWeaponRecolectable weapon, float Angle)
+        private int indexPath = 0;
+        private bool foward = true;
+        public List<PathTrace> path = new List<PathTrace>();
+        public Enemigo(Vector3 _posicion, AWeaponRecolectable weapon, float Angle, List<PathTrace> _path)
         {
-            Weapon = new Weapon(weapon);
-            anguloRotacionRadianes = Angle;
-            this.posicion = posicion;
+
+            var posicionInicial = _path.First();
+            anguloRotacionRadianes = PointTo(posicionInicial.normal);
+
+            this.posicion = new Vector3(posicionInicial.posicion.X, offSetY, posicionInicial.posicion.Y);
 
             World = Matrix.CreateRotationY(anguloRotacionRadianes) * ScaleFactor * Matrix.CreateTranslation(posicion);
 
-            InitialDirection = new Vector3(MathF.Cos(MathHelper.PiOver2 + anguloRotacionRadianes), 0, MathF.Sin(MathHelper.PiOver2 + anguloRotacionRadianes));
+            //InitialDirection = new Vector3(MathF.Cos(MathHelper.PiOver2 + anguloRotacionRadianes), 0, MathF.Sin(MathHelper.PiOver2 + anguloRotacionRadianes));
             LineOfSight = new Ray();
             AabbMaxSight = new Ray();
             AabbMinSight = new Ray();
+
+            path = _path;
+            Weapon = new Weapon(new M4(posicion));
         }
 
         public void LoadContent(ContentManager Content, GraphicsDevice GraphicsDevice)
@@ -115,55 +127,97 @@ namespace TGC.MonoGame.TP
 
         private bool StartedMoving = false;
 
+        private Vector3 convertVector3(Vector2 posicion) {
+
+            return new Vector3(posicion.X, offSetY, posicion.Y);
+        }
+        public void avanzarPath() 
+        {
+            
+            if (indexPath + 1 < path.Count && foward) {
+                if (Vector3.Distance(convertVector3(path[indexPath + 1].posicion), posicion) <= 2)
+                {
+                    indexPath++;
+                    anguloRotacionRadianes = PointTo(path[indexPath].normal);
+                }
+            }
+            else if(indexPath + 1 == path.Count && foward)
+            {
+                foward = false;
+                indexPath--;
+                anguloRotacionRadianes = PointTo(-path[indexPath].normal);
+            }
+            if (!foward) {
+                if (indexPath > 0)
+                {
+                    if (Vector3.Distance(convertVector3(path[indexPath].posicion), posicion) <= 2)
+                    {
+                        indexPath--;
+                        anguloRotacionRadianes = PointTo(-path[indexPath].normal);
+                    }
+                }
+                else if(Vector3.Distance(convertVector3(path[indexPath].posicion), posicion) <=2)
+                { 
+                    foward = true;
+                    indexPath = 0;
+                    anguloRotacionRadianes = PointTo(path[indexPath].normal);
+                }
+                
+            }
+            UpdateWorld(posicion + (vectorDireccion * velocidadMovimiento), anguloRotacionRadianes);
+        }
+
         public void Update(GameTime gameTime, Vector3 posicionCamara)
         {
             //UpdateLineOfSight();
 
             // Calculo la posicion a la que me voy a mover
-            posicionObjetivo = new Vector3(posicionCamara.X, posicion.Y, posicionCamara.Z);
+            //posicionObjetivo = new Vector3(posicionCamara.X, posicion.Y, posicionCamara.Z);
 
-            float distanciaAlObjetivo = Vector3.Distance(posicion, posicionObjetivo);
-            // Si la distancia es menor a un margen comienzo a moverme
-            if (distanciaAlObjetivo < 500 && Config.enemigosFollowActivado && !StartedMoving) {
-                StartedMoving = true;
-                //Guardo la posición anterior
-                OldPosition = posicion;
+            avanzarPath();
 
-                // Establezco el giro al inicial
-                World *= Matrix.CreateRotationY(-anguloRotacionRadianes);
+            //float distanciaAlObjetivo = Vector3.Distance(posicion, posicionObjetivo);
+            //// Si la distancia es menor a un margen comienzo a moverme
+            //if (distanciaAlObjetivo < 500 && Config.enemigosFollowActivado && !StartedMoving) {
+            //    StartedMoving = true;
+            //    //Guardo la posición anterior
+            //    OldPosition = posicion;
 
-                anguloRotacionRadianes = MoveTowards(posicionObjetivo);
-                UpdateWorld(posicion + (vectorDireccion * velocidadMovimiento), anguloRotacionRadianes);
-                Collision.Instance.CheckStatic(Model.Aabb, StaticCollisionCB);
-            }
+            //    // Establezco el giro al inicial
+            //    World *= Matrix.CreateRotationY(-anguloRotacionRadianes);
 
-            if (StartedMoving)
-            {
-                float shortestDistance = GetShortestDistanceToStaticElement();
+            //    anguloRotacionRadianes = MoveTowards(posicionObjetivo);
+            //    UpdateWorld(posicion + (vectorDireccion * velocidadMovimiento), anguloRotacionRadianes);
+            //    Collision.Instance.CheckStatic(Model.Aabb, StaticCollisionCB);
+            //}
 
-                if(shortestDistance < 50)
-                {
-                    var dirIdx = 0;
-                    while (shortestDistance < 50 && dirIdx < PosibleDirections.Length)
-                    {
-                        anguloRotacionRadianes = PointTo(PosibleDirections[dirIdx]);
-                        UpdateWorld(posicion, anguloRotacionRadianes);
-                        shortestDistance = GetShortestDistanceToStaticElement();
-                        dirIdx++;
-                    }
-                }
-                else
-                {
-                    anguloRotacionRadianes = MoveTowards(posicionObjetivo);
-                    UpdateWorld(posicion + (vectorDireccion * velocidadMovimiento), anguloRotacionRadianes);
-                    Collision.Instance.CheckStatic(Model.Aabb, StaticCollisionCB);
-                }
+            //if (StartedMoving)
+            //{
+            //    float shortestDistance = GetShortestDistanceToStaticElement();
 
-                UpdateWorld(posicion + (vectorDireccion * velocidadMovimiento), anguloRotacionRadianes);
-            }
+            //    if(shortestDistance < 50)
+            //    {
+            //        var dirIdx = 0;
+            //        while (shortestDistance < 50 && dirIdx < PosibleDirections.Length)
+            //        {
+            //            anguloRotacionRadianes = PointTo(PosibleDirections[dirIdx]);
+            //            UpdateWorld(posicion, anguloRotacionRadianes);
+            //            shortestDistance = GetShortestDistanceToStaticElement();
+            //            dirIdx++;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        anguloRotacionRadianes = MoveTowards(posicionObjetivo);
+            //        UpdateWorld(posicion + (vectorDireccion * velocidadMovimiento), anguloRotacionRadianes);
+            //        Collision.Instance.CheckStatic(Model.Aabb, StaticCollisionCB);
+            //    }
 
-            if (distanciaAlObjetivo > 500 && distanciaAlObjetivo < 250)
-                StartedMoving = false;
+            //    UpdateWorld(posicion + (vectorDireccion * velocidadMovimiento), anguloRotacionRadianes);
+            //}
+
+            //if (distanciaAlObjetivo > 500 && distanciaAlObjetivo < 250)
+            //    StartedMoving = false;
 
 
             if (Math.Round(gameTime.TotalGameTime.TotalMilliseconds) % 2000 == 0 && !shooting)
@@ -220,18 +274,14 @@ namespace TGC.MonoGame.TP
 
         private void UpdateLineOfSight()
         {
-            World.Decompose(out Vector3 scale, out Quaternion rotation, out Vector3 translation);
-
-            Vector3 Direction = Vector3.Transform(InitialDirection, Matrix.CreateFromQuaternion(rotation));
-
             LineOfSight.Position = posicion + GunOffset;
-            LineOfSight.Direction = Direction;
+            LineOfSight.Direction = vectorDireccion;
 
             AabbMinSight.Position = Model.Aabb.minExtents;
-            AabbMinSight.Direction = Direction;
+            AabbMinSight.Direction = vectorDireccion;
 
             AabbMaxSight.Position = Model.Aabb.maxExtents;
-            AabbMaxSight.Direction = Direction;
+            AabbMaxSight.Direction = vectorDireccion;
         }
         private float GetShortestDistanceToStaticElement()
         {   
