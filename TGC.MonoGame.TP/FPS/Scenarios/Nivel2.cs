@@ -11,15 +11,9 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 {
     public class Nivel2 : AStage
     {
-        private QuadPrimitive Floor { get; set; }
-        private QuadPrimitive Roof { get; set; }
-        private QuadPrimitive WallXp { get; set; }
-        private QuadPrimitive WallZn { get; set; }
-        private QuadPrimitive WallXn { get; set; }
-        private QuadPrimitive WallZp { get; set; }
-        float xLenFloor = 1500;
-        float zLenFloor = 2500;
-        int yLenWall = 450;
+        float xLenFloor = 2000;
+        float zLenFloor = 2000;
+        int yLenWall = 200;
         float thickness = 20;
         
         List<QuadPrimitiveCollidable> Quads = new List<QuadPrimitiveCollidable>();
@@ -28,30 +22,37 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
         public Nivel2(Game game) : base(game)
         {
-            posicionesPosiblesRecolectables.Add(new Vector3(xLenFloor / 2 - 100, 0, zLenFloor / 2 - 100));
-            posicionesPosiblesRecolectables.Add(new Vector3(-xLenFloor / 2 + 100, 0, zLenFloor / 2 - 100));
-            posicionesPosiblesRecolectables.Add(new Vector3(xLenFloor / 2 - 100, 0, -zLenFloor / 2 + 100));
-            posicionesPosiblesRecolectables.Add(new Vector3(-xLenFloor / 2 + 100, 0, -zLenFloor / 2 + 100));
-            posicionesPosiblesRecolectables.Add(new Vector3(xLenFloor / 2 - 100, 0, 0));
-            posicionesPosiblesRecolectables.Add(new Vector3(-xLenFloor / 2 + 100, 0, 0));
-            posicionesPosiblesRecolectables.Add(new Vector3(0, 0, zLenFloor / 2 - 100));
-            posicionesPosiblesRecolectables.Add(new Vector3(0, 0, -zLenFloor / 2 + 100));
-            posicionesPosiblesRecolectables.Add(new Vector3(xLenFloor / 2 - 100, 0, zLenFloor / 4));
-            posicionesPosiblesRecolectables.Add(new Vector3(xLenFloor / 2 - 100, 0, -zLenFloor / 4));
-            posicionesPosiblesRecolectables.Add(new Vector3(-xLenFloor / 2 + 100, 0, zLenFloor / 4));
-            posicionesPosiblesRecolectables.Add(new Vector3(-xLenFloor / 2 + 100, 0, -zLenFloor / 4));
-            int distanciaCentroRecolectable = 230;
-            posicionesPosiblesRecolectables.Add(new Vector3(distanciaCentroRecolectable, 0, distanciaCentroRecolectable));
-            posicionesPosiblesRecolectables.Add(new Vector3(distanciaCentroRecolectable, 0, -distanciaCentroRecolectable));
-            posicionesPosiblesRecolectables.Add(new Vector3(-distanciaCentroRecolectable, 0, distanciaCentroRecolectable));
-            posicionesPosiblesRecolectables.Add(new Vector3(-distanciaCentroRecolectable, 0, -distanciaCentroRecolectable));
+            #region Recolectables
+            posicionesPosiblesRecolectables.Add(new Vector3(-5 * xLenFloor / 32, 0, -1 * zLenFloor / 16));
+            posicionesPosiblesRecolectables.Add(new Vector3(-11 * xLenFloor / 32, 0, -1 * zLenFloor / 16));
+            posicionesPosiblesRecolectables.Add(new Vector3(-1 * xLenFloor / 16, 0, -3 * zLenFloor / 16));
+            posicionesPosiblesRecolectables.Add(new Vector3(-7 * xLenFloor / 16, 0, -3 * zLenFloor / 16));
 
-            Recolectables.Add(new M4(new Vector3(0, 50, zLenFloor / 4)));
-            Recolectables.Add(new Pistol(new Vector3(0, 50, -zLenFloor / 4)));
+            posicionesPosiblesRecolectables.Add(new Vector3(5 * xLenFloor / 16, 0, -3 * zLenFloor / 16));
+            posicionesPosiblesRecolectables.Add(new Vector3(5 * xLenFloor / 16, 0, -5 * zLenFloor / 16));
 
-            //enemyPath.Add(new PathTrace { posicion = new Vector2(-5 * xLenFloor / 16, 7 * zLenFloor / 20), normal = Vector3.UnitX }); //1
+            posicionesPosiblesRecolectables.Add(new Vector3(3 * xLenFloor / 16, 0, 3 * zLenFloor / 16));
+            posicionesPosiblesRecolectables.Add(new Vector3(3 * xLenFloor / 16, 0, 6 * zLenFloor / 16));
+            posicionesPosiblesRecolectables.Add(new Vector3(-3 * xLenFloor / 16, 0, 6 * zLenFloor / 16));
+            #endregion
 
             generarRecolectablesRandom();
+
+            #region Enemy Path
+            enemyPath.Add(new PathTrace { posicion = new Vector2(-7 * xLenFloor / 16, 4 * zLenFloor / 16), normal = Vector3.UnitZ }); //1
+            enemyPath.Add(new PathTrace { posicion = new Vector2(-7 * xLenFloor / 16, 6 * zLenFloor / 16), normal = Vector3.UnitX }); //2
+            enemyPath.Add(new PathTrace { posicion = new Vector2(7 * xLenFloor / 16, 6 * zLenFloor / 16), normal = -Vector3.UnitZ }); //3
+            enemyPath.Add(new PathTrace { posicion = new Vector2(7 * xLenFloor / 16, -1 * zLenFloor / 16), normal = -Vector3.UnitX }); //4
+            enemyPath.Add(new PathTrace { posicion = new Vector2(1 * xLenFloor / 16, -1 * zLenFloor / 16), normal = Vector3.UnitZ }); //5
+            enemyPath.Add(new PathTrace { posicion = new Vector2(1 * xLenFloor / 16, 2 * zLenFloor / 16), normal = -Vector3.UnitX }); //6
+            enemyPath.Add(new PathTrace { posicion = new Vector2(-7 * xLenFloor / 16, 2 * zLenFloor / 16), normal = Vector3.UnitZ }); //7
+            enemyPath.Add(new PathTrace { posicion = new Vector2(-7 * xLenFloor / 16, 6 * zLenFloor / 16), normal = Vector3.UnitX }); //8
+            enemyPath.Add(new PathTrace { posicion = new Vector2(7 * xLenFloor / 16, 6 * zLenFloor / 16), normal = -Vector3.UnitZ }); //9
+            enemyPath.Add(new PathTrace { posicion = new Vector2(7 * xLenFloor / 16, -7 * zLenFloor / 16), normal = -Vector3.UnitX }); //10
+            enemyPath.Add(new PathTrace { posicion = new Vector2(-4 * xLenFloor / 16, -7 * zLenFloor / 16), normal = Vector3.UnitZ }); //11
+            enemyPath.Add(new PathTrace { posicion = new Vector2(-4 * xLenFloor / 16, -1 * zLenFloor / 16), normal = Vector3.UnitZ }); //12
+            #endregion
+            
         }
 
         public override void LoadContent()
@@ -61,13 +62,15 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             Texture2D TexGrayWall = Game.Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "grayWall");
             Texture2D TexWhiteBricks = Game.Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "whiteBricks");
 
+            Player.Instance.Move(new Vector3(-7 * xLenFloor / 16, Player.Instance.Position.Y, 2 * zLenFloor / 16));
+
             float Y = yLenWall / 2;
 
             // Piso
             Quads.Add(new QuadPrimitiveCollidable(GraphicsDevice, Vector3.Zero, Vector3.UnitY, Vector3.UnitX, zLenFloor, xLenFloor, TexCemento, new Vector2(1, 1)));
 
             // Techo
-            Quads.Add(new QuadPrimitiveCollidable(GraphicsDevice, new Vector3(0, yLenWall, 0), Vector3.UnitY, Vector3.UnitX, zLenFloor, xLenFloor, TexCemento2, new Vector2(1, 1)));
+            //Quads.Add(new QuadPrimitiveCollidable(GraphicsDevice, new Vector3(0, yLenWall, 0), Vector3.UnitY, Vector3.UnitX, zLenFloor, xLenFloor, TexCemento2, new Vector2(1, 1)));
 
             // Paredes Principales
             Quads.Add(new QuadPrimitiveCollidable(GraphicsDevice, new Vector3(xLenFloor / 2, Y, 0), -Vector3.UnitX, Vector3.UnitY, zLenFloor, yLenWall, TexGrayWall, new Vector2(5, 1))); // +X
@@ -75,12 +78,42 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             Quads.Add(new QuadPrimitiveCollidable(GraphicsDevice, new Vector3(0, Y, zLenFloor / 2), -Vector3.UnitZ, Vector3.UnitY, xLenFloor, yLenWall, TexWhiteBricks, new Vector2(5, 1))); // +Z
             Quads.Add(new QuadPrimitiveCollidable(GraphicsDevice, new Vector3(0, Y, -zLenFloor / 2), Vector3.UnitZ, Vector3.UnitY, xLenFloor, yLenWall, TexWhiteBricks, new Vector2(5, 1))); // -Z
 
-            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(xLenFloor / 6, Y, -zLenFloor / 8), -Vector3.UnitZ, 2 * xLenFloor / 3, yLenWall, thickness, TexGrayWall, TexWhiteBricks, new Vector2(10, 1), TexWhiteBricks));
+            #region Paredes
+            // 1
+            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(-xLenFloor / 4, Y, 0), -Vector3.UnitZ, xLenFloor / 2, yLenWall, thickness, TexGrayWall, TexWhiteBricks, new Vector2(10, 1), TexWhiteBricks));
+            // 2
+            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(0, Y, -3 * zLenFloor / 16), -Vector3.UnitX, 3 * zLenFloor / 8, yLenWall, thickness, TexGrayWall, TexWhiteBricks, new Vector2(10, 1), TexWhiteBricks));
+            // 3
+            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(3 * xLenFloor / 16, Y, -3 * zLenFloor / 8), -Vector3.UnitZ, 3 * xLenFloor / 8, yLenWall, thickness, TexGrayWall, TexWhiteBricks, new Vector2(10, 1), TexWhiteBricks));
+            // 4
+            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(3 * xLenFloor / 8, Y, -2 * zLenFloor / 8), Vector3.UnitX, 2 * zLenFloor / 8, yLenWall, thickness, TexGrayWall, TexWhiteBricks, new Vector2(10, 1), TexWhiteBricks));
+            // 5
+            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(2 * xLenFloor / 8, Y, - zLenFloor / 8), Vector3.UnitZ, 2 * zLenFloor / 8, yLenWall, thickness, TexGrayWall, TexWhiteBricks, new Vector2(10, 1), TexWhiteBricks));
+            // 6
+            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(0, Y, 2 * zLenFloor / 8), Vector3.UnitZ, 3 * xLenFloor / 4, yLenWall, thickness, TexGrayWall, TexWhiteBricks, new Vector2(10, 1), TexWhiteBricks));
+            // 7
+            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(2 * xLenFloor / 8, Y, zLenFloor / 8), Vector3.UnitX, zLenFloor / 4, yLenWall, thickness, TexGrayWall, TexWhiteBricks, new Vector2(10, 1), TexWhiteBricks));
+            #endregion
 
-            Walls.Add(new WallCollidable(GraphicsDevice, new Vector3(-3 * xLenFloor / 12, Y, zLenFloor / 8), -Vector3.UnitZ, xLenFloor / 2, yLenWall, thickness, TexGrayWall, TexWhiteBricks, new Vector2(10, 1), TexWhiteBricks));
+            #region Columnas
+            // Columnas
+            AddColumn(new Vector2(-7 * xLenFloor / 16, zLenFloor / 16));
+            AddColumn(new Vector2(-7 * xLenFloor / 16, 7 * zLenFloor / 16));
+            AddColumn(new Vector2(7 * xLenFloor / 16, 7 * zLenFloor / 16));
 
-            AddColumn(new Vector2(2 * xLenFloor / 6, -3 * zLenFloor / 8));
-            AddColumn(new Vector2(-2 * xLenFloor / 6, -3 * zLenFloor / 8));
+            AddColumn(new Vector2(-xLenFloor / 16, -zLenFloor / 16));
+            AddColumn(new Vector2(-7 * xLenFloor / 16, -zLenFloor / 16));
+            AddColumn(new Vector2(-xLenFloor / 16, -5 * zLenFloor / 16));
+            AddColumn(new Vector2(-7 * xLenFloor / 16, -5 * zLenFloor / 16));
+
+            AddColumn(new Vector2(5 * xLenFloor / 16, -4 * zLenFloor / 16));
+            #endregion
+
+            // Armas
+            Recolectables.Add(new M4(new Vector3(-5 * xLenFloor / 32, 50, -3 * zLenFloor / 16)));
+            Recolectables.Add(new Pistol(new Vector3(-11 * xLenFloor / 32, 50, -3 * zLenFloor / 16)));
+
+            Enemigos.Add(new Enemigo(enemyPath));
 
             base.LoadContent();
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Diagnostics;
+using TGC.MonoGame.TP.Utils;
 using Grafics = Microsoft.Xna.Framework.Graphics;
 
 namespace TGC.MonoGame.TP.FPS

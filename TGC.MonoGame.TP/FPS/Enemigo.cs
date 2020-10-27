@@ -84,6 +84,7 @@ namespace TGC.MonoGame.TP
             Collision.Instance.AppendStatic(Model.Aabb);
             Collision.Instance.AppendShootable(this);
             Weapon.Gun.LoadContent(Content, GraphicsDevice);
+            Collision.Instance.RemoveCollectable(Weapon.Gun);
 
             var modelEffectArmor = (BasicEffect)Model.Model.Meshes[0].Effects[0];
             modelEffectArmor.DiffuseColor = Color.Pink.ToVector3();
