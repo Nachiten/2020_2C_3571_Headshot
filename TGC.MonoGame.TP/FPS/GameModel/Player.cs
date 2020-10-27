@@ -13,7 +13,7 @@ using TGC.MonoGame.TP.FPS.Scenarios;
 
 namespace TGC.MonoGame.TP.FPS
 {
-    public class Player : Ashootable
+    public class Player : Ashootable, IDisposable
     {
         public static Player Instance { get; private set; }
 
@@ -27,6 +27,10 @@ namespace TGC.MonoGame.TP.FPS
                 Stage = stage;
             }
 
+        }
+        public void Dispose()
+        {
+            Player.Instance = null;
         }
 
         public Player(Game game)
@@ -55,7 +59,7 @@ namespace TGC.MonoGame.TP.FPS
 
         private Matrix View { get; set; }
         public int Health { get; set; }
-        private int maxHealth = 100;
+        private int maxHealth = 20;
         public int Armor { get; set; }
         private int maxArmor = 100;
         public Weapon CurrentWeapon { get; set; }
@@ -266,7 +270,9 @@ namespace TGC.MonoGame.TP.FPS
             }
             return 0;
         }
+
         #endregion
+        
     }
 }
 

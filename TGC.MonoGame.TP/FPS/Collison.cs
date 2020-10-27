@@ -6,15 +6,25 @@ using Microsoft.Xna.Framework;
 using TGC.MonoGame.TP.FPS;
 
 namespace TGC.MonoGame.TP.Utils{
-    public class Collision{
+    public class Collision : IDisposable{
         public static Collision Instance { get; private set; }
         public List<AABB> StaticElements = new List<AABB>();
 
         public List<ARecolectable> CollectableElements = new List<ARecolectable>();
         public List<Ashootable> ShootableElements = new List<Ashootable>();
 
-        public Collision(){
+        public static void Init()
+        {
+            if (Instance is null)
+            {
+                Instance = new Collision();
+            }
         }
+        public void Dispose()
+        {
+            Collision.Instance = null;
+        }
+
         public void AppendStatic(AABB elem){
             StaticElements.Add(elem);
         }
@@ -129,13 +139,7 @@ namespace TGC.MonoGame.TP.Utils{
             }
 
         }
-        public static void Init()
-        {
-            if (Instance is null)
-            {
-                Instance = new Collision();
-            }
-            
-        }
+
+        
     }
 }
