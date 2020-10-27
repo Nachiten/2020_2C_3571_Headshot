@@ -47,7 +47,8 @@ namespace TGC.MonoGame.TP
             StartMenu,
             Loading,
             Playing,
-            Paused
+            Paused,
+            Finished
         }
 
 
@@ -56,6 +57,8 @@ namespace TGC.MonoGame.TP
         private Texture2D loadingScreen;
 
         private Texture2D resumeButton;
+
+        private Texture2D returnButton;
 
         private Texture2D exitButton;
 
@@ -114,6 +117,7 @@ namespace TGC.MonoGame.TP
         protected override void Initialize()
         {
             Collision.Init();
+
             var rasterizerState = new RasterizerState();
             rasterizerState.CullMode = CullMode.None;
             GraphicsDevice.RasterizerState = rasterizerState;
@@ -172,6 +176,8 @@ namespace TGC.MonoGame.TP
 
             resumeButton = Content.Load<Texture2D>(ContentFolderTextures + "resume");
 
+            returnButton = Content.Load<Texture2D>(ContentFolderTextures + "exit");
+
             loadingScreen = Content.Load<Texture2D>(ContentFolderTextures + "loading");
 
             base.LoadContent();
@@ -211,6 +217,9 @@ namespace TGC.MonoGame.TP
                 if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 {
                     gameState = GameState.Paused;
+                }
+                if (Player.Instance.Health <= 0) {
+                    gameState = GameState.Finished;
                 }
             }
 
@@ -264,6 +273,17 @@ namespace TGC.MonoGame.TP
                     Exit();
                 }
             }
+            if (gameState == GameState.Finished) {
+                var resumeButtonRect = new Rectangle((int)resumeButtonPosition.X + 50, (int)resumeButtonPosition.Y, 200, 100);
+
+                if (mouseClickRect.Intersects(resumeButtonRect))
+                {
+                    gameState = GameState.StartMenu;
+                    Player.Instance.Dispose();
+                    Collision.Instance.Dispose();
+                    Collision.Init();
+                }
+            }
         }
 
         void LoadGame()
@@ -301,7 +321,7 @@ namespace TGC.MonoGame.TP
             }
 
             if (gameState == GameState.Paused) {
-                var resumeRectangule = new Rectangle((int)resumeButtonPosition.X + 50, (int)startButtonPosition.Y, 200, 100);
+                var resumeRectangule = new Rectangle((int)resumeButtonPosition.X + 50, (int)resumeButtonPosition.Y, 200, 100);
                 SpriteBatch.Draw(resumeButton, resumeRectangule, Color.White);
 
                 var exitRectangule = new Rectangle((int)exitButtonPosition.X + 50, (int)exitButtonPosition.Y, 200, 100);
@@ -319,6 +339,13 @@ namespace TGC.MonoGame.TP
                 Stage.Draw(gameTime);
                 Player.Instance.Draw(gameTime);
                 interfaz.Draw(gameTime);
+            }
+
+            if (gameState == GameState.Finished) {
+                SpriteBatch.DrawString(font, "GAME OVER", new Vector2((GraphicsDevice.Viewport.Width / 2) - 100, GraphicsDevice.Viewport.Height / 2 - 100), Color.White);
+
+                var returnRectangle = new Rectangle((int)resumeButtonPosition.X + 50, (int)resumeButtonPosition.Y, 200, 100);
+                SpriteBatch.Draw(returnButton, returnRectangle, Color.White);
             }
 
             SpriteBatch.End();

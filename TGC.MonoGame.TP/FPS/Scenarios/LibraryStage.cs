@@ -23,19 +23,8 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
         public LibraryStage(Game game) : base(game)
         {
-
-            //Recolectables
-            /*Recolectables.Add(new Health(new Vector3(xLenFloor / 2 - 100, 55, zLenFloor / 2 - 100)));
-            Recolectables.Add(new Health(new Vector3(-xLenFloor / 2 + 100, 55, zLenFloor / 2 - 100)));
-            Recolectables.Add(new Health(new Vector3(xLenFloor / 2 - 100, 55, -zLenFloor / 2 + 100)));
-            Recolectables.Add(new Health(new Vector3(-xLenFloor / 2 + 100, 55, -zLenFloor / 2 + 100)));
-
-            Recolectables.Add(new Armor(new Vector3(xLenFloor / 4, -45, 0)));
-            Recolectables.Add(new Armor(new Vector3(-xLenFloor / 4, -45, 0)));*/
-
-            Recolectables.Add(new M4(new Vector3(0, 50, zLenFloor / 4)));
-            Recolectables.Add(new Pistol(new Vector3(0, 50, -zLenFloor / 4)));
-
+            Recolectables.Add(new M4(new Vector3(-4 * xLenFloor / 10, 50, zLenFloor / 8)));
+            Recolectables.Add(new Pistol(new Vector3(-xLenFloor / 10, 50, zLenFloor / 8)));
         }
 
         public override void LoadContent()
@@ -45,6 +34,8 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             Texture2D TextureWood = Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "library/wooden-floor");
             Texture2D TextureCarpet = Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "library/red-carpet");
             Texture2D TextureBlackWood = Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "library/black-wood");
+
+            Player.Instance.Move(new Vector3(-5 * xLenFloor / 20, Player.Instance.Position.Y, zLenFloor / 8));
 
             // Piso
             Quads.Add(new QuadPrimitiveCollidable(GraphicsDevice, Vector3.Zero, Vector3.UnitY, Vector3.UnitX, zLenFloor, xLenFloor, TextureCarpet, new Vector2(10, 10)));
