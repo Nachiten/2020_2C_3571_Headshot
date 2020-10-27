@@ -170,7 +170,7 @@ namespace TGC.MonoGame.TP
 
             startButton = Content.Load<Texture2D>(ContentFolderTextures + "library");
 
-            otroMapa = Content.Load<Texture2D>(ContentFolderTextures + "iceworld");
+            otroMapa = Content.Load<Texture2D>(ContentFolderTextures + "maze-level");
 
             exitButton = Content.Load<Texture2D>(ContentFolderTextures + "exit");
 
@@ -250,7 +250,7 @@ namespace TGC.MonoGame.TP
                     Player.Init(this, Camera, Stage);
                 }
                 if (mouseClickRect.Intersects(otroMapaRect)) {
-                    Stage = new Nivel2(this);
+                    Stage = new MazeStage(this);
                     gameState = GameState.Loading;
                     isLoading = false;
                     Player.Init(this, Camera, Stage);
@@ -342,7 +342,8 @@ namespace TGC.MonoGame.TP
             }
 
             if (gameState == GameState.Finished) {
-                SpriteBatch.DrawString(font, "GAME OVER", new Vector2((GraphicsDevice.Viewport.Width / 2) - 100, GraphicsDevice.Viewport.Height / 2 - 100), Color.White);
+                SpriteBatch.DrawString(font, "GAME OVER", new Vector2((GraphicsDevice.Viewport.Width / 2) - 100, GraphicsDevice.Viewport.Height / 2 - 150), Color.White);
+                SpriteBatch.DrawString(font, "Score: " + Player.Instance.Score, new Vector2((GraphicsDevice.Viewport.Width / 2) - 80, GraphicsDevice.Viewport.Height / 2 - 100), Color.White);
 
                 var returnRectangle = new Rectangle((int)resumeButtonPosition.X + 50, (int)resumeButtonPosition.Y, 200, 100);
                 SpriteBatch.Draw(returnButton, returnRectangle, Color.White);

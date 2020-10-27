@@ -49,6 +49,7 @@ namespace TGC.MonoGame.TP.FPS
             {
                 SpriteBatch.DrawString(InterfaceFont, Player.Instance.Health.ToString(), new Vector2(100, 440), Color.White);
                 SpriteBatch.DrawString(InterfaceFont, Player.Instance.Armor.ToString(), new Vector2(660, 440), Color.White);
+                SpriteBatch.DrawString(InterfaceFont, "Score " + Player.Instance.Score.ToString(), new Vector2(350, 400), Color.White);
             }
             SpriteBatch.End();
 

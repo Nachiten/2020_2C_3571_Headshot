@@ -59,9 +59,11 @@ namespace TGC.MonoGame.TP.FPS
 
         private Matrix View { get; set; }
         public int Health { get; set; }
-        private int maxHealth = 20;
+        private int maxHealth = 100;
         public int Armor { get; set; }
         private int maxArmor = 100;
+
+        public int Score = 0;
         public Weapon CurrentWeapon { get; set; }
 
         public float Speed = 300f;
@@ -183,6 +185,10 @@ namespace TGC.MonoGame.TP.FPS
             this.Armor = Math.Min(this.Armor += cantidadArmor, maxArmor);
 
             return true;
+        }
+        public void AddScore(int score)
+        {
+            Score += score;
         }
 
         public void Jump()

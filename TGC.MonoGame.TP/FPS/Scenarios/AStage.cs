@@ -28,6 +28,8 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         protected int cantidadArmorRandom = 2;
         protected int cantidadEnemigos = 2;
 
+        protected int EnemyDeadScore = 100;
+
         protected List<PathTrace> enemyPath = new List<PathTrace>();
         protected List<Vector3> posicionesPosiblesRecolectables = new List<Vector3>();
         public List<Enemigo> Enemigos = new List<Enemigo>();
@@ -72,6 +74,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             {
                 if (unEnemigo.IsDead())
                 {
+                    Player.Instance.AddScore(EnemyDeadScore);
                     unEnemigo.Reiniciar();
                 }
             }
