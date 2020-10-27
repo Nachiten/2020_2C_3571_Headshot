@@ -30,7 +30,6 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
         protected List<PathTrace> enemyPath = new List<PathTrace>();
         protected List<Vector3> posicionesPosiblesRecolectables = new List<Vector3>();
-        protected List<Vector3> posicionesPosiblesEnemigos = new List<Vector3>();
         public List<Enemigo> Enemigos = new List<Enemigo>();
         public Matrix View;
         public Matrix Projection;
@@ -62,8 +61,6 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
                 unEnemigo.LoadContent(Content, GraphicsDevice);
             }
         }
-
-        //public abstract void UbicarObjetos(IList<GameComponent> componentes); 
         public virtual void Update(GameTime gameTime)
         {
             foreach (ARecolectable R in Recolectables)

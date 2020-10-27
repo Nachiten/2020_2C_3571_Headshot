@@ -81,7 +81,6 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             posicionesPosiblesRecolectables.Add(new Vector3(-5 * xLenFloor / 20, 0, 0));
             posicionesPosiblesRecolectables.Add(new Vector3(-5 * xLenFloor / 20, 0, -1 * zLenFloor / 5));
 
-            posicionesPosiblesEnemigos.Add(new Vector3(-5 * xLenFloor / 20, 0, zLenFloor / 10));
             #endregion
 
             #region Sala B
@@ -93,7 +92,6 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             posicionesPosiblesRecolectables.Add(new Vector3(7 * xLenFloor / 16, 0, -zLenFloor / 2 * 0.9f));
             posicionesPosiblesRecolectables.Add(new Vector3(7 * xLenFloor / 16, 0, -zLenFloor / 2 * 0.7f));
 
-            posicionesPosiblesEnemigos.Add(new Vector3(4 * xLenFloor / 16, 0, -zLenFloor / 2 * 0.8f));
             #endregion
 
             // Pared Separadora
@@ -113,8 +111,6 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
             posicionesPosiblesRecolectables.Add(new Vector3(4 * xLenFloor / 16, 0, 4 * zLenFloor / 10));
             posicionesPosiblesRecolectables.Add(new Vector3(7 * xLenFloor / 16, 0, 4 * zLenFloor / 10));
-
-            posicionesPosiblesEnemigos.Add(new Vector3(11 * xLenFloor / 32, 0, 2 * zLenFloor / 10));
             #endregion
 
             #region Sala D
@@ -126,32 +122,22 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             // Mesas
             AddTable(new Vector2(-5 * xLenFloor / 16, 5 * zLenFloor / 20));
             AddTable(new Vector2(-5 * xLenFloor / 16, 9 * zLenFloor / 20));
+
             posicionesPosiblesRecolectables.Add(new Vector3(-7 * xLenFloor / 16, 0, 5 * zLenFloor / 20));
             posicionesPosiblesRecolectables.Add(new Vector3(-7 * xLenFloor / 16, 0, 9 * zLenFloor / 20));
-            posicionesPosiblesEnemigos.Add(new Vector3(-5 * xLenFloor / 16, 0, 7 * zLenFloor / 20));
             #endregion
 
-
             enemyPath.Add(new PathTrace { posicion = new Vector2(-5 * xLenFloor / 16, 7 * zLenFloor / 20), normal = Vector3.UnitX }); //1
-
             enemyPath.Add(new PathTrace { posicion = new Vector2(3* xLenFloor / 32 , 7 * zLenFloor / 20), normal = -Vector3.UnitZ });//2
-
             enemyPath.Add(new PathTrace { posicion = new Vector2(3 * xLenFloor / 32, 0), normal = Vector3.UnitX });//3
-
             enemyPath.Add(new PathTrace { posicion = new Vector2(7 * xLenFloor / 16, 0), normal = -Vector3.UnitZ });//4
-
             enemyPath.Add(new PathTrace { posicion = new Vector2(7 * xLenFloor / 16, -zLenFloor / 2 * 0.4f), normal = -Vector3.UnitX });//5
-
             enemyPath.Add(new PathTrace { posicion = new Vector2(1 * xLenFloor / 16, -zLenFloor / 2 * 0.4f), normal = -Vector3.UnitZ });//6
-
             enemyPath.Add(new PathTrace { posicion = new Vector2(1 * xLenFloor / 16, -zLenFloor / 2 * 0.9f), normal = -Vector3.UnitX});//7
-
             enemyPath.Add(new PathTrace { posicion = new Vector2(-5 * xLenFloor / 20, -zLenFloor / 2 * 0.9f), normal = Vector3.UnitZ });//8
-
             enemyPath.Add(new PathTrace { posicion = new Vector2(-5 * xLenFloor / 20, 0), normal = Vector3.UnitZ });//9
 
-
-            Enemigos.Add(new Enemigo(Vector3.Zero, null, 0, enemyPath));
+            Enemigos.Add(new Enemigo(enemyPath));
 
             generarRecolectablesRandom();
 

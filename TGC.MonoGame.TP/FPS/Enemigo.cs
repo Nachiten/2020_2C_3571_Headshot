@@ -55,7 +55,7 @@ namespace TGC.MonoGame.TP
             -Vector3.UnitZ
         };
 
-        public Enemigo(Vector3 _posicion, AWeaponRecolectable weapon, float Angle, List<PathTrace> _path)
+        public Enemigo(List<PathTrace> _path)
         {
             health = maxHealth;
 
