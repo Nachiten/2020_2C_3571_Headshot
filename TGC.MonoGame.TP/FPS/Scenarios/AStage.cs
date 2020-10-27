@@ -75,14 +75,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             {
                 if (unEnemigo.IsDead())
                 {
-                    for(int i=0; i< posicionesPosiblesEnemigos.Count; i++)
-                    {
-                        unEnemigo.Revivir();
-                        Vector3 posAleatoria = posicionesPosiblesEnemigos[i];
-                        unEnemigo.UpdateWorld(new Vector3(posAleatoria.X, 100, posAleatoria.Z), MathHelper.Pi);
-                        if (!Collision.Instance.CheckStatic(unEnemigo.Aabb))
-                            break;
-                    }
+                    unEnemigo.Reiniciar();
                 }
             }
 

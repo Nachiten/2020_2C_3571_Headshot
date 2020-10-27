@@ -78,7 +78,7 @@ namespace TGC.MonoGame.TP.FPS
         public void Initialize()
         {
             Health = maxHealth;
-            Armor = 45;
+            Armor = maxArmor;
 
             Weapons = new Weapon[2];
             WorldWeapon = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(50, 0, 110);
@@ -145,8 +145,6 @@ namespace TGC.MonoGame.TP.FPS
                 TriggerShot = false;
                 // TODO: Possibly custom animation.Stop(), depending on your animation class
             }
-
-
         }
 
         public void RecibirDisparo(int cantidadDanio) {
@@ -211,13 +209,29 @@ namespace TGC.MonoGame.TP.FPS
 
         public override void GetDamaged(int damage)
         {
-            if (Health - damage < 0)
+            int armorDamage = damage;
+            int healthDamage;
+            if (Armor < 0)
+                healthDamage = damage;
+            else
+                healthDamage = damage / 2;
+            // Armadura
+            if (Armor - armorDamage < 0)
+            {
+                Armor = 0;
+            }
+            else
+            {
+                Armor -= armorDamage;
+            }
+            // Vida
+            if (Health - healthDamage < 0)
             {
                 Health = 0;
             }
             else
             {
-                Health -= damage;
+                Health -= healthDamage;
             }
         }
 
