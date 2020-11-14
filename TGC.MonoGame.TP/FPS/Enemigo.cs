@@ -25,6 +25,8 @@ namespace TGC.MonoGame.TP
 
         private Weapon Weapon { get; set; }
 
+        private Effect Effect;
+
         private Vector3 mirandoInicial = new Vector3(0, 0, -1);
         private float Velocidad = 3;
         private float anguloRotacionRadianes;
@@ -70,9 +72,17 @@ namespace TGC.MonoGame.TP
             Weapon = new Weapon(new M4(posicion));
         }
 
+        public void SetEffect(Effect Effect)
+        {
+            this.Effect = Effect;
+            Weapon.SetEffect(Effect);
+        }
+
         public void LoadContent(ContentManager Content, GraphicsDevice GraphicsDevice)
         {
             Model = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + "enemy/Hellknight_LATEST", World);
+            Model.SetEffect(Effect);
+
             // Correccion de AABB
             float offsetX = 50;
             float offsetZ = 30;
@@ -86,7 +96,20 @@ namespace TGC.MonoGame.TP
             Weapon.Gun.LoadContent(Content, GraphicsDevice);
             Collision.Instance.RemoveCollectable(Weapon.Gun);
 
-            var modelEffectArmor = (BasicEffect)Model.Model.Meshes[0].Effects[0];
+            /*foreach (var mesh in Model.Model.Meshes)
+            {
+                foreach (var effect in mesh.Effects)
+                {
+                    BasicEffect ef = (BasicEffect)effect;
+                    ef.TextureEnabled = true;
+                    ef.Texture = Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "scale");
+                    ef.EnableDefaultLighting();
+                }
+            }*/
+            Model.SetLightParameters(2 / 12f, 10 / 12f, 0f, 1f);
+            Model.SetTexture(Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "scale"));
+
+            /*var modelEffectArmor = (BasicEffect)Model.Model.Meshes[0].Effects[0];
             modelEffectArmor.DiffuseColor = Color.Pink.ToVector3();
             modelEffectArmor.EnableDefaultLighting();
 
@@ -112,7 +135,7 @@ namespace TGC.MonoGame.TP
             //torso
             var dindare4 = (BasicEffect)Model.Model.Meshes[1].Effects[4];
             dindare4.DiffuseColor = Color.Black.ToVector3();
-            dindare4.EnableDefaultLighting();
+            dindare4.EnableDefaultLighting();*/
         }
 
         private Vector3 convertVector3(Vector2 posicion) {
@@ -159,10 +182,11 @@ namespace TGC.MonoGame.TP
         {
             //UpdateLineOfSight();
 
+            Model.SetCameraPos(Player.Instance.GetCameraPos());
             // Calculo la posicion a la que me voy a mover
             //posicionObjetivo = new Vector3(posicionCamara.X, posicion.Y, posicionCamara.Z);
 
-            avanzarPath();
+            //////avanzarPath();
 
             //float distanciaAlObjetivo = Vector3.Distance(posicion, posicionObjetivo);
             //// Si la distancia es menor a un margen comienzo a moverme

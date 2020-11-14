@@ -108,6 +108,10 @@ namespace TGC.MonoGame.TP.FPS
             //Deberiamos ver como obtenemos la direccion a la que esta aputando el arma.
             //this.weapon.fire()
         }
+        public Vector3 GetCameraPos()
+        {
+            return Camera.Position;
+        }
 
         public void Move(Vector3 NewPosition)
         {

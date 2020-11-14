@@ -26,10 +26,11 @@ namespace TGC.MonoGame.TP.Utils
         public QuadPrimitive(GraphicsDevice graphicsDevice, Vector3 origin, Vector3 normal, Vector3 up, float width,
             float height, Texture2D texture, Vector2 textureRepeats)
         {
-            Effect = new BasicEffect(graphicsDevice);
+            /*Effect = new BasicEffect(graphicsDevice);
             Effect.TextureEnabled = true;
-            Effect.Texture = texture;
+            Effect.Texture = texture;*/
             //Effect.EnableDefaultLighting();
+            Texture = texture;
 
             Origin = origin;
             Normal = normal;
@@ -43,6 +44,7 @@ namespace TGC.MonoGame.TP.Utils
         ///     Represents a list of 3D vertices to be streamed to the graphics device.
         /// </summary>
         private VertexBuffer Vertices { get; set; }
+        private Texture2D Texture;
 
         /// <summary>
         ///     Describes the rendering order of the vertices in a vertex buffer, using clockwise winding.
@@ -92,7 +94,7 @@ namespace TGC.MonoGame.TP.Utils
         /// <summary>
         ///     Used to set and query effects and choose techniques.
         /// </summary>
-        public BasicEffect Effect { get; }
+        public Effect Effect { get; set; }
 
         /// <summary>
         ///     Create a vertex buffer for the figure with the given information.
@@ -151,6 +153,21 @@ namespace TGC.MonoGame.TP.Utils
                 BufferUsage.WriteOnly);
             Indices.SetData(indices);
         }
+        public void SetEffect(Effect Effect)
+        {
+            this.Effect = Effect;
+        }
+        public void SetCameraPos(Vector3 pos)
+        {
+            Effect.Parameters["EyePosition"]?.SetValue(pos);
+        }
+        public void SetLightParameters(float KAmbient, float KDiffuse, float KSpecular, float Shininess)
+        {
+            Effect.Parameters["KAmbient"]?.SetValue(KAmbient);
+            Effect.Parameters["KDiffuse"]?.SetValue(KDiffuse);
+            Effect.Parameters["KSpecular"]?.SetValue(KSpecular);
+            Effect.Parameters["Shininess"]?.SetValue(Shininess);
+        }
 
         /// <summary>
         ///     Draw the Quad.
@@ -160,10 +177,12 @@ namespace TGC.MonoGame.TP.Utils
         /// <param name="projection">The projection matrix, normally from the application.</param>
         public virtual void Draw(Matrix world, Matrix view, Matrix projection)
         {
-            // Set BasicEffect parameters.
-            Effect.World = world;
-            Effect.View = view;
-            Effect.Projection = projection;
+            Effect.Parameters["World"]?.SetValue(world);
+            Effect.Parameters["View"]?.SetValue(view);
+            Effect.Parameters["Projection"]?.SetValue(projection);
+            Effect.Parameters["WorldViewProjection"]?.SetValue(world * view * projection);
+            Effect.Parameters["InverseTransposeWorld"]?.SetValue(Matrix.Invert(Matrix.Transpose(world)));
+            Effect.Parameters["ModelTexture"].SetValue(Texture);
 
             // Draw the model, using BasicEffect.
             Draw(Effect);

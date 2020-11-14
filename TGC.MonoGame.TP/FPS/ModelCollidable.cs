@@ -9,9 +9,10 @@ namespace TGC.MonoGame.TP.Utils{
         public Model Model { get; set; }
         public AABB Aabb { get; set; }
         public Matrix World { get; set; }
+        private Effect Effect;
+        private Texture2D Texture;
         public ModelCollidable(GraphicsDevice GraphicsDevice, ContentManager Content, string Filepath, Matrix world){
             Model = Content.Load<Model>(Filepath);
-            // TODO: infer the size of the model & translate it to a vector
             World = world;
             CreateAABB(GraphicsDevice);
         }
@@ -54,11 +55,75 @@ namespace TGC.MonoGame.TP.Utils{
             }
             Aabb = new AABB(GraphicsDevice, min, max);
         }
-        public void Draw(Matrix View, Matrix Projection)
+        public void SetEffect(Effect Effect)
         {
-            Model.Draw(World, View, Projection);
-            //Model.Draw(Matrix.CreateScale(0.1f) * Matrix.CreateTranslation(Aabb.minExtents), View, Projection);
-            //Model.Draw(Matrix.CreateScale(0.1f) * Matrix.CreateTranslation(Aabb.maxExtents), View, Projection);
+            this.Effect = Effect;
+            foreach (var mesh in Model.Meshes)
+                foreach (var part in mesh.MeshParts)
+                    part.Effect = Effect;
+        }
+        public void SetLightParameters(float KAmbient, float KDiffuse, float KSpecular, float Shininess)
+        {
+            Effect.Parameters["KAmbient"]?.SetValue(KAmbient);
+            Effect.Parameters["KDiffuse"]?.SetValue(KDiffuse);
+            Effect.Parameters["KSpecular"]?.SetValue(KSpecular);
+            Effect.Parameters["Shininess"]?.SetValue(Shininess);
+        }
+        public void SetTexture(Texture2D texture)
+        {
+            Texture = texture;
+        }
+        public void SetCameraPos(Vector3 pos)
+        {
+            Effect.Parameters["EyePosition"]?.SetValue(pos);
+        }
+        public void SetTime(float time)
+        {
+            Effect.Parameters["Time"]?.SetValue(time);
+        }
+        public void SetRecolectable(float val)
+        {
+            Effect.Parameters["Recolectable"]?.SetValue(val);
+        }
+        public void Draw(Matrix View, Matrix Projection)
+        {   
+            if(Effect == null)
+            {
+                Model.Draw(World, View, Projection);
+                return;
+            }
+            Effect.Parameters["ModelTexture"].SetValue(Texture);
+            Effect.Parameters["View"]?.SetValue(View);
+            Effect.Parameters["Projection"]?.SetValue(Projection);
+
+            foreach (var mesh in Model.Meshes)
+            {
+                var world = mesh.ParentBone.Transform * World;
+                Effect.Parameters["World"]?.SetValue(world);
+                Effect.Parameters["WorldViewProjection"]?.SetValue(world * View * Projection);
+                Effect.Parameters["InverseTransposeWorld"]?.SetValue(Matrix.Invert(Matrix.Transpose(world)));
+                mesh.Draw();
+            }
+        }
+        public void Draw(Matrix World, Matrix View, Matrix Projection)
+        {
+            if (Effect == null)
+            {
+                Model.Draw(World, View, Projection);
+                return;
+            }
+            Effect.Parameters["ModelTexture"].SetValue(Texture);
+            Effect.Parameters["View"]?.SetValue(View);
+            Effect.Parameters["Projection"]?.SetValue(Projection);
+
+            foreach (var mesh in Model.Meshes)
+            {
+                var world = mesh.ParentBone.Transform * World;
+                Effect.Parameters["World"]?.SetValue(world);
+                Effect.Parameters["WorldViewProjection"]?.SetValue(world * View * Projection);
+                Effect.Parameters["InverseTransposeWorld"]?.SetValue(Matrix.Invert(Matrix.Transpose(world)));
+                mesh.Draw();
+            }
         }
     }
 }

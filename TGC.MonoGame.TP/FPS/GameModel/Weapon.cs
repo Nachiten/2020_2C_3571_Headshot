@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Diagnostics;
 using TGC.MonoGame.TP.Utils;
-using Grafics = Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace TGC.MonoGame.TP.FPS
 {
@@ -26,16 +26,23 @@ namespace TGC.MonoGame.TP.FPS
         {
             //disparar bala
         }
+
+        public void SetEffect(Effect Effect)
+        {
+            Gun.SetEffect(Effect);
+        }
         public void Draw(Matrix world, Matrix view, Matrix projection)
         {
+            Matrix WorldModified;
             if (Gun.Scalable)
             {
-                Gun.Modelo.Model.Draw(world * Matrix.CreateScale(Gun.tamanioModelo*0.8f) * Matrix.CreateTranslation(Vector3.UnitZ * 55 + Vector3.UnitX * 65 - Vector3.UnitY * 15) , view, projection);
+                WorldModified = world * Matrix.CreateScale(Gun.tamanioModelo * 0.8f) * Matrix.CreateTranslation(new Vector3(65,-15,55));
             }
             else
             {
-                Gun.Modelo.Model.Draw(world, view, projection);
+                WorldModified = world;
             }
+            Gun.Draw(WorldModified, view, projection);
         }
       
     }

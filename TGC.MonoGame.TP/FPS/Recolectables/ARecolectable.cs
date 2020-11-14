@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Content;
 using TGC.MonoGame.TP.Utils;
 using System.Diagnostics;
 using TGC.MonoGame.TP.FPS.Scenarios;
+using TGC.MonoGame.TP.FPS;
 
 namespace TGC.MonoGame.TP
 {
@@ -32,11 +33,13 @@ namespace TGC.MonoGame.TP
         protected Vector3 offsetPosicion = Vector3.Zero;
         // Matriz para ajustar el offset
         protected Matrix matrizOffsetPosicion = Matrix.CreateTranslation(Vector3.Zero);
+        protected Effect Effect;
 
         public virtual void LoadContent(ContentManager Content, GraphicsDevice GraphicsDevice) {
             // Genero el modelo
             World *= Matrix.CreateScale(tamanioModelo) * matrizOffsetPosicion;
             Modelo = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + pathModelo, World);
+            
             //Debug.WriteLine("Path: " + pathModelo + " | offset: " + offsetPosicion);
             Modelo.Aabb.Translation(World * Matrix.CreateTranslation(posicion + offsetPosicion));
 
@@ -44,9 +47,12 @@ namespace TGC.MonoGame.TP
             Collision.Instance.AppendCollectable(this);
 
             // Se genera los efectos y texturas default
-            var modelEffectArmor = (BasicEffect)Modelo.Model.Meshes[0].Effects[0];
-            modelEffectArmor.DiffuseColor = modelColor;
-            modelEffectArmor.EnableDefaultLighting();
+            Modelo.SetEffect(Effect);
+            Modelo.SetLightParameters(2 / 12f, 10 / 12f, 0f, 1f);
+            Modelo.SetTexture(Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "scale"));
+            //var modelEffectArmor = (BasicEffect)Modelo.Model.Meshes[0].Effects[0];
+            //modelEffectArmor.DiffuseColor = modelColor;
+            //modelEffectArmor.EnableDefaultLighting();
         }
 
         public void Update(GameTime gameTime)
@@ -58,12 +64,25 @@ namespace TGC.MonoGame.TP
                 Rotation = 0;
 
             Modelo.Transform(World * Matrix.CreateRotationY(Rotation) * Matrix.CreateTranslation(posicion), false);
+            Modelo.SetCameraPos(Player.Instance.GetCameraPos());
+            Modelo.SetTime((float)gameTime.TotalGameTime.TotalSeconds);
         }
 
         public void Draw(Matrix view, Matrix projection)
         {
             // Dibujo el modelo
+            Modelo.SetRecolectable(1f);
             Modelo.Draw(view, projection);
+            Modelo.SetRecolectable(0f);
+        }
+        public void Draw(Matrix world, Matrix view, Matrix projection)
+        {
+            // Dibujo el modelo
+            Modelo.Draw(world, view, projection);
+        }
+        public void SetEffect(Effect Effect)
+        {
+            this.Effect = Effect;
         }
 
         public abstract void recolectar(AStage Stage);

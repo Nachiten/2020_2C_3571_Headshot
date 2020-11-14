@@ -20,11 +20,15 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         List<WallCollidable> Walls = new List<WallCollidable>();
         #endregion
         List<ModelCollidable> Tables = new List<ModelCollidable>();
+        Effect Effect;
 
         public LibraryStage(Game game) : base(game)
         {
             Recolectables.Add(new M4(new Vector3(-4 * xLenFloor / 10, 50, zLenFloor / 8)));
             Recolectables.Add(new Pistol(new Vector3(-xLenFloor / 10, 50, zLenFloor / 8)));
+            Color LightsColor = Color.White;
+            Lights.Add(new Light { Position = new Vector3(-5 * xLenFloor / 20, 7* yLenWall / 8, -zLenFloor / 10), Color = LightsColor});
+
         }
 
         public override void LoadContent()
@@ -132,11 +136,51 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
             generarRecolectablesRandom();
 
+            foreach (WallCollidable w in Walls)
+            {
+                w.SetEffect(CreateBlinnPhong());
+                w.SetLightParameters(2 / 12f, 10 / 12f, 0f, 1f);
+            }
+            foreach (QuadPrimitiveCollidable q in Quads)
+            {
+                q.SetEffect(CreateBlinnPhong());
+                q.SetLightParameters(2 / 12f, 10 / 12f, 0f, 1f);
+            }
+            foreach (Enemigo e in Enemigos)
+            {
+                e.SetEffect(CreateBlinnPhong());
+            }
+            foreach (ARecolectable r in Recolectables)
+            {
+                r.SetEffect(CreateBlinnPhong());
+            }
+
             base.LoadContent();
         }
         public override void Update(GameTime gameTime)
         {
+            foreach (WallCollidable w in Walls)
+            {
+                w.SetCameraPos(Player.Instance.GetCameraPos());
+            }
+            foreach (QuadPrimitiveCollidable q in Quads)
+            {
+                q.SetCameraPos(Player.Instance.GetCameraPos());
+            }
+            foreach (ModelCollidable t in Tables)
+            {
+                t.SetCameraPos(Player.Instance.GetCameraPos());
+            }
             base.Update(gameTime);
+        }
+        private Effect CreateBlinnPhong()
+        {
+            Effect Effect = Content.Load<Effect>(FPSManager.ContentFolderEffect + "BlinnPhong");
+            Effect.Parameters["AmbientColor"]?.SetValue(Lights[0].Color.ToVector3());
+            Effect.Parameters["DiffuseColor"]?.SetValue(Lights[0].Color.ToVector3());
+            Effect.Parameters["SpecularColor"]?.SetValue(Lights[0].Color.ToVector3());
+            Effect.Parameters["LightPosition"]?.SetValue(Lights[0].Position);
+            return Effect;
         }
 
         #region metodoDraw
@@ -166,9 +210,9 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             ModelCollidable table = new ModelCollidable(GraphicsDevice, Content, FPSManager.ContentFolder3D + "tables/round-table", World);
 
             // Carga de textura
-            var tableEffect = (BasicEffect)table.Model.Meshes[0].Effects[0];
-            tableEffect.TextureEnabled = true;
-            tableEffect.Texture = Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "round-table/texture");
+            table.SetEffect(CreateBlinnPhong());
+            table.SetLightParameters(0f,1f,0f,100f);
+            table.SetTexture(Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "round-table/texture"));
 
             // Ajuste de AABB
             float xOffset = 50;

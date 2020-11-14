@@ -13,6 +13,11 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         public Vector2 posicion;
         public Vector3 normal;
     }
+    public struct Light
+    {
+        public Vector3 Position;
+        public Color Color;
+    }
     public abstract class AStage
     {
         public Game Game;
@@ -23,6 +28,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         public LinePrimitive ZAxis;
         public List<ARecolectable> Recolectables = new List<ARecolectable>();
         public List<AABB> Boxes = new List<AABB>();
+        public List<Light> Lights = new List<Light>();
 
         protected int cantidadCorazonesRandom = 4;
         protected int cantidadArmorRandom = 2;

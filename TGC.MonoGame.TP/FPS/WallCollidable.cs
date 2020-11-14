@@ -33,5 +33,29 @@ namespace TGC.MonoGame.TP.FPS
             Right.Draw(view, projection);
             Bottom.Draw(view, projection);
         }
+        public void SetEffect(Effect Effect)
+        {
+            Front.SetEffect(Effect);
+            Back.SetEffect(Effect);
+            Left.SetEffect(Effect);
+            Right.SetEffect(Effect);
+            Bottom.SetEffect(Effect);
+        }
+        public void SetCameraPos(Vector3 pos)
+        {
+            Front.SetCameraPos(pos);
+            Back.SetCameraPos(pos);
+            Left.SetCameraPos(pos);
+            Right.SetCameraPos(pos);
+            Bottom.SetCameraPos(pos);
+        }
+        public void SetLightParameters(float KAmbient, float KDiffuse, float KSpecular, float Shininess)
+        {
+            Front.SetLightParameters(KAmbient, KDiffuse, KSpecular, Shininess);
+            Back.SetLightParameters(KAmbient, KDiffuse, KSpecular, Shininess);
+            Left.SetLightParameters(KAmbient, KDiffuse, KSpecular, Shininess);
+            Right.SetLightParameters(KAmbient, KDiffuse, KSpecular, Shininess);
+            Bottom.SetLightParameters(KAmbient, KDiffuse, KSpecular, Shininess); 
+        }
     }
 }

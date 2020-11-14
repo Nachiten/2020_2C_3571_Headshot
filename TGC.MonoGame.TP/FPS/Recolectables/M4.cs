@@ -32,7 +32,9 @@ namespace TGC.MonoGame.TP
 
             // -- Agrego logica extra --
 
-            // Mesh silenciador
+            Modelo.SetTexture(Content.Load<Texture2D>(ContentFolder3D + "weapons/fbx/noodas"));
+
+            /*// Mesh silenciador
             var modelEffect = (BasicEffect)Modelo.Model.Meshes[0].Effects[0];
             modelEffect.TextureEnabled = true;
             modelEffect.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/fbx/noodas");
@@ -42,7 +44,7 @@ namespace TGC.MonoGame.TP
             var modelEffect2 = (BasicEffect)Modelo.Model.Meshes[1].Effects[0];
             modelEffect2.EnableDefaultLighting();
             modelEffect2.TextureEnabled = true;
-            modelEffect2.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/fbx/noodas");
+            modelEffect2.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/fbx/noodas");*/
         }
     }
 }
