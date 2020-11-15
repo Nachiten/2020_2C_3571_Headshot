@@ -32,15 +32,15 @@ namespace TGC.MonoGame.TP
         private float anguloRotacionRadianes;
         private Vector3 vectorDireccion = Vector3.Zero;
 
-        private int offSetY = 70;
-        private Matrix ScaleFactor = Matrix.CreateScale(.5f);
+        private int offSetY = 0;
+        private Matrix ScaleFactor = Matrix.CreateScale(.8f);
 
         private int maxHealth = 400;
         private float health;
         
         private bool shooting = false;
         private Ray LineOfSight;
-        private Vector3 GunOffset = new Vector3(57, 15, -10);
+        private Vector3 GunOffset = new Vector3(33, 73, -10);
         private float shootTimeSeconds = 0.5f;
 
         private int indexPath = 0;
@@ -64,7 +64,7 @@ namespace TGC.MonoGame.TP
             var posicionInicial = _path.First();
             anguloRotacionRadianes = PointTo(posicionInicial.normal);
             posicion = convertVector3(posicionInicial.posicion);
-            World = Matrix.CreateRotationY(anguloRotacionRadianes) * ScaleFactor * Matrix.CreateTranslation(posicion);
+            World = ScaleFactor * Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationY(anguloRotacionRadianes) * Matrix.CreateTranslation(posicion);
 
             LineOfSight = new Ray();
 
@@ -80,14 +80,7 @@ namespace TGC.MonoGame.TP
 
         public void LoadContent(ContentManager Content, GraphicsDevice GraphicsDevice)
         {
-            Model = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + "enemy/Hellknight_LATEST", World);
-            Model.SetEffect(Effect);
-
-            // Correccion de AABB
-            float offsetX = 50;
-            float offsetZ = 30;
-            float offsetY = 190;
-            Model.Aabb.SetManually(new Vector3(posicion.X - offsetX, 0, posicion.Z - offsetZ), new Vector3(posicion.X + offsetX, offsetY, posicion.Z + offsetZ));
+            Model = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + "Knight/Knight_01", World);
 
             Aabb = Model.Aabb;
 
@@ -96,46 +89,9 @@ namespace TGC.MonoGame.TP
             Weapon.Gun.LoadContent(Content, GraphicsDevice);
             Collision.Instance.RemoveCollectable(Weapon.Gun);
 
-            /*foreach (var mesh in Model.Model.Meshes)
-            {
-                foreach (var effect in mesh.Effects)
-                {
-                    BasicEffect ef = (BasicEffect)effect;
-                    ef.TextureEnabled = true;
-                    ef.Texture = Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "scale");
-                    ef.EnableDefaultLighting();
-                }
-            }*/
-            Model.SetLightParameters(2 / 12f, 10 / 12f, 0f, 1f);
-            Model.SetTexture(Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "scale"));
-
-            /*var modelEffectArmor = (BasicEffect)Model.Model.Meshes[0].Effects[0];
-            modelEffectArmor.DiffuseColor = Color.Pink.ToVector3();
-            modelEffectArmor.EnableDefaultLighting();
-
-            var modelAlgo = (BasicEffect)Model.Model.Meshes[1].Effects[0];
-            modelAlgo.DiffuseColor = Color.Brown.ToVector3();
-            modelAlgo.EnableDefaultLighting();
-
-            //Mandibula
-            var dindare2 = (BasicEffect)Model.Model.Meshes[1].Effects[1];
-            dindare2.DiffuseColor = Color.WhiteSmoke.ToVector3();
-            dindare2.EnableDefaultLighting();
-
-            //Ojos
-            var dindare = (BasicEffect)Model.Model.Meshes[1].Effects[2];
-            dindare.DiffuseColor = Color.Yellow.ToVector3();
-            dindare.EnableDefaultLighting();
-
-            //Cuerpo
-            var dindare3 = (BasicEffect)Model.Model.Meshes[1].Effects[3];
-            dindare3.DiffuseColor = Color.DarkGray.ToVector3();
-            dindare3.EnableDefaultLighting();
-
-            //torso
-            var dindare4 = (BasicEffect)Model.Model.Meshes[1].Effects[4];
-            dindare4.DiffuseColor = Color.Black.ToVector3();
-            dindare4.EnableDefaultLighting();*/
+            Model.SetEffect(Effect);
+            Model.SetLightParameters(6 / 12f, 6 / 12f, 0f, 1f);
+            Model.SetTexture(Content.Load<Texture2D>(ContentFolder3D + "Knight/Knight01_albedo"));
         }
 
         private Vector3 convertVector3(Vector2 posicion) {
@@ -180,56 +136,10 @@ namespace TGC.MonoGame.TP
 
         public void Update(GameTime gameTime, Vector3 posicionCamara)
         {
-            //UpdateLineOfSight();
 
             Model.SetCameraPos(Player.Instance.GetCameraPos());
-            // Calculo la posicion a la que me voy a mover
-            //posicionObjetivo = new Vector3(posicionCamara.X, posicion.Y, posicionCamara.Z);
 
-            //////avanzarPath();
-
-            //float distanciaAlObjetivo = Vector3.Distance(posicion, posicionObjetivo);
-            //// Si la distancia es menor a un margen comienzo a moverme
-            //if (distanciaAlObjetivo < 500 && Config.enemigosFollowActivado && !StartedMoving) {
-            //    StartedMoving = true;
-            //    //Guardo la posición anterior
-            //    OldPosition = posicion;
-
-            //    // Establezco el giro al inicial
-            //    World *= Matrix.CreateRotationY(-anguloRotacionRadianes);
-
-            //    anguloRotacionRadianes = MoveTowards(posicionObjetivo);
-            //    UpdateWorld(posicion + (vectorDireccion * velocidadMovimiento), anguloRotacionRadianes);
-            //    Collision.Instance.CheckStatic(Model.Aabb, StaticCollisionCB);
-            //}
-
-            //if (StartedMoving)
-            //{
-            //    float shortestDistance = GetShortestDistanceToStaticElement();
-
-            //    if(shortestDistance < 50)
-            //    {
-            //        var dirIdx = 0;
-            //        while (shortestDistance < 50 && dirIdx < PosibleDirections.Length)
-            //        {
-            //            anguloRotacionRadianes = PointTo(PosibleDirections[dirIdx]);
-            //            UpdateWorld(posicion, anguloRotacionRadianes);
-            //            shortestDistance = GetShortestDistanceToStaticElement();
-            //            dirIdx++;
-            //        }
-            //    }
-            //    else
-            //    {
-            //        anguloRotacionRadianes = MoveTowards(posicionObjetivo);
-            //        UpdateWorld(posicion + (vectorDireccion * velocidadMovimiento), anguloRotacionRadianes);
-            //        Collision.Instance.CheckStatic(Model.Aabb, StaticCollisionCB);
-            //    }
-
-            //    UpdateWorld(posicion + (vectorDireccion * velocidadMovimiento), anguloRotacionRadianes);
-            //}
-
-            //if (distanciaAlObjetivo > 500 && distanciaAlObjetivo < 250)
-            //    StartedMoving = false;
+            avanzarPath();
 
 
             if (Math.Round(gameTime.TotalGameTime.TotalMilliseconds) % (shootTimeSeconds * 1000) == 0 && !shooting)
@@ -246,7 +156,7 @@ namespace TGC.MonoGame.TP
         {
             posicion = hacia;
             // Aplico la rotacion que corresponde
-            World = ScaleFactor * Matrix.CreateRotationY(MathHelper.Pi + angulo);
+            World = ScaleFactor * Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationY(MathHelper.Pi + angulo);
 
             // Muevo el modelo
             World *= Matrix.CreateTranslation(posicion);
@@ -298,7 +208,7 @@ namespace TGC.MonoGame.TP
 
             World.Decompose(out Vector3 scale, out Quaternion rotation, out Vector3 translation);
 
-            Matrix ww = Matrix.CreateTranslation(GunOffset) * Matrix.CreateFromQuaternion(rotation) * Matrix.CreateTranslation(translation);
+            Matrix ww = Matrix.CreateTranslation(GunOffset) * Matrix.CreateRotationX(MathHelper.PiOver2) * Matrix.CreateFromQuaternion(rotation) * Matrix.CreateTranslation(translation);
 
             Weapon.Draw(ww, view, projection);
         }

@@ -39,8 +39,6 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             Texture2D TextureCarpet = Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "library/red-carpet");
             Texture2D TextureBlackWood = Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "library/black-wood");
 
-            Player.Instance.Move(new Vector3(-5 * xLenFloor / 20, Player.Instance.Position.Y, zLenFloor / 8));
-
             // Piso
             Quads.Add(new QuadPrimitiveCollidable(GraphicsDevice, Vector3.Zero, Vector3.UnitY, Vector3.UnitX, zLenFloor, xLenFloor, TextureCarpet, new Vector2(10, 10)));
 
@@ -134,6 +132,9 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
             Enemigos.Add(new Enemigo(enemyPath));
 
+            //Player.Instance.Move(new Vector3(-5 * xLenFloor / 20, Player.Instance.Position.Y, zLenFloor / 8));
+            Player.Instance.Move(new Vector3(enemyPath[0].posicion.X-100, Player.Instance.Position.Y, enemyPath[0].posicion.Y));
+
             generarRecolectablesRandom();
 
             foreach (WallCollidable w in Walls)
@@ -211,7 +212,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
             // Carga de textura
             table.SetEffect(CreateBlinnPhong());
-            table.SetLightParameters(0f,1f,0f,100f);
+            table.SetLightParameters(.5f,.5f,0f,100f);
             table.SetTexture(Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "round-table/texture"));
 
             // Ajuste de AABB
