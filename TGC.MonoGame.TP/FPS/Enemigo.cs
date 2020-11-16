@@ -90,7 +90,7 @@ namespace TGC.MonoGame.TP
             Collision.Instance.RemoveCollectable(Weapon.Gun);
 
             Model.SetEffect(Effect);
-            Model.SetLightParameters(6 / 12f, 6 / 12f, 0f, 1f);
+            Model.SetLightParameters(.2f, .75f, .05f, 100f);
             Model.SetTexture(Content.Load<Texture2D>(ContentFolder3D + "Knight/Knight01_albedo"));
         }
 

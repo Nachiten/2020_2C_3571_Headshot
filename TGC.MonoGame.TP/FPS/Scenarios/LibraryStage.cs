@@ -140,12 +140,12 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             foreach (WallCollidable w in Walls)
             {
                 w.SetEffect(CreateBlinnPhong());
-                w.SetLightParameters(2 / 12f, 10 / 12f, 0f, 1f);
+                w.SetLightParameters(.0f, 1f, .0f, 100f);
             }
             foreach (QuadPrimitiveCollidable q in Quads)
             {
                 q.SetEffect(CreateBlinnPhong());
-                q.SetLightParameters(2 / 12f, 10 / 12f, 0f, 1f);
+                q.SetLightParameters(.0f, 1f, .0f, 100f);
             }
             foreach (Enemigo e in Enemigos)
             {
@@ -207,18 +207,17 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
         private void AddTable(Vector2 Position)
         {
-            Matrix World = Matrix.CreateScale(0.4f) * Matrix.CreateTranslation(new Vector3(Position.X, 5, Position.Y));
-            ModelCollidable table = new ModelCollidable(GraphicsDevice, Content, FPSManager.ContentFolder3D + "tables/round-table", World);
+            Matrix World = Matrix.CreateScale(1f) * Matrix.CreateTranslation(new Vector3(Position.X, 5, Position.Y));
+            ModelCollidable table = new ModelCollidable(GraphicsDevice, Content, FPSManager.ContentFolder3D + "MobiusDesk/mobius_desk", World);
 
             // Carga de textura
             table.SetEffect(CreateBlinnPhong());
-            table.SetLightParameters(.5f,.5f,0f,100f);
-            table.SetTexture(Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "round-table/texture"));
+            table.SetLightParameters(.0f,1f,.0f,100f);
+            table.SetTexture(Content.Load<Texture2D>(FPSManager.ContentFolder3D + "MobiusDesk/mobius_desk_tex"));
 
             // Ajuste de AABB
-            float xOffset = 50;
-            float zOffset = 50;
-            table.Aabb.SetManually(new Vector3(Position.X - xOffset, 0, Position.Y - zOffset), new Vector3(Position.X + xOffset, 60, Position.Y + zOffset));
+            float xOffset = 60;
+            table.Aabb.SetManually(new Vector3(Position.X - xOffset, 0, Position.Y - 10), new Vector3(Position.X + xOffset, 60, Position.Y + 40));
 
             Boxes.Add(table.Aabb);
 
