@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using TGC.MonoGame.TP.FPS.Scenarios;
 
 namespace TGC.MonoGame.TP.Utils
 {
@@ -95,6 +96,12 @@ namespace TGC.MonoGame.TP.Utils
         ///     Used to set and query effects and choose techniques.
         /// </summary>
         public Effect Effect { get; set; }
+        private float KAmbient;
+        private float KDiffuse;
+        private float KSpecular;
+        private float Shininess;
+        private Light Light;
+
 
         /// <summary>
         ///     Create a vertex buffer for the figure with the given information.
@@ -163,10 +170,18 @@ namespace TGC.MonoGame.TP.Utils
         }
         public void SetLightParameters(float KAmbient, float KDiffuse, float KSpecular, float Shininess)
         {
-            Effect.Parameters["KAmbient"]?.SetValue(KAmbient);
-            Effect.Parameters["KDiffuse"]?.SetValue(KDiffuse);
-            Effect.Parameters["KSpecular"]?.SetValue(KSpecular);
-            Effect.Parameters["Shininess"]?.SetValue(Shininess);
+            if(KAmbient + KDiffuse + KSpecular > 1)
+            {
+                throw new System.Exception("SetLightParameters expects parameters 'K' to sum 1");
+            }
+            this.KAmbient = KAmbient;
+            this.KDiffuse = KDiffuse;
+            this.KSpecular = KSpecular;
+            this.Shininess = Shininess;
+        }
+        public void SetLight(Light Light)
+        {
+            this.Light = Light;
         }
 
         /// <summary>
@@ -183,6 +198,15 @@ namespace TGC.MonoGame.TP.Utils
             Effect.Parameters["WorldViewProjection"]?.SetValue(world * view * projection);
             Effect.Parameters["InverseTransposeWorld"]?.SetValue(Matrix.Invert(Matrix.Transpose(world)));
             Effect.Parameters["ModelTexture"].SetValue(Texture);
+            // Update Light Parameters
+            Effect.Parameters["KAmbient"]?.SetValue(KAmbient);
+            Effect.Parameters["KDiffuse"]?.SetValue(KDiffuse);
+            Effect.Parameters["KSpecular"]?.SetValue(KSpecular);
+            Effect.Parameters["Shininess"]?.SetValue(Shininess);
+            Effect.Parameters["AmbientColor"]?.SetValue(Light.AmbientColor.ToVector3());
+            Effect.Parameters["DiffuseColor"]?.SetValue(Light.DiffuseColor.ToVector3());
+            Effect.Parameters["SpecularColor"]?.SetValue(Light.SpecularColor.ToVector3());
+            Effect.Parameters["LightPosition"]?.SetValue(Light.Position);
 
             // Draw the model, using BasicEffect.
             Draw(Effect);

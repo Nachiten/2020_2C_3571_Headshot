@@ -16,7 +16,15 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
     public struct Light
     {
         public Vector3 Position;
-        public Color Color;
+        public Color AmbientColor;
+        public Color DiffuseColor;
+        public Color SpecularColor;
+
+    }
+    public struct RecolectablePosition
+    {
+        public Vector3 Position;
+        public int Room;
     }
     public abstract class AStage
     {
@@ -27,8 +35,10 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         public LinePrimitive YAxis;
         public LinePrimitive ZAxis;
         public List<ARecolectable> Recolectables = new List<ARecolectable>();
+        protected List<List<IElementEffect>> Rooms = new List<List<IElementEffect>>();
         public List<AABB> Boxes = new List<AABB>();
         public List<Light> Lights = new List<Light>();
+        public List<ModelCollidable> Lamps = new List<ModelCollidable>();
 
         protected int cantidadCorazonesRandom = 4;
         protected int cantidadArmorRandom = 2;
@@ -37,7 +47,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         protected int EnemyDeadScore = 100;
 
         protected List<PathTrace> enemyPath = new List<PathTrace>();
-        protected List<Vector3> posicionesPosiblesRecolectables = new List<Vector3>();
+        protected List<RecolectablePosition> posicionesPosiblesRecolectables = new List<RecolectablePosition>();
         public List<Enemigo> Enemigos = new List<Enemigo>();
         public Matrix View;
         public Matrix Projection;
@@ -67,6 +77,21 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             foreach (Enemigo unEnemigo in Enemigos)
             {
                 unEnemigo.LoadContent(Content, GraphicsDevice);
+            }
+            AddLamps();
+
+            // Agrego Luces
+            for (int i = 0; i < Rooms.Count; i++)
+                foreach (var e in Rooms[i])
+                    e.SetLight(Lights[i]);
+        }
+        private void AddLamps()
+        {
+            foreach(var l in Lights)
+            {
+                Matrix World = Matrix.CreateScale(.1f) * Matrix.CreateTranslation(l.Position);
+                ModelCollidable lamp = new ModelCollidable(GraphicsDevice, Content, FPSManager.ContentFolder3D + "Light/lamp", World);
+                Lamps.Add(lamp);
             }
         }
         public virtual void Update(GameTime gameTime)
@@ -103,6 +128,10 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             foreach (Enemigo unEnemigo in Enemigos)
             {
                 unEnemigo.Draw(View, Projection);
+            }
+            foreach (var l in Lamps)
+            {
+                l.Draw(View, Projection);
             }
 
             if (Config.drawAxis)
@@ -165,18 +194,20 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             for (i = 0; i < cantidadArmorRandom; i++)
             {
                 int index = valoresRandom[i];
-                Vector3 vectorActual = posicionesPosiblesRecolectables[index];
-
-                Recolectables.Add(new Armor(new Vector3(vectorActual.X, -45, vectorActual.Z)));
+                Vector3 vectorActual = posicionesPosiblesRecolectables[index].Position;
+                ARecolectable armor = new Armor(new Vector3(vectorActual.X, -45, vectorActual.Z));
+                Rooms[posicionesPosiblesRecolectables[index].Room].Add(armor);
+                Recolectables.Add(armor);
             }
 
             // Itero para generar los Health en posiciones random ya definidas
             for (int j = i; j < cantidadCorazonesRandom + cantidadArmorRandom; j++)
             {
                 int index = valoresRandom[j];
-                Vector3 vectorActual = posicionesPosiblesRecolectables[index];
-
-                Recolectables.Add(new Health(new Vector3(vectorActual.X, 55, vectorActual.Z)));
+                Vector3 vectorActual = posicionesPosiblesRecolectables[index].Position;
+                ARecolectable health = new Health(new Vector3(vectorActual.X, 55, vectorActual.Z));
+                Rooms[posicionesPosiblesRecolectables[index].Room].Add(health);
+                Recolectables.Add(health);
             }
         }
         private List<int> generarValoresRandom(int cantidad, int hasta)

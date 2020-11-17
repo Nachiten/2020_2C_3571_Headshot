@@ -34,11 +34,18 @@ namespace TGC.MonoGame.TP.FPS
         public void Draw(Matrix world, Matrix view, Matrix projection)
         {
             Matrix WorldModified;
-            if (Gun.Scalable)
+            /*if (Gun.Scalable)
             {
                 WorldModified = world * Matrix.CreateScale(Gun.tamanioModelo * 0.8f) * Matrix.CreateTranslation(new Vector3(65,-15,55));
             }
             else
+            {
+                WorldModified = world;
+            }*/
+            if(Index == 2)
+            {
+                WorldModified = world * Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(new Vector3(100, 0, 220));
+            } else
             {
                 WorldModified = world;
             }

@@ -3,13 +3,20 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using System;
 using System.Diagnostics;
+using TGC.MonoGame.TP.FPS.Scenarios;
+using TGC.MonoGame.TP.FPS;
 
 namespace TGC.MonoGame.TP.Utils{
-    public class ModelCollidable {
+    public class ModelCollidable : IElementEffect {
         public Model Model { get; set; }
         public AABB Aabb { get; set; }
         public Matrix World { get; set; }
         private Effect Effect;
+        private float KAmbient;
+        private float KDiffuse;
+        private float KSpecular;
+        private float Shininess;
+        private Light Light;
         private Texture2D Texture;
         public ModelCollidable(GraphicsDevice GraphicsDevice, ContentManager Content, string Filepath, Matrix world){
             Model = Content.Load<Model>(Filepath);
@@ -64,10 +71,18 @@ namespace TGC.MonoGame.TP.Utils{
         }
         public void SetLightParameters(float KAmbient, float KDiffuse, float KSpecular, float Shininess)
         {
-            Effect.Parameters["KAmbient"]?.SetValue(KAmbient);
-            Effect.Parameters["KDiffuse"]?.SetValue(KDiffuse);
-            Effect.Parameters["KSpecular"]?.SetValue(KSpecular);
-            Effect.Parameters["Shininess"]?.SetValue(Shininess);
+            if (KAmbient + KDiffuse + KSpecular > 1)
+            {
+                throw new System.Exception("SetLightParameters expects parameters 'K' to sum 1");
+            }
+            this.KAmbient = KAmbient;
+            this.KDiffuse = KDiffuse;
+            this.KSpecular = KSpecular;
+            this.Shininess = Shininess;
+        }
+        public void SetLight(Light Light)
+        {
+            this.Light = Light;
         }
         public void SetTexture(Texture2D texture)
         {
@@ -95,6 +110,15 @@ namespace TGC.MonoGame.TP.Utils{
             Effect.Parameters["ModelTexture"].SetValue(Texture);
             Effect.Parameters["View"]?.SetValue(View);
             Effect.Parameters["Projection"]?.SetValue(Projection);
+            // Update Light Parameters
+            Effect.Parameters["KAmbient"]?.SetValue(KAmbient);
+            Effect.Parameters["KDiffuse"]?.SetValue(KDiffuse);
+            Effect.Parameters["KSpecular"]?.SetValue(KSpecular);
+            Effect.Parameters["Shininess"]?.SetValue(Shininess);
+            Effect.Parameters["AmbientColor"]?.SetValue(Light.AmbientColor.ToVector3());
+            Effect.Parameters["DiffuseColor"]?.SetValue(Light.DiffuseColor.ToVector3());
+            Effect.Parameters["SpecularColor"]?.SetValue(Light.SpecularColor.ToVector3());
+            Effect.Parameters["LightPosition"]?.SetValue(Light.Position);
 
             foreach (var mesh in Model.Meshes)
             {
@@ -115,6 +139,15 @@ namespace TGC.MonoGame.TP.Utils{
             Effect.Parameters["ModelTexture"].SetValue(Texture);
             Effect.Parameters["View"]?.SetValue(View);
             Effect.Parameters["Projection"]?.SetValue(Projection);
+            // Update Light Parameters
+            Effect.Parameters["KAmbient"]?.SetValue(KAmbient);
+            Effect.Parameters["KDiffuse"]?.SetValue(KDiffuse);
+            Effect.Parameters["KSpecular"]?.SetValue(KSpecular);
+            Effect.Parameters["Shininess"]?.SetValue(Shininess);
+            Effect.Parameters["AmbientColor"]?.SetValue(Light.AmbientColor.ToVector3());
+            Effect.Parameters["DiffuseColor"]?.SetValue(Light.DiffuseColor.ToVector3());
+            Effect.Parameters["SpecularColor"]?.SetValue(Light.SpecularColor.ToVector3());
+            Effect.Parameters["LightPosition"]?.SetValue(Light.Position);
 
             foreach (var mesh in Model.Meshes)
             {

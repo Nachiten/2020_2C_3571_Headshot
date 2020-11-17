@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using TGC.MonoGame.TP.Utils;
+using TGC.MonoGame.TP.FPS.Scenarios;
 
 namespace TGC.MonoGame.TP.FPS
 {
-    public class WallCollidable
+    public class WallCollidable : IElementEffect
     {
         QuadPrimitiveCollidable Front;
         QuadPrimitiveCollidable Back;
@@ -56,6 +57,14 @@ namespace TGC.MonoGame.TP.FPS
             Left.SetLightParameters(KAmbient, KDiffuse, KSpecular, Shininess);
             Right.SetLightParameters(KAmbient, KDiffuse, KSpecular, Shininess);
             Bottom.SetLightParameters(KAmbient, KDiffuse, KSpecular, Shininess); 
+        }
+        public void SetLight(Light Light)
+        {
+            Front.SetLight(Light);
+            Back.SetLight(Light);
+            Left.SetLight(Light);
+            Right.SetLight(Light);
+            Bottom.SetLight(Light);
         }
     }
 }

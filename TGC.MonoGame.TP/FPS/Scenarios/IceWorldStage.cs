@@ -35,7 +35,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             WoodenBoxWorld = Matrix.CreateTranslation(Vector3.UnitY * WoodenBoxSize / 2 - Vector3.UnitX * WoodenBoxSize / 2 - Vector3.UnitZ * WoodenBoxSize / 2);
             SteelBoxWorld = Matrix.CreateTranslation(Vector3.UnitY * SteelBoxSize / 2);
 
-            posicionesPosiblesRecolectables.Add(new Vector3(xLenFloor / 2 - 100, 0, zLenFloor / 2 - 100));
+            /*posicionesPosiblesRecolectables.Add(new Vector3(xLenFloor / 2 - 100, 0, zLenFloor / 2 - 100));
             posicionesPosiblesRecolectables.Add(new Vector3(-xLenFloor / 2 + 100, 0, zLenFloor / 2 - 100));
             posicionesPosiblesRecolectables.Add(new Vector3(xLenFloor / 2 - 100, 0, -zLenFloor / 2 + 100));
             posicionesPosiblesRecolectables.Add(new Vector3(-xLenFloor / 2 + 100, 0, -zLenFloor / 2 + 100));
@@ -51,7 +51,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             posicionesPosiblesRecolectables.Add(new Vector3(distanciaCentroRecolectable, 0, distanciaCentroRecolectable));
             posicionesPosiblesRecolectables.Add(new Vector3(distanciaCentroRecolectable, 0, -distanciaCentroRecolectable));
             posicionesPosiblesRecolectables.Add(new Vector3(-distanciaCentroRecolectable, 0, distanciaCentroRecolectable));
-            posicionesPosiblesRecolectables.Add(new Vector3(-distanciaCentroRecolectable, 0, -distanciaCentroRecolectable));
+            posicionesPosiblesRecolectables.Add(new Vector3(-distanciaCentroRecolectable, 0, -distanciaCentroRecolectable));*/
 
             this.generarRecolectablesRandom();
 

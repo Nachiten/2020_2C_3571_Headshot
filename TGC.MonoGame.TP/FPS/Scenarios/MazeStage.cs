@@ -23,7 +23,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         public MazeStage(Game game) : base(game)
         {
             #region Recolectables
-            posicionesPosiblesRecolectables.Add(new Vector3(-5 * xLenFloor / 32, 0, -1 * zLenFloor / 16));
+            /*posicionesPosiblesRecolectables.Add(new Vector3(-5 * xLenFloor / 32, 0, -1 * zLenFloor / 16));
             posicionesPosiblesRecolectables.Add(new Vector3(-11 * xLenFloor / 32, 0, -1 * zLenFloor / 16));
             posicionesPosiblesRecolectables.Add(new Vector3(-1 * xLenFloor / 16, 0, -3 * zLenFloor / 16));
             posicionesPosiblesRecolectables.Add(new Vector3(-7 * xLenFloor / 16, 0, -3 * zLenFloor / 16));
@@ -33,7 +33,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
             posicionesPosiblesRecolectables.Add(new Vector3(3 * xLenFloor / 16, 0, 3 * zLenFloor / 16));
             posicionesPosiblesRecolectables.Add(new Vector3(3 * xLenFloor / 16, 0, 6 * zLenFloor / 16));
-            posicionesPosiblesRecolectables.Add(new Vector3(-3 * xLenFloor / 16, 0, 6 * zLenFloor / 16));
+            posicionesPosiblesRecolectables.Add(new Vector3(-3 * xLenFloor / 16, 0, 6 * zLenFloor / 16));*/
             #endregion
 
             generarRecolectablesRandom();

@@ -11,7 +11,7 @@ using TGC.MonoGame.TP.FPS;
 
 namespace TGC.MonoGame.TP
 {
-    public abstract class ARecolectable
+    public abstract class ARecolectable : IElementEffect
     {
         // Path para modelo
         protected const string ContentFolder3D = "Models/";
@@ -46,13 +46,8 @@ namespace TGC.MonoGame.TP
             // Se agrega el colisionable a la lista
             Collision.Instance.AppendCollectable(this);
 
-            // Se genera los efectos y texturas default
+            // Se genera el efecto
             Modelo.SetEffect(Effect);
-            Modelo.SetLightParameters(2 / 12f, 10 / 12f, 0f, 1f);
-            Modelo.SetTexture(Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "scale"));
-            //var modelEffectArmor = (BasicEffect)Modelo.Model.Meshes[0].Effects[0];
-            //modelEffectArmor.DiffuseColor = modelColor;
-            //modelEffectArmor.EnableDefaultLighting();
         }
 
         public void Update(GameTime gameTime)
@@ -83,6 +78,10 @@ namespace TGC.MonoGame.TP
         public void SetEffect(Effect Effect)
         {
             this.Effect = Effect;
+        }
+        public void SetLight(Light Light)
+        {
+            Modelo.SetLight(Light);
         }
 
         public abstract void recolectar(AStage Stage);

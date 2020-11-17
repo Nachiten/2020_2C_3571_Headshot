@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace TGC.MonoGame.TP
 {
-    public class Enemigo: Ashootable
+    public class Enemigo: Ashootable, IElementEffect
     {
         private const string ContentFolder3D = "Models/";
 
@@ -76,6 +76,10 @@ namespace TGC.MonoGame.TP
         {
             this.Effect = Effect;
             Weapon.SetEffect(Effect);
+        }
+        public void SetLight(Light Light)
+        {
+            Model.SetLight(Light);
         }
 
         public void LoadContent(ContentManager Content, GraphicsDevice GraphicsDevice)

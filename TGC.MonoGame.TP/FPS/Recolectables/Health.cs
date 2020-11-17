@@ -42,7 +42,7 @@ namespace TGC.MonoGame.TP
             base.LoadContent(Content, GraphicsDevice);
 
             // -- Agrego logica extra --
-
+            Modelo.SetLightParameters(.2f, .4f, .4f, 100f);
             Modelo.SetTexture(Content.Load<Texture2D>(ContentFolder3D + "FirstAid/FirstAidBox_tex"));
         }
     }

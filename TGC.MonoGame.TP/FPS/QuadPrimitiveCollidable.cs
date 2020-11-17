@@ -1,9 +1,10 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using TGC.MonoGame.TP.Utils;
+using TGC.MonoGame.TP.FPS;
 namespace TGC.MonoGame.TP.Utils
 {
-    public class QuadPrimitiveCollidable : QuadPrimitive {
+    public class QuadPrimitiveCollidable : QuadPrimitive, IElementEffect
+    {
         public AABB aabb { get; set; }
         public QuadPrimitiveCollidable(GraphicsDevice graphicsDevice, Vector3 origin, Vector3 normal, Vector3 up, float width, float height, Texture2D texture, Vector2 textureRepeats)
             : base(graphicsDevice,origin,normal,up,width,height,texture,textureRepeats)

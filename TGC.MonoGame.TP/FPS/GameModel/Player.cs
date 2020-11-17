@@ -86,7 +86,7 @@ namespace TGC.MonoGame.TP.FPS
             Health = maxHealth;
             Armor = maxArmor;
 
-            Weapons = new Weapon[2];
+            Weapons = new Weapon[3];
             WorldWeapon = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(50, 0, 110);
             View = Matrix.CreateLookAt(new Vector3(30, 20, 150), new Vector3(30, 0, 0), Vector3.Up);
             Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);
