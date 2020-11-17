@@ -25,6 +25,12 @@
 /processorParam:DebugMode=Auto
 /build:Effects/BlinnPhong.fx
 
+#begin Effects/Bloom.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/Bloom.fx
+
 #begin Effects/Rebote.fx
 /importer:EffectImporter
 /processor:EffectProcessor
