@@ -39,6 +39,9 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         public List<AABB> Boxes = new List<AABB>();
         public List<Light> Lights = new List<Light>();
         public List<ModelCollidable> Lamps = new List<ModelCollidable>();
+        protected List<QuadPrimitiveCollidable> Quads = new List<QuadPrimitiveCollidable>();
+        protected List<WallCollidable> Walls = new List<WallCollidable>();
+        protected Effect Effect;
 
         protected int cantidadCorazonesRandom = 4;
         protected int cantidadArmorRandom = 2;
@@ -72,12 +75,26 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         {
             foreach (ARecolectable R in Recolectables)
             {
+                R.SetEffect(Effect);
                 R.LoadContent(Content, GraphicsDevice);
             }
             foreach (Enemigo unEnemigo in Enemigos)
             {
+                unEnemigo.SetEffect(Effect);
                 unEnemigo.LoadContent(Content, GraphicsDevice);
             }
+
+            foreach (WallCollidable w in Walls)
+            {
+                w.SetEffect(Effect);
+                w.SetLightParameters(.2f, .8f, 0f, 1f);
+            }
+            foreach (QuadPrimitiveCollidable q in Quads)
+            {
+                q.SetEffect(Effect);
+                q.SetLightParameters(.2f, .8f, 0f, 1f);
+            }
+
             AddLamps();
 
             // Agrego Luces
@@ -114,6 +131,15 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             {
                 var position = ((TGCGame)Game).Camera.Position;
                 unEnemigo.Update(gameTime, position);
+            }
+
+            foreach (WallCollidable w in Walls)
+            {
+                w.SetCameraPos(Player.Instance.GetCameraPos());
+            }
+            foreach (QuadPrimitiveCollidable q in Quads)
+            {
+                q.SetCameraPos(Player.Instance.GetCameraPos());
             }
         }
         public virtual void Draw(GameTime gameTime)

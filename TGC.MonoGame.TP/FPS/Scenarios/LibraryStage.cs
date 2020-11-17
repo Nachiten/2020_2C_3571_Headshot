@@ -16,12 +16,9 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         int yLenWall = 300;
         float thickness = 20;
 
-        List<QuadPrimitiveCollidable> Quads = new List<QuadPrimitiveCollidable>();
-        List<WallCollidable> Walls = new List<WallCollidable>();
         List<ModelCollidable> Tables = new List<ModelCollidable>();
         #endregion
 
-        Effect Effect;
         Color LightsColor = Color.White;
 
         public LibraryStage(Game game) : base(game)
@@ -219,37 +216,10 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
             generarRecolectablesRandom();
 
-            foreach (WallCollidable w in Walls)
-            {
-                w.SetEffect(Effect);
-                w.SetLightParameters(.2f, .8f, 0f, 1f);
-            }
-            foreach (QuadPrimitiveCollidable q in Quads)
-            {
-                q.SetEffect(Effect);
-                q.SetLightParameters(.2f, .8f, 0f, 1f);
-            }
-            foreach (Enemigo e in Enemigos)
-            {
-                e.SetEffect(Effect);
-            }
-            foreach (ARecolectable r in Recolectables)
-            {
-                r.SetEffect(Effect);
-            }
-
             base.LoadContent();
         }
         public override void Update(GameTime gameTime)
         {
-            foreach (WallCollidable w in Walls)
-            {
-                w.SetCameraPos(Player.Instance.GetCameraPos());
-            }
-            foreach (QuadPrimitiveCollidable q in Quads)
-            {
-                q.SetCameraPos(Player.Instance.GetCameraPos());
-            }
             foreach (ModelCollidable t in Tables)
             {
                 t.SetCameraPos(Player.Instance.GetCameraPos());
