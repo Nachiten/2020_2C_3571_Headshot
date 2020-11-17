@@ -46,8 +46,6 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             posicionesPosiblesRecolectables.Add(new RecolectablePosition { Position = new Vector3(-3 * xLenFloor / 16, 0, 6 * zLenFloor / 16), Room = 3 });
             #endregion
 
-            generarRecolectablesRandom();
-
             #region Enemy Path
             enemyPath.Add(new PathTrace { posicion = new Vector2(-7 * xLenFloor / 16, 4 * zLenFloor / 16), normal = Vector3.UnitZ }); //1
             enemyPath.Add(new PathTrace { posicion = new Vector2(-7 * xLenFloor / 16, 6 * zLenFloor / 16), normal = Vector3.UnitX }); //2
@@ -70,6 +68,8 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             Lights.Add(new Light { Position = new Vector3(0, lightY, 2 * zLenFloor / 8 - 2 * thickness), AmbientColor = LightsColor, DiffuseColor = LightsColor, SpecularColor = LightsColor });
             Lights.Add(new Light { Position = new Vector3(0, lightY, 15 * zLenFloor / 32), AmbientColor = LightsColor, DiffuseColor = LightsColor, SpecularColor = LightsColor });
             #endregion
+
+            generarRecolectablesRandom();
 
         }
 

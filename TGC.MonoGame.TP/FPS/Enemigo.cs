@@ -35,7 +35,7 @@ namespace TGC.MonoGame.TP
         private int offSetY = 0;
         private Matrix ScaleFactor = Matrix.CreateScale(.8f);
 
-        private int maxHealth = 400;
+        private int maxHealth = 100;
         private float health;
         
         private bool shooting = false;
@@ -56,6 +56,15 @@ namespace TGC.MonoGame.TP
             -Vector3.UnitX,
             -Vector3.UnitZ
         };
+        #region animation
+        public bool TriggerDead = false;
+        double frameTimePlayed = 0; //Amount of time (out of animationTime) that the animation has been playing for
+        bool IsAnimating = false; //Self-Explanitory
+        int animationTime = 500; //For .5 seconds of animation.
+        Matrix PreviousWorld;
+        float TriggerDissapear = 0f;
+        float TriggerStopFlatten = 0f;
+        #endregion
 
         public Enemigo(List<PathTrace> _path)
         {
@@ -143,7 +152,9 @@ namespace TGC.MonoGame.TP
 
             Model.SetCameraPos(Player.Instance.GetCameraPos());
 
-            avanzarPath();
+            if(!IsAnimating)
+                avanzarPath();
+            HandleDeadAnimation(gameTime);
 
 
             if (Math.Round(gameTime.TotalGameTime.TotalMilliseconds) % (shootTimeSeconds * 1000) == 0 && !shooting)
@@ -168,6 +179,51 @@ namespace TGC.MonoGame.TP
 
             // Actualizo la vista
             UpdateLineOfSight();
+        }
+        private void HandleDeadAnimation(GameTime GameTime)
+        {
+            //If it is not already animating and there is a trigger, start animating
+            if (!IsAnimating && TriggerDead)
+            {
+                IsAnimating = true;
+                PreviousWorld = World;
+            }
+
+            //Increment the frameTimePlayed by the time (in milliseconds) since the last frame
+            if (IsAnimating)
+                frameTimePlayed += GameTime.ElapsedGameTime.TotalMilliseconds;
+            //If playing and we have not exceeded the time limit
+            if (IsAnimating && frameTimePlayed < animationTime)
+            {
+                Vector3 scale;
+                Quaternion rotation;
+                Vector3 translation;
+                World.Decompose(out scale, out rotation, out translation);
+                if(vectorDireccion.X == 1 || vectorDireccion.X == -1)
+                    World = Matrix.CreateScale(scale) * Matrix.CreateFromQuaternion(rotation) * Matrix.CreateRotationZ(MathHelper.PiOver2 * (float)(frameTimePlayed / (animationTime * 16))) * Matrix.CreateTranslation(translation);
+                else
+                    World = Matrix.CreateScale(scale) * Matrix.CreateFromQuaternion(rotation) * Matrix.CreateRotationX(MathHelper.PiOver2 * (float)(frameTimePlayed / (animationTime * 16))) * Matrix.CreateTranslation(translation);
+                Model.Transform(World, true);
+            }
+            //If exceeded time, reset variables and stop playing
+            else if (IsAnimating && frameTimePlayed >= animationTime)
+            {
+                //World = PreviousWorld;
+                TriggerDead = false;
+                TriggerDissapear = 1f;
+            }
+            if (TriggerDissapear == 1f && frameTimePlayed >= animationTime * 4)
+            {
+                TriggerStopFlatten = 1f;
+            }
+            if (TriggerDissapear == 1f && frameTimePlayed >= animationTime * 8)
+            {
+                frameTimePlayed = 0;
+                IsAnimating = false;
+                TriggerDissapear = 0f;
+                TriggerStopFlatten = 0f;
+                Reiniciar();
+            }
         }
         private float MoveTowards(Vector3 v)
         {
@@ -207,8 +263,17 @@ namespace TGC.MonoGame.TP
 
         public void Draw(Matrix view, Matrix projection)
         {
-            // Dibujo en las coordenadas actuales
+            // Update Parameters
+            Effect.Parameters["Enemy"]?.SetValue(1f);
+            Effect.Parameters["Dead"]?.SetValue(TriggerDissapear);
+            Effect.Parameters["StopFlatten"]?.SetValue(TriggerStopFlatten);
+            Effect.Parameters["Time"]?.SetValue((float)frameTimePlayed/1000);
+            // Draw
             Model.Draw(view, projection);
+            // Unset Parameters
+            Effect.Parameters["Enemy"]?.SetValue(0f);
+            Effect.Parameters["Dead"]?.SetValue(0f);
+            Effect.Parameters["StopFlatten"]?.SetValue(0f);
 
             World.Decompose(out Vector3 scale, out Quaternion rotation, out Vector3 translation);
 
@@ -239,9 +304,14 @@ namespace TGC.MonoGame.TP
             var posicionInicial = path.First();
             anguloRotacionRadianes = PointTo(posicionInicial.normal);
             posicion = convertVector3(posicionInicial.posicion);
-            World = Matrix.CreateRotationY(anguloRotacionRadianes) * ScaleFactor * Matrix.CreateTranslation(posicion);
+            World = ScaleFactor * Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationY(anguloRotacionRadianes) * Matrix.CreateTranslation(posicion);
+            Model.Transform(World, true);
 
             LineOfSight = new Ray();
+        }
+        public void Revivir()
+        {
+            health = maxHealth;
         }
 
 
@@ -254,7 +324,6 @@ namespace TGC.MonoGame.TP
         }
         public int ShootableCollisionCB(Ashootable e)
         {
-            Debug.WriteLine("!!!!Dispare al personaje ");
             e.GetDamaged(Weapon.Damage);
             return 0;
         }

@@ -123,7 +123,8 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
                 if (unEnemigo.IsDead())
                 {
                     Player.Instance.AddScore(EnemyDeadScore);
-                    unEnemigo.Reiniciar();
+                    unEnemigo.TriggerDead = true;
+                    unEnemigo.Revivir();
                 }
             }
 
