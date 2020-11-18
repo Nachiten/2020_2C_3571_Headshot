@@ -119,6 +119,7 @@ namespace TGC.MonoGame.TP.Utils{
             Effect.Parameters["DiffuseColor"]?.SetValue(Light.DiffuseColor.ToVector3());
             Effect.Parameters["SpecularColor"]?.SetValue(Light.SpecularColor.ToVector3());
             Effect.Parameters["LightPosition"]?.SetValue(Light.Position);
+            Effect.CurrentTechnique = Effect.Techniques["BasicColorDrawing"];
 
             foreach (var mesh in Model.Meshes)
             {
