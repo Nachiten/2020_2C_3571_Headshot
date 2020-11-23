@@ -294,6 +294,7 @@ namespace TGC.MonoGame.TP
 
                 if (mouseClickRect.Intersects(resumeButtonRect))
                 {
+                    SoundManager.Instance.detenerMusica();
                     gameState = GameState.StartMenu;
                     Player.Instance.Dispose();
                     Collision.Instance.Dispose();

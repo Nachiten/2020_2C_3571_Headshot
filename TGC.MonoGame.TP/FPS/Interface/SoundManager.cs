@@ -89,6 +89,10 @@ namespace TGC.MonoGame.TP.FPS.Interface
             }
         }
 
+        public void detenerMusica() {
+            MediaPlayer.Stop();
+        }
+
         public void comenzarMusica() {
             MediaPlayer.Play(cancionBackground);
         }
