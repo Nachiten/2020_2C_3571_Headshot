@@ -4,11 +4,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.Samples.Cameras;
 using TGC.MonoGame.TP.Utils;
-using TGC.MonoGame.TP.FPS.Scenarios;
-using System.Diagnostics;
-using System;
 using TGC.MonoGame.TP.FPS;
+using TGC.MonoGame.TP.FPS.Scenarios;
 using TGC.MonoGame.TP.FPS.Interface;
+using System;
+using System.Diagnostics;
 using System.Threading;
 
 namespace TGC.MonoGame.TP
@@ -230,6 +230,9 @@ namespace TGC.MonoGame.TP
                     gameState = GameState.Paused;
                 }
                 if (Player.Instance.Health <= 0) {
+                    Debug.WriteLine("Me mori");
+                    // TODO | Reproducir sonido de player muerto | Index: 7
+                    SoundManager.Instance.reproducirSonido(SoundManager.Sonido.MuerteJugador);
                     gameState = GameState.Finished;
                 }
             }

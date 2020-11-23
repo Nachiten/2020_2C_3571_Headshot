@@ -33,7 +33,7 @@ namespace TGC.MonoGame.TP
 
             if (sumeArmor) 
             {
-                SoundManager.Instance.reproducirSonido(3);
+                SoundManager.Instance.reproducirSonido(SoundManager.Sonido.RecolectarArmor);
                 eliminarRecolectableDeLista(Stage);
             }
                 

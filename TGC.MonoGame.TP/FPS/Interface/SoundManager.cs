@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
 
 namespace TGC.MonoGame.TP.FPS.Interface
 {
@@ -23,38 +24,71 @@ namespace TGC.MonoGame.TP.FPS.Interface
         }
         #endregion
 
-        private Song sonidoDisparo;
-        private Song recolectarHealth;
-        private Song recolectarArmor;
-        private Song recolectarWeapon;
+        private SoundEffect sonidoDisparo;
+        private SoundEffect recolectarHealth;
+        private SoundEffect recolectarArmor;
+        private SoundEffect recolectarWeapon;
+        private SoundEffect pegarEnemigo;
+        private SoundEffect matarEnemigo;
+        private SoundEffect muerteJugador;
+        private Song cancionBackground;
         private ContentManager Content;
         private String soundPath = "Sounds/";
 
-        private void cargarContenido() {
-            sonidoDisparo = Content.Load<Song>(soundPath + "GunShot");
-            recolectarHealth = Content.Load<Song>(soundPath + "HealthPickUp");
-            recolectarArmor = Content.Load<Song>(soundPath + "ArmorPickUp");
-            recolectarWeapon = Content.Load<Song>(soundPath + "GunPickUp");
+        public enum Sonido
+        {
+            Disparo = 1,
+            RecolectarHealth,
+            RecolectarArmor,
+            RecolectarWeapon,
+            PegarEnemigo,
+            MatarEnemigo,
+            MuerteJugador
         }
 
-        public void reproducirSonido(int idSonido) {
+        private void cargarContenido() {
+            sonidoDisparo = Content.Load<SoundEffect>(soundPath + "GunShot");
+            recolectarHealth = Content.Load<SoundEffect>(soundPath + "HealthPickUp");
+            recolectarArmor = Content.Load<SoundEffect>(soundPath + "ArmorPickUp");
+            recolectarWeapon = Content.Load<SoundEffect>(soundPath + "GunPickUp");
+            pegarEnemigo = Content.Load<SoundEffect>(soundPath + "EnemyHitOof");
+            matarEnemigo = Content.Load<SoundEffect>(soundPath + "EnemyKillWindowsXP");
+            muerteJugador = Content.Load<SoundEffect>(soundPath + "PlayerDeathTitanic");
+
+            cancionBackground = Content.Load<Song>(soundPath + "Song");
+        }
+
+        public void reproducirSonido(Sonido idSonido) {
             switch (idSonido) {
-                case 1:
-                    MediaPlayer.Play(sonidoDisparo);
+                case Sonido.Disparo:
+                    sonidoDisparo.Play();
                     break;
-                case 2:
-                    MediaPlayer.Play(recolectarHealth);
+                case Sonido.RecolectarHealth:
+                    recolectarHealth.Play();
                     break;
-                case 3:
-                    MediaPlayer.Play(recolectarArmor);
+                case Sonido.RecolectarArmor:
+                    recolectarArmor.Play();
                     break;
-                case 4:
-                    MediaPlayer.Play(recolectarWeapon);
+                case Sonido.RecolectarWeapon:
+                    recolectarWeapon.Play();
+                    break;
+                case Sonido.PegarEnemigo:
+                    pegarEnemigo.Play();
+                    break;
+                case Sonido.MatarEnemigo:
+                    matarEnemigo.Play();
+                    break;
+                case Sonido.MuerteJugador:
+                    muerteJugador.Play();
                     break;
                 default:
                     Debug.WriteLine("ERROR | Codigo de sonido invalido");
                     break;
             }
+        }
+
+        public void comenzarMusica() {
+            MediaPlayer.Play(cancionBackground);
         }
 
     }

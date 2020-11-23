@@ -210,7 +210,7 @@ namespace TGC.MonoGame.TP.FPS
 
         public void AgarrarArma(Weapon nuevaArma)
         {
-            SoundManager.Instance.reproducirSonido(4);
+            SoundManager.Instance.reproducirSonido(SoundManager.Sonido.RecolectarWeapon);
             Weapons[nuevaArma.Index-1] = nuevaArma;
             CurrentWeapon = nuevaArma;   
         }

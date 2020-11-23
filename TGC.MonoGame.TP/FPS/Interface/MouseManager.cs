@@ -38,7 +38,7 @@ namespace TGC.MonoGame.TP.FPS.Interface
             if (previousMouseState.LeftButton == ButtonState.Released && Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
                 if (Player.Instance.CurrentWeapon != null)
-                    SoundManager.Instance.reproducirSonido(1);
+                    SoundManager.Instance.reproducirSonido(SoundManager.Sonido.Disparo);
 
                 Player.Instance.TriggerShot = true;
                 ShotDirection = new Ray(Camera.Position, Camera.FrontDirection);

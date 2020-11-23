@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using TGC.MonoGame.TP.Utils;
 using TGC.MonoGame.TP.FPS;
+using TGC.MonoGame.TP.FPS.Interface;
 using System.Diagnostics;
 using System.Reflection.PortableExecutable;
 using System.Collections.Generic;
@@ -185,7 +186,6 @@ namespace TGC.MonoGame.TP
             //If it is not already animating and there is a trigger, start animating
             if (!IsAnimating && TriggerDead)
             {
-                // Reproducir sonido
                 IsAnimating = true;
                 PreviousWorld = World;
             }
@@ -290,6 +290,8 @@ namespace TGC.MonoGame.TP
                 health = 0;
             } else
             {
+                // TODO | Reproducir sonido que le pegue | Index 5
+                SoundManager.Instance.reproducirSonido(SoundManager.Sonido.PegarEnemigo);
                 health -= damage;
             }
         }

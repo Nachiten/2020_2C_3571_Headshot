@@ -31,7 +31,7 @@ namespace TGC.MonoGame.TP
 
             if (sumeVida) 
             {
-                SoundManager.Instance.reproducirSonido(2);
+                SoundManager.Instance.reproducirSonido(SoundManager.Sonido.RecolectarHealth);
                 eliminarRecolectableDeLista(Stage);
             }
 

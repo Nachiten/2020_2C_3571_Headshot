@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using TGC.MonoGame.TP.FPS.Interface;
 
 namespace TGC.MonoGame.TP.FPS.Scenarios
 {
@@ -122,6 +123,8 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             {
                 if (unEnemigo.IsDead())
                 {
+                    // TODO Reproducir sonido de muerto | Index: 6
+                    SoundManager.Instance.reproducirSonido(SoundManager.Sonido.MatarEnemigo);
                     Player.Instance.AddScore(EnemyDeadScore);
                     unEnemigo.TriggerDead = true;
                     unEnemigo.Revivir();

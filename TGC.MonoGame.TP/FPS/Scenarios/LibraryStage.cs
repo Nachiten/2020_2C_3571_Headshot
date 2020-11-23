@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using TGC.MonoGame.TP.FPS.Interface;
 using TGC.MonoGame.TP.Utils;
 
 namespace TGC.MonoGame.TP.FPS.Scenarios
@@ -215,6 +216,8 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             //Player.Instance.Move(new Vector3(enemyPath[0].posicion.X-100, Player.Instance.Position.Y, enemyPath[0].posicion.Y));
 
             generarRecolectablesRandom();
+
+            SoundManager.Instance.comenzarMusica();
 
             base.LoadContent();
         }

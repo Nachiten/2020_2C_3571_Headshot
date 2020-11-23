@@ -848,27 +848,51 @@
 
 #begin Sounds/ArmorPickUp.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/ArmorPickUp.mp3
 
+#begin Sounds/EnemyHitOof.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/EnemyHitOof.mp3
+
+#begin Sounds/EnemyKillWindowsXP.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/EnemyKillWindowsXP.mp3
+
 #begin Sounds/GunPickUp.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/GunPickUp.mp3
 
 #begin Sounds/GunShot.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/GunShot.mp3
 
 #begin Sounds/HealthPickUp.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/HealthPickUp.mp3
+
+#begin Sounds/PlayerDeathTitanic.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/PlayerDeathTitanic.mp3
+
+#begin Sounds/Song.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sounds/Song.mp3
 
 #begin SpriteFonts/Arial.spritefont
 /importer:FontDescriptionImporter
