@@ -846,6 +846,30 @@
 /processorParam:TextureFormat=Color
 /build:Models/weapons/Pistol_Beretta/RenderResult.png
 
+#begin Sounds/ArmorPickUp.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sounds/ArmorPickUp.mp3
+
+#begin Sounds/GunPickUp.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sounds/GunPickUp.mp3
+
+#begin Sounds/GunShot.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sounds/GunShot.mp3
+
+#begin Sounds/HealthPickUp.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sounds/HealthPickUp.mp3
+
 #begin SpriteFonts/Arial.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

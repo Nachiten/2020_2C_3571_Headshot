@@ -185,6 +185,7 @@ namespace TGC.MonoGame.TP
             //If it is not already animating and there is a trigger, start animating
             if (!IsAnimating && TriggerDead)
             {
+                // Reproducir sonido
                 IsAnimating = true;
                 PreviousWorld = World;
             }

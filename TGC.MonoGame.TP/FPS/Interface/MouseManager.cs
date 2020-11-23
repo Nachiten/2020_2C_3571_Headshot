@@ -1,8 +1,8 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using TGC.MonoGame.TP.Utils;
 using TGC.MonoGame.Samples.Cameras;
+using TGC.MonoGame.TP.Utils;
+using System;
 
 namespace TGC.MonoGame.TP.FPS.Interface
 {
@@ -31,13 +31,15 @@ namespace TGC.MonoGame.TP.FPS.Interface
         {
             previousMouseState = Mouse.GetState();
             pastMousePosition = Mouse.GetState().Position.ToVector2();
-            
         }
         public void Update(float elapsedTime, Func<Ashootable, int> ShootCallback) {
             
             // Handle Click
             if (previousMouseState.LeftButton == ButtonState.Released && Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
+                if (Player.Instance.CurrentWeapon != null)
+                    SoundManager.Instance.reproducirSonido(1);
+
                 Player.Instance.TriggerShot = true;
                 ShotDirection = new Ray(Camera.Position, Camera.FrontDirection);
                 Collision.Instance.CheckShootable(ShotDirection, Player.Instance, ShootCallback);

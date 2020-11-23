@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using TGC.MonoGame.TP.FPS.Scenarios;
 using TGC.MonoGame.TP.FPS;
+using TGC.MonoGame.TP.FPS.Interface;
 
 namespace TGC.MonoGame.TP
 {
@@ -30,8 +31,12 @@ namespace TGC.MonoGame.TP
         {
             bool sumeArmor = Player.Instance.sumarArmor(armorSumada);
 
-            if (sumeArmor)
+            if (sumeArmor) 
+            {
+                SoundManager.Instance.reproducirSonido(3);
                 eliminarRecolectableDeLista(Stage);
+            }
+                
         }
         public override void LoadContent(ContentManager Content, GraphicsDevice GraphicsDevice)
         {

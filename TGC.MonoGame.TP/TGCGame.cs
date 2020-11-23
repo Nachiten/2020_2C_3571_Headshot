@@ -146,6 +146,7 @@ namespace TGC.MonoGame.TP
 
             KeyboardManager.Init(Camera);
             MouseManager.Init(Camera);
+            SoundManager.Init(Content);
 
             interfaz.Initialize();
 

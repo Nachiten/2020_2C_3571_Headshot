@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using TGC.MonoGame.TP.FPS;
 using TGC.MonoGame.TP.FPS.Scenarios;
+using TGC.MonoGame.TP.FPS.Interface;
 
 
 namespace TGC.MonoGame.TP
@@ -26,14 +27,13 @@ namespace TGC.MonoGame.TP
 
         public override void recolectar(AStage Stage)
         {
-
             bool sumeVida = Player.Instance.sumarVida(vidaSumada);
-            
-            if (sumeVida)
-            eliminarRecolectableDeLista(Stage);
 
-            //if (Player.Instance.Health > 100) { 
-            //}
+            if (sumeVida) 
+            {
+                SoundManager.Instance.reproducirSonido(2);
+                eliminarRecolectableDeLista(Stage);
+            }
 
         }
         public override void LoadContent(ContentManager Content, GraphicsDevice GraphicsDevice)
