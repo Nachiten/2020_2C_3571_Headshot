@@ -884,7 +884,7 @@
 
 #begin Sounds/PlayerDeathTitanic.mp3
 /importer:Mp3Importer
-/processor:SoundEffectProcessor
+/processor:SongProcessor
 /processorParam:Quality=Best
 /build:Sounds/PlayerDeathTitanic.mp3
 
