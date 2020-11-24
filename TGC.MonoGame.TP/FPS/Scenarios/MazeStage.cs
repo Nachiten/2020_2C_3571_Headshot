@@ -20,6 +20,8 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
         Color LightsColor = Color.White;
 
+        private SkyBox SkyBox { get; set; }
+
         public MazeStage(Game game) : base(game)
         {
             Effect = Content.Load<Effect>(FPSManager.ContentFolderEffect + "BlinnPhong");
@@ -164,6 +166,14 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             Rooms[3].Add(enemy);
             Enemigos.Add(enemy);
 
+            // Skybox
+            var skyBox = Game.Content.Load<Model>("skybox/cube");
+            //var skyBoxTexture = Game.Content.Load<TextureCube>(FPSManager.ContentFolderTextures + "/skyboxes/sunset/sunset");
+            var skyBoxTexture = Game.Content.Load<TextureCube>(FPSManager.ContentFolderTextures + "/skyboxes/islands/islands");
+            //var skyBoxTexture = Game.Content.Load<TextureCube>(FPSManager.ContentFolderTextures + "/skyboxes/skybox/skybox");
+            var skyBoxEffect = Game.Content.Load<Effect>(FPSManager.ContentFolderEffect + "SkyBox");
+            SkyBox = new SkyBox(skyBox, skyBoxTexture, skyBoxEffect);
+
             base.LoadContent();
         }
 
@@ -178,6 +188,8 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
         public override void Draw(GameTime gameTime)
         {
+            //SkyBox.Draw(View, Projection, Player.Instance.GetCameraPos());
+
             base.Draw(gameTime);
 
             foreach (QuadPrimitiveCollidable q in Quads)
