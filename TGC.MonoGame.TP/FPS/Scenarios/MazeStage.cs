@@ -20,7 +20,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
         Color LightsColor = Color.White;
 
-        private SkyBox SkyBox { get; set; }
+        public SkyBox SkyBox { get; set; }
 
         public MazeStage(Game game) : base(game)
         {
@@ -169,8 +169,9 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             // Skybox
             var skyBox = Game.Content.Load<Model>("skybox/cube");
             //var skyBoxTexture = Game.Content.Load<TextureCube>(FPSManager.ContentFolderTextures + "/skyboxes/sunset/sunset");
-            var skyBoxTexture = Game.Content.Load<TextureCube>(FPSManager.ContentFolderTextures + "/skyboxes/islands/islands");
-            //var skyBoxTexture = Game.Content.Load<TextureCube>(FPSManager.ContentFolderTextures + "/skyboxes/skybox/skybox");
+            //var skyBoxTexture = Game.Content.Load<TextureCube>(FPSManager.ContentFolderTextures + "/skyboxes/islands/islands");
+            var skyBoxTexture = Game.Content.Load<TextureCube>(FPSManager.ContentFolderTextures + "/skyboxes/skybox/skybox");
+            //var skyBoxTexture = Game.Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "/library");
             var skyBoxEffect = Game.Content.Load<Effect>(FPSManager.ContentFolderEffect + "SkyBox");
             SkyBox = new SkyBox(skyBox, skyBoxTexture, skyBoxEffect);
 
@@ -188,7 +189,13 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
         public override void Draw(GameTime gameTime)
         {
-            //SkyBox.Draw(View, Projection, Player.Instance.GetCameraPos());
+            var samplerstate = GraphicsDevice.SamplerStates[0];
+            var depthstencilstate = GraphicsDevice.DepthStencilState;
+            GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+            GraphicsDevice.DepthStencilState = DepthStencilState.DepthRead;
+            SkyBox.Draw(View, Projection, Player.Instance.GetCameraPos());
+            GraphicsDevice.SamplerStates[0] = samplerstate;
+            GraphicsDevice.DepthStencilState = depthstencilstate;
 
             base.Draw(gameTime);
 
