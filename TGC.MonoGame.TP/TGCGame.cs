@@ -361,8 +361,8 @@ namespace TGC.MonoGame.TP
             {
                 isLoading = false;
                 Stage.Draw(gameTime);
-                //Player.Instance.Draw(gameTime);
-                //interfaz.Draw(gameTime);
+                Player.Instance.Draw(gameTime);
+                interfaz.Draw(gameTime);
             }
 
             if (gameState == GameState.Finished) {

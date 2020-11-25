@@ -66,7 +66,7 @@ namespace TGC.MonoGame.TP.FPS
         public int Score = 0;
         public Weapon CurrentWeapon { get; set; }
 
-        public float Speed = 300f;
+        public float Speed = 5f;
 
         public Weapon[] Weapons { get; set; }
 

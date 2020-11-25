@@ -168,10 +168,9 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
             // Skybox
             var skyBox = Game.Content.Load<Model>("skybox/cube");
-            //var skyBoxTexture = Game.Content.Load<TextureCube>(FPSManager.ContentFolderTextures + "/skyboxes/sunset/sunset");
+            var skyBoxTexture = Game.Content.Load<TextureCube>(FPSManager.ContentFolderTextures + "/skyboxes/sunset/sunset");
             //var skyBoxTexture = Game.Content.Load<TextureCube>(FPSManager.ContentFolderTextures + "/skyboxes/islands/islands");
-            var skyBoxTexture = Game.Content.Load<TextureCube>(FPSManager.ContentFolderTextures + "/skyboxes/skybox/skybox");
-            //var skyBoxTexture = Game.Content.Load<Texture2D>(FPSManager.ContentFolderTextures + "/library");
+            //var skyBoxTexture = Game.Content.Load<TextureCube>(FPSManager.ContentFolderTextures + "/skyboxes/skybox/skybox");
             var skyBoxEffect = Game.Content.Load<Effect>(FPSManager.ContentFolderEffect + "SkyBox");
             SkyBox = new SkyBox(skyBox, skyBoxTexture, skyBoxEffect);
 
@@ -189,6 +188,8 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
         public override void Draw(GameTime gameTime)
         {
+            View = ((TGCGame)Game).Camera.View;
+            Projection = ((TGCGame)Game).Camera.Projection;
             var samplerstate = GraphicsDevice.SamplerStates[0];
             var depthstencilstate = GraphicsDevice.DepthStencilState;
             GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;

@@ -78,12 +78,12 @@ namespace TGC.MonoGame.TP.Utils
                     foreach (var part in mesh.MeshParts)
                     {
                         part.Effect = Effect;
-                        part.Effect.Parameters["World"].SetValue(
+                        part.Effect.Parameters["World"]?.SetValue(
                             Matrix.CreateScale(Size) * Matrix.CreateTranslation(cameraPosition));
-                        part.Effect.Parameters["View"].SetValue(view);
-                        part.Effect.Parameters["Projection"].SetValue(projection);
-                        part.Effect.Parameters["SkyBoxTexture"].SetValue(Texture);
-                        part.Effect.Parameters["CameraPosition"].SetValue(cameraPosition);
+                        part.Effect.Parameters["View"]?.SetValue(view);
+                        part.Effect.Parameters["Projection"]?.SetValue(projection);
+                        part.Effect.Parameters["SkyBoxTexture"]?.SetValue(Texture);
+                        part.Effect.Parameters["CameraPosition"]?.SetValue(cameraPosition);
                     }
 
                     // Draw the mesh with the SkyBox effect

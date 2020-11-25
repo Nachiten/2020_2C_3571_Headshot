@@ -73,30 +73,32 @@ namespace TGC.MonoGame.TP.FPS.Interface
             /*if (keyboardState.IsKeyDown(Keys.D3))
                 Player.Instance.ChangeWeapon(3);*/
 
+            Vector3 currpos = Player.Position;
+
             if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
             {
-                Player.Position += -Camera.RightDirection * currentMovementSpeed * elapsedTime;
+                currpos += -Camera.RightDirection * currentMovementSpeed; //* elapsedTime;
                 MouseManager.Instance.ViewChanged = true;
             }
 
             if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
             {
-                Player.Position += Camera.RightDirection * currentMovementSpeed * elapsedTime;
+                currpos += Camera.RightDirection * currentMovementSpeed; //* elapsedTime;
                 MouseManager.Instance.ViewChanged = true;
             }
 
             if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
             {
-                Player.Position += Camera.FrontDirection * currentMovementSpeed * elapsedTime;
+                currpos += Camera.FrontDirection * currentMovementSpeed; //* elapsedTime;
                 MouseManager.Instance.ViewChanged = true;
             }
 
             if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
             {
-                Player.Position += -Camera.FrontDirection * currentMovementSpeed * elapsedTime;
+                currpos += -Camera.FrontDirection * currentMovementSpeed; //* elapsedTime;
                 MouseManager.Instance.ViewChanged = true;
             }
-            Player.Move(new Vector3(Player.Position.X, 100, Player.Position.Z));
+            Player.Move(new Vector3(currpos.X, 100, currpos.Z));
         }
     }
 }
