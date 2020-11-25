@@ -86,33 +86,14 @@ namespace TGC.MonoGame.TP
         private SpriteBatch SpriteBatch { get; set; }
 
         private GraphicsDeviceManager Graphics { get; }
-
-        private Matrix WorldM4 { get; set; }
-        //private Model ModeloTgcitoClassic { get; set; }
-        private Matrix World { get; set; }
-        private Matrix View { get; set; }
-        private Matrix Projection { get; set; }
         public Effect Effect { get; set; }
         public FreeCamera Camera { get; set; }
         AStage Stage { get; set; }
-        //private Player jugador { get; set; }
         private PlayerGUI interfaz { get; set; }
-        private Weapon arma { get; set; }
-
         private SpriteFont font { get; set; }
-
+        private BloomFilter _bloomFilter;
+        SpriteBatch _spriteBatch;
         private RenderTarget2D RenderTarget { get; set; }
-
-        private FullScreenQuad FullScreenQuad { get; set; }
-
-        // Esta lita de recolectables deberia estar en otra clase "recolectables"
-        //private List<Recolectable> recolectables = new List<Recolectable>();
-
-        //private Enemigo enemigo1;
-        //private Enemigo enemigo2;
-
-        // Array de recolectables
-        // Cuando recolecta algo se quita de la lista
 
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
@@ -150,14 +131,6 @@ namespace TGC.MonoGame.TP
 
             interfaz.Initialize();
 
-            // Configuramos nuestras matrices de la escena.
-            //World = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(10, 0, 10);
-            //View = Matrix.CreateLookAt(new Vector3(30, 20, 150), new Vector3(30, 0, 0), Vector3.Up);
-            //Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);
-
-            //WorldM4 = Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(50, 0, 110);
-            //Effect = new BasicEffect(GraphicsDevice);
-
             base.Initialize();
         }
 
@@ -185,11 +158,13 @@ namespace TGC.MonoGame.TP
 
             loadingScreen = Content.Load<Texture2D>(ContentFolderTextures + "loading");
 
+            _bloomFilter = new BloomFilter();
+            _bloomFilter.Load(GraphicsDevice, Content, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+
+            _bloomFilter.BloomPreset = BloomFilter.BloomPresets.SuperWide;
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
             RenderTarget = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24);
-            FullScreenQuad = new FullScreenQuad(GraphicsDevice);
-            Effect = Content.Load<Effect>(FPSManager.ContentFolderEffect + "Bloom");
-            Effect.Parameters["Height"]?.SetValue(GraphicsDevice.Viewport.Height);
-            Effect.Parameters["Width"]?.SetValue(GraphicsDevice.Viewport.Width);
+
 
             base.LoadContent();
         }
@@ -243,8 +218,6 @@ namespace TGC.MonoGame.TP
                 
                 isLoading = false;
             }
-
-            Effect.Parameters["Time"]?.SetValue((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Update(gameTime);
         }
@@ -317,13 +290,11 @@ namespace TGC.MonoGame.TP
         /// </summary>
         protected override void Draw(GameTime gameTime)
         {
-
             GraphicsDevice.SetRenderTarget(RenderTarget);
             GraphicsDevice.Clear(Color.Black);
 
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.BlendState = BlendState.Opaque;
-
 
             //Handle game state
             if (gameState == GameState.StartMenu)
@@ -375,20 +346,22 @@ namespace TGC.MonoGame.TP
                 SpriteBatch.End();
             }
 
+            Texture2D bloom = _bloomFilter.Draw(RenderTarget, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
             GraphicsDevice.SetRenderTarget(null);
-            GraphicsDevice.Clear(Color.Black);
-            Effect.CurrentTechnique = Effect.Techniques["PostProcessing"];
-            Effect.Parameters["baseTexture"]?.SetValue(RenderTarget);
-            FullScreenQuad.Draw(Effect);
+
+            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+
+            _spriteBatch.Draw(RenderTarget, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+            _spriteBatch.Draw(bloom, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+
+
+            _spriteBatch.End();
+
 
             base.Draw(gameTime);
         }
 
-        //private void recolectarEnIndice(int index)
-        //{
-        //    recolectables.RemoveAt(index);
-        //}
         private float VectorsAngle(Vector3 v1, Vector3 v2)
         {
             return (float)Math.Acos(Vector3.Dot(v1, v2) / (Vector3.Distance(v1, Vector3.Zero) * Vector3.Distance(v2, Vector3.Zero)));
@@ -401,6 +374,7 @@ namespace TGC.MonoGame.TP
         {
             // Libero los recursos.
             Content.Unload();
+            _bloomFilter.Dispose();
 
             base.UnloadContent();
         }
