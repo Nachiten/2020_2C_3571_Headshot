@@ -47,6 +47,14 @@ namespace TGC.MonoGame.Samples.Cameras
             MouseManager.Instance.ViewChanged = true;
             UpdateCameraVectors();
         }
+        public void ResetCamera(Vector3 pos)
+        {
+            yaw = -90f;
+            pitch = 0;
+            Position = pos;
+            UpdateCameraVectors();
+            CalculateView();
+        }
 
         private void UpdateCameraVectors()
         {

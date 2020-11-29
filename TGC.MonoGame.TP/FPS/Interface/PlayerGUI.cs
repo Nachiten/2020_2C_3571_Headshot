@@ -52,7 +52,33 @@ namespace TGC.MonoGame.TP.FPS
                 SpriteBatch.DrawString(InterfaceFont, "Score " + Player.Instance.Score.ToString(), new Vector2(350, 400), Color.White);
             }
             SpriteBatch.End();
+        }
+        public void Draw(GameTime gameTime, Texture2D RenderTarget)
+        {
+            SpriteBatch.Begin(samplerState: GraphicsDevice.SamplerStates[0], rasterizerState: GraphicsDevice.RasterizerState);
 
+            Vector2 location = new Vector2(0, 380);
+            Rectangle sourceRectangle = new Rectangle(0, 0, 900, 300);
+            Vector2 origin = new Vector2(0, 0);
+
+            SpriteBatch.Draw(RenderTarget, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+
+            SpriteBatch.Draw(FooterTexture, location, sourceRectangle, Color.White, 0.01f, origin, .87f, SpriteEffects.None, 1);
+
+            SpriteBatch.Draw(HeartTexture, new Vector2(60, 440), new Rectangle(0, 0, 32, 32), Color.White, 0.01f, origin, .87f, SpriteEffects.None, 1);
+            SpriteBatch.Draw(ArmorTexture, new Vector2(710, 440), new Rectangle(0, 0, 32, 32), Color.White, 0.01f, origin, .87f, SpriteEffects.None, 1);
+
+            if (Player.Instance.Health <= 0)
+            {
+                SpriteBatch.DrawString(InterfaceFont, "Dead", new Vector2(50, 432), Color.White);
+            }
+            else
+            {
+                SpriteBatch.DrawString(InterfaceFont, Player.Instance.Health.ToString(), new Vector2(100, 440), Color.White);
+                SpriteBatch.DrawString(InterfaceFont, Player.Instance.Armor.ToString(), new Vector2(660, 440), Color.White);
+                SpriteBatch.DrawString(InterfaceFont, "Score " + Player.Instance.Score.ToString(), new Vector2(350, 400), Color.White);
+            }
+            SpriteBatch.End();
         }
     }
 }

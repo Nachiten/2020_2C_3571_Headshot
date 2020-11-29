@@ -76,7 +76,7 @@ namespace TGC.MonoGame.TP.FPS
 
         public Vector3 PreviousPosition;
 
-        static FreeCamera Camera;
+        public static FreeCamera Camera;
         static AStage Stage;
 
         #endregion
@@ -281,7 +281,6 @@ namespace TGC.MonoGame.TP.FPS
             }
             return 0;
         }
-
         #endregion
         
     }

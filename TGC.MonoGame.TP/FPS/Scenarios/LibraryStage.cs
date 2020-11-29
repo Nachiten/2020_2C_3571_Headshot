@@ -212,8 +212,8 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             Rooms[3].Add(enemy);
             Enemigos.Add(enemy);
 
-            //Player.Instance.Move(new Vector3(-5 * xLenFloor / 20, Player.Instance.Position.Y, zLenFloor / 8));
-            Player.Instance.Move(new Vector3(enemyPath[0].posicion.X-100, Player.Instance.Position.Y, enemyPath[0].posicion.Y));
+            Player.Instance.Move(new Vector3(-5 * xLenFloor / 20, Player.Instance.Position.Y, zLenFloor / 8));
+            //Player.Instance.Move(new Vector3(enemyPath[0].posicion.X-100, Player.Instance.Position.Y, enemyPath[0].posicion.Y));
 
             generarRecolectablesRandom();
 

@@ -93,7 +93,10 @@ namespace TGC.MonoGame.TP
         private SpriteFont font { get; set; }
         private BloomFilter _bloomFilter;
         private RenderTarget2D RenderTarget { get; set; }
-        private ModelCollidable Modelo3dMenu;
+        private RenderTarget2D RenderTargetBlurMenu;
+        private ModelCollidable Modelo3dMenu1;
+        private ModelCollidable Modelo3dMenu2;
+        private QuadPrimitiveCollidable Plane3dMenu;
         private FullScreenQuad fsq;
 
         /// <summary>
@@ -122,7 +125,7 @@ namespace TGC.MonoGame.TP
 
 
             var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
-            Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(10, 1, 0), screenSize);
+            Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(0, 5, 20), screenSize);
 
             interfaz = new PlayerGUI(this);
 
@@ -164,11 +167,29 @@ namespace TGC.MonoGame.TP
 
             _bloomFilter.BloomPreset = BloomFilter.BloomPresets.Cheap;
             RenderTarget = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24);
+            RenderTargetBlurMenu = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24);
 
             Effect = Content.Load<Effect>(ContentFolderEffect + "BasicShader");
-            Modelo3dMenu = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + "Knight/Knight_01", Matrix.CreateTranslation(Vector3.Zero));
-            Modelo3dMenu.SetEffect(Effect);
-            Modelo3dMenu.SetTexture(Content.Load<Texture2D>(ContentFolder3D + "Knight/Knight01_albedo"));
+            Effect.Parameters["screenSize"].SetValue(new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height));
+
+            Light light = new Light { Position = new Vector3(0, 30, 0), AmbientColor = Color.DarkRed, DiffuseColor = Color.White, SpecularColor = Color.White };
+
+            Modelo3dMenu1 = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + "Knight/Knight_01", Matrix.Identity);
+            Modelo3dMenu1.SetEffect(Effect);
+            Modelo3dMenu1.SetLightParameters(.3f, .6f, .1f, 10f);
+            Modelo3dMenu1.SetLight(light);
+            Modelo3dMenu1.SetTexture(Content.Load<Texture2D>(ContentFolder3D + "Knight/Knight01_albedo"));
+            Modelo3dMenu2 = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + "Knight/Knight_01", Matrix.Identity);
+            Modelo3dMenu2.SetEffect(Effect);
+            Modelo3dMenu2.SetLightParameters(.3f, .6f, .1f, 10f);
+            Modelo3dMenu2.SetLight(light);
+            Modelo3dMenu2.SetTexture(Content.Load<Texture2D>(ContentFolder3D + "Knight/Knight01_albedo"));
+
+            Plane3dMenu = new QuadPrimitiveCollidable(GraphicsDevice,Vector3.Zero,Vector3.UnitY, Vector3.UnitZ,50f,50f,
+                Content.Load<Texture2D>(ContentFolderTextures + "menu-floor"),Vector2.One*3);
+            Plane3dMenu.SetEffect(Effect);
+            Plane3dMenu.SetLightParameters(.3f, .6f, .1f, 10f);
+            Plane3dMenu.SetLight(light);
 
             fsq = new FullScreenQuad(GraphicsDevice);
 
@@ -214,6 +235,10 @@ namespace TGC.MonoGame.TP
                     // TODO | Reproducir sonido de player muerto | Index: 7
                     SoundManager.Instance.reproducirSonido(SoundManager.Sonido.MuerteJugador);
                     gameState = GameState.Finished;
+                    // Reset Camera
+                    Camera.ResetCamera(new Vector3(0, 5, 20));
+                    Modelo3dMenu1.SetEffect(Effect);
+                    Modelo3dMenu2.SetEffect(Effect);
                 }
             }
 
@@ -222,6 +247,18 @@ namespace TGC.MonoGame.TP
                 LoadGame();
                 
                 isLoading = false;
+            }
+
+            
+            if (gameState == GameState.StartMenu)
+            {
+                var time = (float)gameTime.TotalGameTime.TotalSeconds;
+                Matrix WorldModel = Matrix.CreateScale(0.05f) * Matrix.CreateRotationX(-MathHelper.PiOver2);
+                Modelo3dMenu1.Transform(WorldModel * Matrix.CreateRotationY(time) * Matrix.CreateTranslation(Vector3.UnitX * 7), false);
+                Modelo3dMenu2.Transform(WorldModel * Matrix.CreateRotationY(-time) * Matrix.CreateTranslation(-Vector3.UnitX * 7), false);
+                Modelo3dMenu1.SetCameraPos(Camera.Position);
+                Modelo3dMenu2.SetCameraPos(Camera.Position);
+                Plane3dMenu.SetCameraPos(Camera.Position);
             }
 
             base.Update(gameTime);
@@ -236,22 +273,35 @@ namespace TGC.MonoGame.TP
             //Handle game state
             if (gameState == GameState.StartMenu)
             {
+                // 1ra pasada (3d)
+                GraphicsDevice.SetRenderTarget(RenderTarget);
                 GraphicsDevice.Clear(Color.Black);
                 GraphicsDevice.DepthStencilState = DepthStencilState.Default;
                 GraphicsDevice.BlendState = BlendState.Opaque;
 
-                Modelo3dMenu.Draw(Camera.View, Camera.Projection);
+                Modelo3dMenu1.Draw(Camera.View, Camera.Projection);
+                Modelo3dMenu2.Draw(Camera.View, Camera.Projection);
+                Plane3dMenu.Draw(Camera.View, Camera.Projection);
 
+                // 2da pasada (Blur)
+                GraphicsDevice.SetRenderTarget(RenderTargetBlurMenu);
+                Effect.CurrentTechnique = Effect.Techniques["PostProcessingBlur"];
+                Effect.Parameters["RenderTargetTexture"].SetValue(RenderTarget);
+                fsq.Draw(Effect);
+
+                // 3ra pasada
+                GraphicsDevice.SetRenderTarget(null);
                 SpriteBatch.Begin(samplerState: GraphicsDevice.SamplerStates[0], rasterizerState: GraphicsDevice.RasterizerState);
+                SpriteBatch.Draw(RenderTargetBlurMenu, new Rectangle(0,0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
                 SpriteBatch.DrawString(font, "Seleccione un mapa", new Vector2((GraphicsDevice.Viewport.Width / 2) - 150, 75), Color.White);
 
                 var startRectangule = new Rectangle((int)startButtonPosition.X + 50, (int)startButtonPosition.Y, 200, 100);
                 SpriteBatch.Draw(startButton, startRectangule, Color.White);
-
-                //cambiar este boton por un seleccionar mapa
                 var otroMapaRect = new Rectangle((int)otroMapaPosition2.X + 50, (int)otroMapaPosition2.Y, 200, 100);
                 SpriteBatch.Draw(otroMapa, otroMapaRect, Color.White);
+
                 SpriteBatch.End();
+
             }
 
             if (gameState == GameState.Paused)
@@ -282,6 +332,7 @@ namespace TGC.MonoGame.TP
 
             if (gameState == GameState.Playing)
             {
+                // 1ra pasada (3d)
                 GraphicsDevice.SetRenderTarget(RenderTarget);
                 GraphicsDevice.Clear(Color.Black);
 
@@ -291,17 +342,19 @@ namespace TGC.MonoGame.TP
                 isLoading = false;
                 Stage.Draw(gameTime);
                 Player.Instance.Draw(gameTime);
-                interfaz.Draw(gameTime);
 
-                // Bloom Part
+                // 2da pasada (Bloom)
                 Texture2D bloom = _bloomFilter.Draw(RenderTarget, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
-
-                GraphicsDevice.SetRenderTarget(null);
+                GraphicsDevice.SetRenderTarget(RenderTargetBlurMenu);
 
                 Effect.CurrentTechnique = Effect.Techniques["PostProcessing"];
                 Effect.Parameters["RenderTargetTexture"].SetValue(RenderTarget);
                 Effect.Parameters["BloomTexture"].SetValue(bloom);
                 fsq.Draw(Effect);
+
+                // 3ra pasada
+                GraphicsDevice.SetRenderTarget(null);
+                interfaz.Draw(gameTime, RenderTargetBlurMenu);
             }
 
             if (gameState == GameState.Finished)
