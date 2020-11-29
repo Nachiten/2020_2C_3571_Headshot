@@ -92,8 +92,9 @@ namespace TGC.MonoGame.TP
         private PlayerGUI interfaz { get; set; }
         private SpriteFont font { get; set; }
         private BloomFilter _bloomFilter;
-        SpriteBatch _spriteBatch;
         private RenderTarget2D RenderTarget { get; set; }
+        private ModelCollidable Modelo3dMenu;
+        private FullScreenQuad fsq;
 
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
@@ -121,7 +122,7 @@ namespace TGC.MonoGame.TP
 
 
             var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
-            Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(0, 100, 0), screenSize);
+            Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(10, 1, 0), screenSize);
 
             interfaz = new PlayerGUI(this);
 
@@ -161,10 +162,15 @@ namespace TGC.MonoGame.TP
             _bloomFilter = new BloomFilter();
             _bloomFilter.Load(GraphicsDevice, Content, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
-            _bloomFilter.BloomPreset = BloomFilter.BloomPresets.SuperWide;
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            _bloomFilter.BloomPreset = BloomFilter.BloomPresets.Cheap;
             RenderTarget = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24);
 
+            Effect = Content.Load<Effect>(ContentFolderEffect + "BasicShader");
+            Modelo3dMenu = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + "Knight/Knight_01", Matrix.CreateTranslation(Vector3.Zero));
+            Modelo3dMenu.SetEffect(Effect);
+            Modelo3dMenu.SetTexture(Content.Load<Texture2D>(ContentFolder3D + "Knight/Knight01_albedo"));
+
+            fsq = new FullScreenQuad(GraphicsDevice);
 
             base.LoadContent();
         }
@@ -205,7 +211,6 @@ namespace TGC.MonoGame.TP
                     gameState = GameState.Paused;
                 }
                 if (Player.Instance.Health <= 0) {
-                    Debug.WriteLine("Me mori");
                     // TODO | Reproducir sonido de player muerto | Index: 7
                     SoundManager.Instance.reproducirSonido(SoundManager.Sonido.MuerteJugador);
                     gameState = GameState.Finished;
@@ -220,6 +225,101 @@ namespace TGC.MonoGame.TP
             }
 
             base.Update(gameTime);
+        }
+
+        /// <summary>
+        ///     Se llama cada vez que hay que refrescar la pantalla.
+        ///     Escribir aquí todo el código referido al renderizado.
+        /// </summary>
+        protected override void Draw(GameTime gameTime)
+        {
+            //Handle game state
+            if (gameState == GameState.StartMenu)
+            {
+                GraphicsDevice.Clear(Color.Black);
+                GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+                GraphicsDevice.BlendState = BlendState.Opaque;
+
+                Modelo3dMenu.Draw(Camera.View, Camera.Projection);
+
+                SpriteBatch.Begin(samplerState: GraphicsDevice.SamplerStates[0], rasterizerState: GraphicsDevice.RasterizerState);
+                SpriteBatch.DrawString(font, "Seleccione un mapa", new Vector2((GraphicsDevice.Viewport.Width / 2) - 150, 75), Color.White);
+
+                var startRectangule = new Rectangle((int)startButtonPosition.X + 50, (int)startButtonPosition.Y, 200, 100);
+                SpriteBatch.Draw(startButton, startRectangule, Color.White);
+
+                //cambiar este boton por un seleccionar mapa
+                var otroMapaRect = new Rectangle((int)otroMapaPosition2.X + 50, (int)otroMapaPosition2.Y, 200, 100);
+                SpriteBatch.Draw(otroMapa, otroMapaRect, Color.White);
+                SpriteBatch.End();
+            }
+
+            if (gameState == GameState.Paused)
+            {
+                GraphicsDevice.Clear(Color.Black);
+                GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+                GraphicsDevice.BlendState = BlendState.Opaque;
+
+                SpriteBatch.Begin(samplerState: GraphicsDevice.SamplerStates[0], rasterizerState: GraphicsDevice.RasterizerState);
+                var resumeRectangule = new Rectangle((int)resumeButtonPosition.X + 50, (int)resumeButtonPosition.Y, 200, 100);
+                SpriteBatch.Draw(resumeButton, resumeRectangule, Color.White);
+
+                var exitRectangule = new Rectangle((int)exitButtonPosition.X + 50, (int)exitButtonPosition.Y, 200, 100);
+                SpriteBatch.Draw(exitButton, exitRectangule, Color.White);
+                SpriteBatch.End();
+            }
+
+            if (gameState == GameState.Loading)
+            {
+                GraphicsDevice.Clear(Color.Black);
+                GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+                GraphicsDevice.BlendState = BlendState.Opaque;
+
+                SpriteBatch.Begin(samplerState: GraphicsDevice.SamplerStates[0], rasterizerState: GraphicsDevice.RasterizerState);
+                SpriteBatch.Draw(loadingScreen, new Vector2((GraphicsDevice.Viewport.Width / 2) - loadingScreen.Width / 2, (GraphicsDevice.Viewport.Height / 2) - loadingScreen.Height / 2), Color.White);
+                SpriteBatch.End();
+            }
+
+            if (gameState == GameState.Playing)
+            {
+                GraphicsDevice.SetRenderTarget(RenderTarget);
+                GraphicsDevice.Clear(Color.Black);
+
+                GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+                GraphicsDevice.BlendState = BlendState.Opaque;
+
+                isLoading = false;
+                Stage.Draw(gameTime);
+                Player.Instance.Draw(gameTime);
+                interfaz.Draw(gameTime);
+
+                // Bloom Part
+                Texture2D bloom = _bloomFilter.Draw(RenderTarget, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+
+                GraphicsDevice.SetRenderTarget(null);
+
+                Effect.CurrentTechnique = Effect.Techniques["PostProcessing"];
+                Effect.Parameters["RenderTargetTexture"].SetValue(RenderTarget);
+                Effect.Parameters["BloomTexture"].SetValue(bloom);
+                fsq.Draw(Effect);
+            }
+
+            if (gameState == GameState.Finished)
+            {
+                GraphicsDevice.Clear(Color.Black);
+                GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+                GraphicsDevice.BlendState = BlendState.Opaque;
+
+                SpriteBatch.Begin(samplerState: GraphicsDevice.SamplerStates[0], rasterizerState: GraphicsDevice.RasterizerState);
+                SpriteBatch.DrawString(font, "GAME OVER", new Vector2((GraphicsDevice.Viewport.Width / 2) - 100, GraphicsDevice.Viewport.Height / 2 - 150), Color.White);
+                SpriteBatch.DrawString(font, "Score: " + Player.Instance.Score, new Vector2((GraphicsDevice.Viewport.Width / 2) - 80, GraphicsDevice.Viewport.Height / 2 - 100), Color.White);
+
+                var returnRectangle = new Rectangle((int)resumeButtonPosition.X + 50, (int)resumeButtonPosition.Y, 200, 100);
+                SpriteBatch.Draw(returnButton, returnRectangle, Color.White);
+                SpriteBatch.End();
+            }
+
+            base.Draw(gameTime);
         }
         void MouseClicked(int x, int y)
         {
@@ -238,7 +338,8 @@ namespace TGC.MonoGame.TP
                     isLoading = false;
                     Player.Init(this, Camera, Stage);
                 }
-                if (mouseClickRect.Intersects(otroMapaRect)) {
+                if (mouseClickRect.Intersects(otroMapaRect))
+                {
                     Stage = new MazeStage(this);
                     gameState = GameState.Loading;
                     isLoading = false;
@@ -246,7 +347,8 @@ namespace TGC.MonoGame.TP
                 }
             }
 
-            if (gameState == GameState.Paused) {
+            if (gameState == GameState.Paused)
+            {
 
                 var resumeButtonRect = new Rectangle((int)resumeButtonPosition.X + 50, (int)resumeButtonPosition.Y, 200, 100);
 
@@ -262,7 +364,8 @@ namespace TGC.MonoGame.TP
                     Exit();
                 }
             }
-            if (gameState == GameState.Finished) {
+            if (gameState == GameState.Finished)
+            {
                 var resumeButtonRect = new Rectangle((int)resumeButtonPosition.X + 50, (int)resumeButtonPosition.Y, 200, 100);
 
                 if (mouseClickRect.Intersects(resumeButtonRect))
@@ -282,84 +385,6 @@ namespace TGC.MonoGame.TP
             Stage.LoadContent();
             gameState = GameState.Playing;
             isLoading = false;
-        }
-
-        /// <summary>
-        ///     Se llama cada vez que hay que refrescar la pantalla.
-        ///     Escribir aquí todo el código referido al renderizado.
-        /// </summary>
-        protected override void Draw(GameTime gameTime)
-        {
-            GraphicsDevice.SetRenderTarget(RenderTarget);
-            GraphicsDevice.Clear(Color.Black);
-
-            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            GraphicsDevice.BlendState = BlendState.Opaque;
-
-            //Handle game state
-            if (gameState == GameState.StartMenu)
-            {
-                SpriteBatch.Begin(samplerState: GraphicsDevice.SamplerStates[0], rasterizerState: GraphicsDevice.RasterizerState);
-                SpriteBatch.DrawString(font, "Seleccione un mapa", new Vector2((GraphicsDevice.Viewport.Width / 2) - 150, 75), Color.White);
-
-                var startRectangule = new Rectangle((int)startButtonPosition.X + 50, (int)startButtonPosition.Y, 200, 100);
-                SpriteBatch.Draw(startButton, startRectangule, Color.White);
-
-                //cambiar este boton por un seleccionar mapa
-                var otroMapaRect = new Rectangle((int)otroMapaPosition2.X + 50, (int)otroMapaPosition2.Y, 200, 100);
-                SpriteBatch.Draw(otroMapa, otroMapaRect, Color.White);
-                SpriteBatch.End();
-            }
-
-            if (gameState == GameState.Paused) {
-                SpriteBatch.Begin(samplerState: GraphicsDevice.SamplerStates[0], rasterizerState: GraphicsDevice.RasterizerState);
-                var resumeRectangule = new Rectangle((int)resumeButtonPosition.X + 50, (int)resumeButtonPosition.Y, 200, 100);
-                SpriteBatch.Draw(resumeButton, resumeRectangule, Color.White);
-
-                var exitRectangule = new Rectangle((int)exitButtonPosition.X + 50, (int)exitButtonPosition.Y, 200, 100);
-                SpriteBatch.Draw(exitButton, exitRectangule, Color.White);
-                SpriteBatch.End();
-            }
-
-            if (gameState == GameState.Loading)
-            {
-                SpriteBatch.Begin(samplerState: GraphicsDevice.SamplerStates[0], rasterizerState: GraphicsDevice.RasterizerState);
-                SpriteBatch.Draw(loadingScreen, new Vector2((GraphicsDevice.Viewport.Width / 2) - loadingScreen.Width / 2, (GraphicsDevice.Viewport.Height / 2) - loadingScreen.Height / 2), Color.White);
-                SpriteBatch.End();
-            }
-
-            if (gameState == GameState.Playing)
-            {
-                isLoading = false;
-                Stage.Draw(gameTime);
-                Player.Instance.Draw(gameTime);
-                interfaz.Draw(gameTime);
-            }
-
-            if (gameState == GameState.Finished) {
-                SpriteBatch.Begin(samplerState: GraphicsDevice.SamplerStates[0], rasterizerState: GraphicsDevice.RasterizerState);
-                SpriteBatch.DrawString(font, "GAME OVER", new Vector2((GraphicsDevice.Viewport.Width / 2) - 100, GraphicsDevice.Viewport.Height / 2 - 150), Color.White);
-                SpriteBatch.DrawString(font, "Score: " + Player.Instance.Score, new Vector2((GraphicsDevice.Viewport.Width / 2) - 80, GraphicsDevice.Viewport.Height / 2 - 100), Color.White);
-
-                var returnRectangle = new Rectangle((int)resumeButtonPosition.X + 50, (int)resumeButtonPosition.Y, 200, 100);
-                SpriteBatch.Draw(returnButton, returnRectangle, Color.White);
-                SpriteBatch.End();
-            }
-
-            Texture2D bloom = _bloomFilter.Draw(RenderTarget, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
-
-            GraphicsDevice.SetRenderTarget(null);
-
-            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
-
-            _spriteBatch.Draw(RenderTarget, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-            _spriteBatch.Draw(bloom, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-
-
-            _spriteBatch.End();
-
-
-            base.Draw(gameTime);
         }
 
         private float VectorsAngle(Vector3 v1, Vector3 v2)

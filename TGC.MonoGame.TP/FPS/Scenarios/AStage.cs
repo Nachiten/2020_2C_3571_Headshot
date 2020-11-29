@@ -187,16 +187,16 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
                 foreach (ARecolectable R in Recolectables)
                 {
-                    R.Modelo.World.Decompose(out Vector3 scale, out Quaternion rotation, out Vector3 translation);
-                    AABBDraw.Draw(Matrix.CreateScale(R.Modelo.Aabb.size.X * scaleFactor, R.Modelo.Aabb.size.Y * scaleFactor, R.Modelo.Aabb.size.Z * scaleFactor) * Matrix.CreateTranslation(translation), View, Projection);
+                    //R.Modelo.World.Decompose(out Vector3 scale, out Quaternion rotation, out Vector3 translation);
+                    AABBDraw.Draw(Matrix.CreateScale(R.Modelo.Aabb.size * scaleFactor) * Matrix.CreateTranslation(R.Modelo.Aabb.Position), View, Projection);
                 }
                 foreach (Enemigo unEnemigo in Enemigos)
                 {
-                    AABBDraw.Draw(Matrix.CreateScale(unEnemigo.Model.Aabb.size.X * scaleFactor, unEnemigo.Model.Aabb.size.Y * scaleFactor, unEnemigo.Model.Aabb.size.Z * scaleFactor) * Matrix.CreateTranslation(unEnemigo.Model.Aabb.Position), View, Projection);
+                    AABBDraw.Draw(Matrix.CreateScale(unEnemigo.Model.Aabb.size * scaleFactor) * Matrix.CreateTranslation(unEnemigo.Model.Aabb.Position), View, Projection);
                 }
                 foreach (AABB aabb in Boxes)
                 {
-                    AABBDraw.Draw(Matrix.CreateScale(aabb.size.X * scaleFactor, aabb.size.Y * scaleFactor, aabb.size.Z * scaleFactor) * Matrix.CreateTranslation(aabb.Position), View, Projection);
+                    AABBDraw.Draw(Matrix.CreateScale(aabb.size * scaleFactor) * Matrix.CreateTranslation(aabb.Position), View, Projection);
                 }
 
                 var rasterizerStateSolid = new RasterizerState();

@@ -28,7 +28,7 @@ namespace TGC.MonoGame.TP.Utils{
             World = world;
             if(dynamic)
             {
-                World.Decompose(out Vector3 scale, out Quaternion rotation, out Vector3 translation);;
+                World.Decompose(out Vector3 scale, out Quaternion rotation, out Vector3 translation);
                 Aabb.Translation(translation);
             }
         }

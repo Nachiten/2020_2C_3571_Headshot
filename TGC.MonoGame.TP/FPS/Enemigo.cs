@@ -96,6 +96,8 @@ namespace TGC.MonoGame.TP
         {
             Model = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + "Knight/Knight_01", World);
 
+            UpdateAABB();
+
             Aabb = Model.Aabb;
 
             Collision.Instance.AppendStatic(Model.Aabb);
@@ -178,8 +180,17 @@ namespace TGC.MonoGame.TP
             World *= Matrix.CreateTranslation(posicion);
             Model.Transform(World, true);
 
+            UpdateAABB();
+
             // Actualizo la vista
             UpdateLineOfSight();
+        }
+        public void UpdateAABB()
+        {
+            float xOffset = 20;
+            float zOffset = 20;
+            float ymax = 150;
+            Model.Aabb.SetManually(new Vector3(posicion.X - xOffset, 0, posicion.Z - zOffset), new Vector3(posicion.X + xOffset, ymax, posicion.Z + zOffset));
         }
         private void HandleDeadAnimation(GameTime GameTime)
         {
