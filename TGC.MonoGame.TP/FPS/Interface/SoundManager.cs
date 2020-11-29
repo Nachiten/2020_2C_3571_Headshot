@@ -30,6 +30,7 @@ namespace TGC.MonoGame.TP.FPS.Interface
         private SoundEffect recolectarWeapon;
         private SoundEffect pegarEnemigo;
         private SoundEffect matarEnemigo;
+        private SoundEffect pegarJugador;
         private Song muerteJugador;
         private Song cancionBackground;
         private ContentManager Content;
@@ -43,7 +44,8 @@ namespace TGC.MonoGame.TP.FPS.Interface
             RecolectarWeapon,
             PegarEnemigo,
             MatarEnemigo,
-            MuerteJugador
+            MuerteJugador,
+            PegarJugador
         }
 
         private void cargarContenido() {
@@ -54,6 +56,7 @@ namespace TGC.MonoGame.TP.FPS.Interface
             recolectarWeapon = Content.Load<SoundEffect>(soundPath + "GunPickUp");
             pegarEnemigo = Content.Load<SoundEffect>(soundPath + "EnemyHitOof");
             matarEnemigo = Content.Load<SoundEffect>(soundPath + "EnemyKillWindowsXP");
+            pegarJugador = Content.Load<SoundEffect>(soundPath + "PlayerHit");
 
             // Canciones
             muerteJugador = Content.Load<Song>(soundPath + "PlayerDeathTitanic");
@@ -82,6 +85,9 @@ namespace TGC.MonoGame.TP.FPS.Interface
                     break;
                 case Sonido.MuerteJugador:
                     MediaPlayer.Play(muerteJugador);
+                    break;
+                case Sonido.PegarJugador:
+                    pegarJugador.Play();
                     break;
                 default:
                     Debug.WriteLine("ERROR | Codigo de sonido invalido");

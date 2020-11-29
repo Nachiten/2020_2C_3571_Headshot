@@ -157,11 +157,13 @@ namespace TGC.MonoGame.TP.FPS
             }
         }
 
-        public void RecibirDisparo(int cantidadDanio) {
-            if (this.Health > 0) {
-                this.Health -= cantidadDanio;
-            }
-        }
+        //public void RecibirDisparo(int cantidadDanio) {
+        //    SoundManager.Instance.reproducirSonido(SoundManager.Sonido.PegarJugador);
+        //    Debug.WriteLine("Entre a recibir disparo");
+        //    if (this.Health > 0) {
+        //        this.Health -= cantidadDanio;
+        //    }
+        //}
 
         public bool sumarVida(int cantidadVida)
         {
@@ -224,6 +226,7 @@ namespace TGC.MonoGame.TP.FPS
 
         public override void GetDamaged(int damage)
         {
+            SoundManager.Instance.reproducirSonido(SoundManager.Sonido.PegarJugador);
             int armorDamage = damage;
             int healthDamage;
             if (Armor < 0)
