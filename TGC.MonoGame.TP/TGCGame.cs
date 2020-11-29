@@ -73,7 +73,7 @@ namespace TGC.MonoGame.TP
         private Vector2 resumeButtonPosition;
 
 
-        private Thread backgroundThreat;
+        private Thread backgroundThread;
 
         private bool isLoading = false;
 
@@ -191,6 +191,7 @@ namespace TGC.MonoGame.TP
             Plane3dMenu.SetLightParameters(.3f, .6f, .1f, 10f);
             Plane3dMenu.SetLight(light);
 
+            SoundManager.Instance.reproducirSonido(SoundManager.Sonido.Menu);
             fsq = new FullScreenQuad(GraphicsDevice);
 
             base.LoadContent();
@@ -215,9 +216,9 @@ namespace TGC.MonoGame.TP
 
             if (gameState == GameState.Loading && !isLoading)
             {
-                backgroundThreat = new Thread(LoadGame);
+                backgroundThread = new Thread(LoadGame);
                 isLoading = true;
-                backgroundThreat.Start();
+                backgroundThread.Start();
 
             }
 
@@ -232,7 +233,6 @@ namespace TGC.MonoGame.TP
                     gameState = GameState.Paused;
                 }
                 if (Player.Instance.Health <= 0) {
-                    // TODO | Reproducir sonido de player muerto | Index: 7
                     SoundManager.Instance.reproducirSonido(SoundManager.Sonido.MuerteJugador);
                     gameState = GameState.Finished;
                     // Reset Camera
@@ -245,7 +245,6 @@ namespace TGC.MonoGame.TP
             if (gameState == GameState.Playing && isLoading)
             {
                 LoadGame();
-                
                 isLoading = false;
             }
 
@@ -259,6 +258,7 @@ namespace TGC.MonoGame.TP
                 Modelo3dMenu1.SetCameraPos(Camera.Position);
                 Modelo3dMenu2.SetCameraPos(Camera.Position);
                 Plane3dMenu.SetCameraPos(Camera.Position);
+                SoundManager.Instance.reproducirSonido(SoundManager.Sonido.Menu);
             }
 
             base.Update(gameTime);

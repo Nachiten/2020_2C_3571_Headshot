@@ -1,11 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
-using System.Text;
-using TGC.MonoGame.Samples.Cameras;
 using TGC.MonoGame.TP.Utils;
+using TGC.MonoGame.TP.FPS.Interface;
 
 namespace TGC.MonoGame.TP.FPS.Scenarios
 {
@@ -173,6 +170,8 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             var skyBoxTexture = Game.Content.Load<TextureCube>(FPSManager.ContentFolderTextures + "/skyboxes/skybox/skybox");
             var skyBoxEffect = Game.Content.Load<Effect>(FPSManager.ContentFolderEffect + "SkyBox");
             SkyBox = new SkyBox(skyBox, skyBoxTexture, skyBoxEffect);
+
+            SoundManager.Instance.comenzarMusica(SoundManager.Musica.MazeStage);
 
             base.LoadContent();
         }

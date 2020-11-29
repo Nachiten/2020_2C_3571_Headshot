@@ -217,7 +217,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
             generarRecolectablesRandom();
 
-            SoundManager.Instance.comenzarMusica();
+            SoundManager.Instance.comenzarMusica(SoundManager.Musica.LibraryStage);
 
             base.LoadContent();
         }

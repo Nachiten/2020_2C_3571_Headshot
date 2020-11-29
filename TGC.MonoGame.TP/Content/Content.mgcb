@@ -919,11 +919,17 @@
 /processorParam:Quality=Best
 /build:Sounds/PlayerHit.mp3
 
-#begin Sounds/Song.mp3
+#begin Sounds/Vaporwave.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:Sounds/Song.mp3
+/build:Sounds/Vaporwave.mp3
+
+#begin Sounds/yyz.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sounds/yyz.mp3
 
 #begin SpriteFonts/Arial.spritefont
 /importer:FontDescriptionImporter

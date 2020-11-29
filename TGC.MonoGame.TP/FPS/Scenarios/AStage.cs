@@ -121,18 +121,6 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
             foreach (Enemigo unEnemigo in Enemigos)
             {
-                if (unEnemigo.IsDead())
-                {
-                    // TODO Reproducir sonido de muerto | Index: 6
-                    SoundManager.Instance.reproducirSonido(SoundManager.Sonido.MatarEnemigo);
-                    Player.Instance.AddScore(EnemyDeadScore);
-                    unEnemigo.TriggerDead = true;
-                    unEnemigo.Revivir();
-                }
-            }
-
-            foreach (Enemigo unEnemigo in Enemigos)
-            {
                 var position = ((TGCGame)Game).Camera.Position;
                 unEnemigo.Update(gameTime, position);
             }

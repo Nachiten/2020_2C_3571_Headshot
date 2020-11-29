@@ -48,15 +48,6 @@ namespace TGC.MonoGame.TP
         private bool foward = true;
         public List<PathTrace> path = new List<PathTrace>();
 
-        private Vector3 posicionObjetivo = Vector3.Zero;
-        private bool StartedMoving = false;
-        Vector3[] PosibleDirections = new[]
-        {
-            Vector3.UnitX,
-            Vector3.UnitZ,
-            -Vector3.UnitX,
-            -Vector3.UnitZ
-        };
         #region animation
         public bool TriggerDead = false;
         double frameTimePlayed = 0; //Amount of time (out of animationTime) that the animation has been playing for
@@ -160,7 +151,7 @@ namespace TGC.MonoGame.TP
             HandleDeadAnimation(gameTime);
 
 
-            if (Math.Round(gameTime.TotalGameTime.TotalMilliseconds) % (shootTimeSeconds * 1000) == 0 && !shooting)
+            if (Math.Round(gameTime.TotalGameTime.TotalMilliseconds) % (shootTimeSeconds * 1000) == 0 && !shooting && health > 0)
             {
                 shooting = true;
                 Collision.Instance.CheckShootable(LineOfSight, this, ShootableCollisionCB);
@@ -296,19 +287,26 @@ namespace TGC.MonoGame.TP
 
         public override void GetDamaged(int damage)
         {
+            if (health <= 0)
+                return;
+
+            SoundManager.Instance.reproducirSonido(SoundManager.Sonido.PegarEnemigo);
             if (health - damage < 0)
             {
                 health = 0;
+                HandleDeath();
             } else
             {
-                // TODO | Reproducir sonido que le pegue | Index 5
-                SoundManager.Instance.reproducirSonido(SoundManager.Sonido.PegarEnemigo);
                 health -= damage;
+                if(health == 0)
+                    HandleDeath();
             }
         }
-        public bool IsDead()
+        public void HandleDeath()
         {
-            return health == 0;
+            SoundManager.Instance.reproducirSonido(SoundManager.Sonido.MatarEnemigo);
+            Player.Instance.AddScore(100);
+            TriggerDead = true;
         }
         public void Reiniciar()
         {

@@ -24,6 +24,7 @@ namespace TGC.MonoGame.TP.FPS.Interface
         }
         #endregion
 
+        // Effects
         private SoundEffect sonidoDisparo;
         private SoundEffect recolectarHealth;
         private SoundEffect recolectarArmor;
@@ -31,8 +32,12 @@ namespace TGC.MonoGame.TP.FPS.Interface
         private SoundEffect pegarEnemigo;
         private SoundEffect matarEnemigo;
         private SoundEffect pegarJugador;
-        private Song muerteJugador;
-        private Song cancionBackground;
+        // Songs
+        private Song muerteJugadorSong;
+        private Song menuSong;
+        private Song librarySong;
+        private Song mazeSong;
+        // Other Stuff
         private ContentManager Content;
         private String soundPath = "Sounds/";
 
@@ -45,7 +50,13 @@ namespace TGC.MonoGame.TP.FPS.Interface
             PegarEnemigo,
             MatarEnemigo,
             MuerteJugador,
-            PegarJugador
+            PegarJugador,
+            Menu
+        }
+        public enum Musica
+        {
+            LibraryStage = 1,
+            MazeStage
         }
 
         private void cargarContenido() {
@@ -59,8 +70,10 @@ namespace TGC.MonoGame.TP.FPS.Interface
             pegarJugador = Content.Load<SoundEffect>(soundPath + "PlayerHit");
 
             // Canciones
-            muerteJugador = Content.Load<Song>(soundPath + "PlayerDeathTitanic");
-            cancionBackground = Content.Load<Song>(soundPath + "Song");
+            muerteJugadorSong = Content.Load<Song>(soundPath + "PlayerDeathTitanic");
+            menuSong = Content.Load<Song>(soundPath + "vaporwave");
+            librarySong = Content.Load<Song>(soundPath + "yyz");
+            mazeSong = Content.Load<Song>(soundPath + "yyz");
         }
 
         public void reproducirSonido(Sonido idSonido) {
@@ -84,7 +97,10 @@ namespace TGC.MonoGame.TP.FPS.Interface
                     matarEnemigo.Play();
                     break;
                 case Sonido.MuerteJugador:
-                    MediaPlayer.Play(muerteJugador);
+                    MediaPlayer.Play(muerteJugadorSong);
+                    break;
+                case Sonido.Menu:
+                    MediaPlayer.Play(menuSong);
                     break;
                 case Sonido.PegarJugador:
                     pegarJugador.Play();
@@ -99,8 +115,19 @@ namespace TGC.MonoGame.TP.FPS.Interface
             MediaPlayer.Stop();
         }
 
-        public void comenzarMusica() {
-            MediaPlayer.Play(cancionBackground);
+        public void comenzarMusica(Musica idMusica) {
+            switch (idMusica)
+            {
+                case Musica.LibraryStage:
+                    MediaPlayer.Play(librarySong);
+                    break;
+                case Musica.MazeStage:
+                    MediaPlayer.Play(mazeSong);
+                    break;
+                default:
+                    Debug.WriteLine("ERROR | Codigo de cancion invalido");
+                    break;
+            }
         }
 
     }
