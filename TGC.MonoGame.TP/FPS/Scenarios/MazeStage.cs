@@ -201,15 +201,18 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
             foreach (QuadPrimitiveCollidable q in Quads)
             {
-                q.Draw(View, Projection);
+                if (Player.Camera.InView(q.aabb))
+                    q.Draw(View, Projection);
             }
             foreach (WallCollidable w in Walls)
             {
-                w.Draw(View, Projection);
+                if (w.InView(Player.Camera))
+                    w.Draw(View, Projection);
             }
-            foreach (ModelCollidable unModelo in Columnas)
+            foreach (ModelCollidable c in Columnas)
             {
-                unModelo.Draw(View, Projection);
+                if (Player.Camera.InView(c.Aabb))
+                    c.Draw(View, Projection);
             }
         }
 

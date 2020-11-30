@@ -1,10 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TGC.MonoGame.TP.Utils;
 using TGC.MonoGame.TP.FPS.Scenarios;
+using TGC.MonoGame.Samples.Cameras;
 
 namespace TGC.MonoGame.TP.FPS
 {
@@ -65,6 +63,20 @@ namespace TGC.MonoGame.TP.FPS
             Left.SetLight(Light);
             Right.SetLight(Light);
             Bottom.SetLight(Light);
+        }
+        public bool InView(FreeCamera Camera)
+        {
+            if (Camera.InView(Front.aabb))
+                return true;
+            if (Camera.InView(Back.aabb))
+                return true;
+            if (Camera.InView(Left.aabb))
+                return true;
+            if (Camera.InView(Right.aabb))
+                return true;
+            if (Camera.InView(Bottom.aabb))
+                return true;
+            return false;
         }
     }
 }

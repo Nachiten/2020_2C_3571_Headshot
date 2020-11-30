@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using TGC.MonoGame.TP.FPS.Interface;
+using TGC.MonoGame.TP.Utils;
 
 namespace TGC.MonoGame.Samples.Cameras
 {
@@ -70,6 +71,10 @@ namespace TGC.MonoGame.Samples.Cameras
             // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
             RightDirection = Vector3.Normalize(Vector3.Cross(FrontDirection, Vector3.Up));
             UpDirection = Vector3.Normalize(Vector3.Cross(RightDirection, FrontDirection));
+        }
+        public bool InView(AABB box)
+        {
+            return new BoundingFrustum(View * Projection).Intersects(box.boundingBox);
         }
     }
 }

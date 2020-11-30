@@ -138,18 +138,22 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         {
             View = ((TGCGame)Game).Camera.View;
             Projection = ((TGCGame)Game).Camera.Projection;
+
             foreach (ARecolectable R in Recolectables)
             {
-                R.Draw(View, Projection);
+                if (Player.Camera.InView(R.Modelo.Aabb))
+                    R.Draw(View, Projection);
             }
 
             foreach (Enemigo unEnemigo in Enemigos)
             {
-                unEnemigo.Draw(View, Projection);
+                if (Player.Camera.InView(unEnemigo.Aabb))
+                    unEnemigo.Draw(View, Projection);
             }
             foreach (var l in Lamps)
             {
-                l.Draw(View, Projection);
+                if (Player.Camera.InView(l.Aabb))
+                    l.Draw(View, Projection);
             }
 
             if (Config.drawAxis)
@@ -175,7 +179,6 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
                 foreach (ARecolectable R in Recolectables)
                 {
-                    //R.Modelo.World.Decompose(out Vector3 scale, out Quaternion rotation, out Vector3 translation);
                     AABBDraw.Draw(Matrix.CreateScale(R.Modelo.Aabb.size * scaleFactor) * Matrix.CreateTranslation(R.Modelo.Aabb.Position), View, Projection);
                 }
                 foreach (Enemigo unEnemigo in Enemigos)

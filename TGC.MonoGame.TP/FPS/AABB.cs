@@ -9,7 +9,7 @@ namespace TGC.MonoGame.TP.Utils{
         public Vector3 minExtents { get; set; }
         //public Matrix world;
         public Vector3 size;
-        BoundingBox boundingBox;
+        public BoundingBox boundingBox;
         public Vector3 Position;
 
         public AABB(GraphicsDevice gd, Vector3 size){
