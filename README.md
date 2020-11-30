@@ -29,17 +29,17 @@ Los recursos usados se almacenan utilizando [Git LFS](https://git-lfs.github.com
 ## Integrantes
 Foto Perfil | Apellido, Nombre
 ------------ | -------------
-<img src="https://github.com/Nachiten/2020_2C_3571_Headshot/blob/master/imagenes/FotoNacho.jpg" height="500" width="500"> | Baptista, Ignacio
-Imagen Alejo | Aceval, Alejo
-Imagen Mati | Martello, Matias
+<img src="https://github.com/Nachiten/2020_2C_3571_Headshot/blob/master/imagenes/FotoNacho.jpg" height="250" width="250"> | Baptista, Ignacio
+<img src="https://github.com/Nachiten/2020_2C_3571_Headshot/blob/master/imagenes/fotoMati.jpg" height="250" width="250"> | Aceval, Alejo
+<img src="https://github.com/Nachiten/2020_2C_3571_Headshot/blob/master/imagenes/FotoAlejo.jpg" height="250" width="250"> | Martello, Matias
 
 
 ## Capturas
-![screenshot1](https://github.com/tgc-utn/tgc-monogame-tp/blob/master/imagenes/screenshot1.png)
-![screenshot2](https://github.com/tgc-utn/tgc-monogame-tp/blob/master/imagenes/screenshot2.png)
-![screenshot3](https://github.com/tgc-utn/tgc-monogame-tp/blob/master/imagenes/screenshot3.png)
-![screenshot4](https://github.com/tgc-utn/tgc-monogame-tp/blob/master/imagenes/screenshot4.png)
-![screenshot5](https://github.com/tgc-utn/tgc-monogame-tp/blob/master/imagenes/screenshot5.png)
+![screenshot1](https://github.com/Nachiten/2020_2C_3571_Headshot/blob/master/imagenes/screenshot1.png)
+![screenshot2](https://github.com/Nachiten/2020_2C_3571_Headshot/blob/master/imagenes/screenshot2.png)
+![screenshot3](https://github.com/Nachiten/2020_2C_3571_Headshot/blob/master/imagenes/screenshot3.png)
+![screenshot4](https://github.com/Nachiten/2020_2C_3571_Headshot/blob/master/imagenes/screenshot4.png)
+![screenshot5](https://github.com/Nachiten/2020_2C_3571_Headshot/blob/master/imagenes/screenshot5.png)
 
 ## Game Play
-![gameplay](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+[![gameplay](https://img.youtube.com/vi/pgEwUC0jvH4/0.jpg)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
