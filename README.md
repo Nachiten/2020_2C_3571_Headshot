@@ -27,16 +27,19 @@ Afuera del mundo Windows, vas a necesitar la ayudar de [Wine](https://www.winehq
 Los recursos usados se almacenan utilizando [Git LFS](https://git-lfs.github.com), con lo cual antes de hacer clone del repositorio les conviene tenerlo instalado así es automático el pull o si ya lo tienen pueden hacer ```git lfs pull```.
 
 ## Integrantes
-TGC, Tgcito  |  Apellido, Nombre
+Foto Perfil | Apellido, Nombre
 ------------ | -------------
-<img src="https://github.com/tgc-utn/tgc-utn.github.io/blob/master/images/robotgc.png" height="500"> | <img src="https://github.com/tgc-utn/tgc-utn.github.io/blob/master/images/trofeotp.png" height="500">
+<img src="https://github.com/Nachiten/2020_2C_3571_Headshot/blob/master/imagenes/FotoNacho.jpg" height="500" width="500"> | Baptista, Ignacio
+Imagen Alejo | Aceval, Alejo
+Imagen Mati | Martello, Matias
+
 
 ## Capturas
-![screenshot1](https://github.com/tgc-utn/tgc-monogame-tp/blob/master/TGC.MonoGame.TP/Icon.bmp)
-![screenshot2](https://github.com/tgc-utn/tgc-monogame-tp/blob/master/TGC.MonoGame.TP/Icon.bmp)
-![screenshot3](https://github.com/tgc-utn/tgc-monogame-tp/blob/master/TGC.MonoGame.TP/Icon.bmp)
-![screenshot4](https://github.com/tgc-utn/tgc-monogame-tp/blob/master/TGC.MonoGame.TP/Icon.bmp)
-![screenshot5](https://github.com/tgc-utn/tgc-monogame-tp/blob/master/TGC.MonoGame.TP/Icon.bmp)
+![screenshot1](https://github.com/tgc-utn/tgc-monogame-tp/blob/master/imagenes/screenshot1.png)
+![screenshot2](https://github.com/tgc-utn/tgc-monogame-tp/blob/master/imagenes/screenshot2.png)
+![screenshot3](https://github.com/tgc-utn/tgc-monogame-tp/blob/master/imagenes/screenshot3.png)
+![screenshot4](https://github.com/tgc-utn/tgc-monogame-tp/blob/master/imagenes/screenshot4.png)
+![screenshot5](https://github.com/tgc-utn/tgc-monogame-tp/blob/master/imagenes/screenshot5.png)
 
 ## Game Play
-[![Watch the video](https://img.youtube.com/vi/pgEwUC0jvH4/0.jpg)](https://www.youtube.com/playlist?list=PLRM4L32DjvnazuMl8wZlbpEYL5Qh63ulG)
+![gameplay](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
