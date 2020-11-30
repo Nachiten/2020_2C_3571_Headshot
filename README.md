@@ -5,7 +5,7 @@
 [#BuiltWithMonoGame](http://www.monogame.net) and [.NET Core](https://dotnet.microsoft.com)
 
 ## Descripción
-Proyecto plantilla para los trabajos prácticos de la asignatura electiva [Técnicas de Gráficos por Computadora](http://tgc-utn.github.io/) (TGC) en la carrera de Ingeniería en Sistemas de Información. Universidad Tecnológica Nacional, Facultad Regional Buenos Aires (UTN-FRBA).
+Resolución del tp del grupo Headshot en la materia Tecnicas de Graficos por Computadora (TGC) en la carrera de Ingeniería en Sistemas de Información. Universidad Tecnológica Nacional, Facultad Regional Buenos Aires (UTN-FRBA).
 
 ## Requisitos
 * [.NET Core SDK](https://docs.microsoft.com/dotnet/core/install/sdk)
@@ -29,9 +29,9 @@ Los recursos usados se almacenan utilizando [Git LFS](https://git-lfs.github.com
 ## Integrantes
 Foto Perfil | Apellido, Nombre
 ------------ | -------------
-<img src="https://github.com/Nachiten/2020_2C_3571_Headshot/blob/master/imagenes/FotoNacho.jpg" height="250" width="250"> | Baptista, Ignacio
-<img src="https://github.com/Nachiten/2020_2C_3571_Headshot/blob/master/imagenes/fotoMati.jpg" height="250" width="250"> | Aceval, Alejo
-<img src="https://github.com/Nachiten/2020_2C_3571_Headshot/blob/master/imagenes/FotoAlejo.jpg" height="250" width="250"> | Martello, Matias
+<img src="https://github.com/Nachiten/2020_2C_3571_Headshot/blob/master/imagenes/fotoNacho.jpg" height="250" width="250"> | Baptista, Ignacio
+<img src="https://github.com/Nachiten/2020_2C_3571_Headshot/blob/master/imagenes/fotoAlejo.jpg" height="250" width="250"> | Aceval, Alejo
+<img src="https://github.com/Nachiten/2020_2C_3571_Headshot/blob/master/imagenes/fotoMati.jpg" height="250" width="250"> | Martello, Matias
 
 
 ## Capturas
@@ -42,4 +42,4 @@ Foto Perfil | Apellido, Nombre
 ![screenshot5](https://github.com/Nachiten/2020_2C_3571_Headshot/blob/master/imagenes/screenshot5.png)
 
 ## Game Play
-[![gameplay](https://img.youtube.com/vi/pgEwUC0jvH4/0.jpg)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+[![gameplay](https://github.com/Nachiten/2020_2C_3571_Headshot/blob/master/imagenes/screenshot1.png)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
