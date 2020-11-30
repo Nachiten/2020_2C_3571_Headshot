@@ -13,6 +13,12 @@ using System.Threading;
 
 namespace TGC.MonoGame.TP
 {
+    public struct Button
+    {
+        public Texture2D Texture;
+        public Vector2 Position;
+        public Rectangle Rectangle;
+    }
     /// <summary>
     ///     Esta es la clase principal  del juego.
     ///     Inicialmente puede ser renombrado o copiado para hacer más ejemplos chicos, en el caso de copiar para que se
@@ -40,6 +46,8 @@ namespace TGC.MonoGame.TP
             Content.RootDirectory = "Content";
             // Hace que el mouse sea visible.
             IsMouseVisible = true;
+
+            resolution = new Resolution { Width = 1280, Height = 720 };
         }
 
         public enum GameState
@@ -50,28 +58,11 @@ namespace TGC.MonoGame.TP
             Paused,
             Finished
         }
-
-
-        private Texture2D startButton;
-
-        private Texture2D loadingScreen;
-
-        private Texture2D resumeButton;
-
-        private Texture2D returnButton;
-
-        private Texture2D exitButton;
-
-        private Texture2D otroMapa;
-
-        private Vector2 startButtonPosition;
-
-        private Vector2 otroMapaPosition2;
-
-        private Vector2 exitButtonPosition;
-
-        private Vector2 resumeButtonPosition;
-
+        public struct Resolution
+        {
+            public int Width;
+            public int Height;
+        }
 
         private Thread backgroundThread;
 
@@ -98,6 +89,12 @@ namespace TGC.MonoGame.TP
         private ModelCollidable Modelo3dMenu2;
         private QuadPrimitiveCollidable Plane3dMenu;
         private FullScreenQuad fsq;
+        public Resolution resolution;
+        private Button LibraryStageButt;
+        private Button MazeStageButt;
+        private Button ResumeButt;
+        private Button ExitButt;
+        private Button LoadingButt;
 
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
@@ -106,6 +103,9 @@ namespace TGC.MonoGame.TP
         protected override void Initialize()
         {
             Collision.Init();
+            Graphics.PreferredBackBufferWidth = resolution.Width;
+            Graphics.PreferredBackBufferHeight = resolution.Height;
+            Graphics.ApplyChanges();
 
             var rasterizerState = new RasterizerState();
             rasterizerState.CullMode = CullMode.None;
@@ -113,18 +113,10 @@ namespace TGC.MonoGame.TP
 
             font = Content.Load<SpriteFont>(ContentFolderSpriteFonts + "Arial");
 
-            startButtonPosition = new Vector2((GraphicsDevice.Viewport.Height / 2), 150);
-
-            otroMapaPosition2 = new Vector2((GraphicsDevice.Viewport.Height / 2), 300);
-
-            resumeButtonPosition = new Vector2((GraphicsDevice.Viewport.Height / 2), 200);
-
-            exitButtonPosition = new Vector2((GraphicsDevice.Viewport.Height / 2), 300);
-
             gameState = GameState.StartMenu;
 
 
-            var screenSize = new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
+            var screenSize = new Point(resolution.Width / 2, resolution.Height / 2);
             Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(0, 5, 20), screenSize);
 
             interfaz = new PlayerGUI(this);
@@ -149,28 +141,21 @@ namespace TGC.MonoGame.TP
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
             //Menu
-
-            startButton = Content.Load<Texture2D>(ContentFolderTextures + "library");
-
-            otroMapa = Content.Load<Texture2D>(ContentFolderTextures + "maze-level");
-
-            exitButton = Content.Load<Texture2D>(ContentFolderTextures + "exit");
-
-            resumeButton = Content.Load<Texture2D>(ContentFolderTextures + "resume");
-
-            returnButton = Content.Load<Texture2D>(ContentFolderTextures + "exit");
-
-            loadingScreen = Content.Load<Texture2D>(ContentFolderTextures + "loading");
+            LibraryStageButt = CreateButton(ContentFolderTextures + "library", 0, -0.1f);
+            MazeStageButt = CreateButton(ContentFolderTextures + "maze-level", 0, 0.1f);
+            ResumeButt = CreateButton(ContentFolderTextures + "resume", 0, -0.1f);
+            ExitButt = CreateButton(ContentFolderTextures + "exit", 0, 0.1f);
+            LoadingButt = CreateButton(ContentFolderTextures + "loading", 0, 0);
 
             _bloomFilter = new BloomFilter();
-            _bloomFilter.Load(GraphicsDevice, Content, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            _bloomFilter.Load(GraphicsDevice, Content, resolution.Width, resolution.Height);
 
             _bloomFilter.BloomPreset = BloomFilter.BloomPresets.Cheap;
-            RenderTarget = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24);
-            RenderTargetBlurMenu = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24);
+            RenderTarget = new RenderTarget2D(GraphicsDevice, resolution.Width, resolution.Height, false, SurfaceFormat.Color, DepthFormat.Depth24);
+            RenderTargetBlurMenu = new RenderTarget2D(GraphicsDevice, resolution.Width, resolution.Height, false, SurfaceFormat.Color, DepthFormat.Depth24);
 
             Effect = Content.Load<Effect>(ContentFolderEffect + "BasicShader");
-            Effect.Parameters["screenSize"].SetValue(new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height));
+            Effect.Parameters["screenSize"].SetValue(new Vector2(resolution.Width, resolution.Height));
 
             Light light = new Light { Position = new Vector3(0, 30, 0), AmbientColor = Color.DarkRed, DiffuseColor = Color.White, SpecularColor = Color.White };
 
@@ -293,12 +278,10 @@ namespace TGC.MonoGame.TP
                 GraphicsDevice.SetRenderTarget(null);
                 SpriteBatch.Begin(samplerState: GraphicsDevice.SamplerStates[0], rasterizerState: GraphicsDevice.RasterizerState);
                 SpriteBatch.Draw(RenderTargetBlurMenu, new Rectangle(0,0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-                SpriteBatch.DrawString(font, "Seleccione un mapa", new Vector2((GraphicsDevice.Viewport.Width / 2) - 150, 75), Color.White);
-
-                var startRectangule = new Rectangle((int)startButtonPosition.X + 50, (int)startButtonPosition.Y, 200, 100);
-                SpriteBatch.Draw(startButton, startRectangule, Color.White);
-                var otroMapaRect = new Rectangle((int)otroMapaPosition2.X + 50, (int)otroMapaPosition2.Y, 200, 100);
-                SpriteBatch.Draw(otroMapa, otroMapaRect, Color.White);
+                DrawCenteredString("HEADSHOT", 0, -0.4f);
+                DrawCenteredString("Seleccionar Stage", 0, -0.3f);
+                SpriteBatch.Draw(LibraryStageButt.Texture, LibraryStageButt.Rectangle, Color.White);
+                SpriteBatch.Draw(MazeStageButt.Texture, MazeStageButt.Rectangle, Color.White);
 
                 SpriteBatch.End();
 
@@ -311,11 +294,10 @@ namespace TGC.MonoGame.TP
                 GraphicsDevice.BlendState = BlendState.Opaque;
 
                 SpriteBatch.Begin(samplerState: GraphicsDevice.SamplerStates[0], rasterizerState: GraphicsDevice.RasterizerState);
-                var resumeRectangule = new Rectangle((int)resumeButtonPosition.X + 50, (int)resumeButtonPosition.Y, 200, 100);
-                SpriteBatch.Draw(resumeButton, resumeRectangule, Color.White);
 
-                var exitRectangule = new Rectangle((int)exitButtonPosition.X + 50, (int)exitButtonPosition.Y, 200, 100);
-                SpriteBatch.Draw(exitButton, exitRectangule, Color.White);
+                SpriteBatch.Draw(ResumeButt.Texture, ResumeButt.Rectangle, Color.White);
+                SpriteBatch.Draw(ExitButt.Texture, ExitButt.Rectangle, Color.White);
+
                 SpriteBatch.End();
             }
 
@@ -326,7 +308,7 @@ namespace TGC.MonoGame.TP
                 GraphicsDevice.BlendState = BlendState.Opaque;
 
                 SpriteBatch.Begin(samplerState: GraphicsDevice.SamplerStates[0], rasterizerState: GraphicsDevice.RasterizerState);
-                SpriteBatch.Draw(loadingScreen, new Vector2((GraphicsDevice.Viewport.Width / 2) - loadingScreen.Width / 2, (GraphicsDevice.Viewport.Height / 2) - loadingScreen.Height / 2), Color.White);
+                SpriteBatch.Draw(LoadingButt.Texture, LoadingButt.Position, Color.White);
                 SpriteBatch.End();
             }
 
@@ -344,7 +326,7 @@ namespace TGC.MonoGame.TP
                 Player.Instance.Draw(gameTime);
 
                 // 2da pasada (Bloom)
-                Texture2D bloom = _bloomFilter.Draw(RenderTarget, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+                Texture2D bloom = _bloomFilter.Draw(RenderTarget, resolution.Width, resolution.Height);
                 GraphicsDevice.SetRenderTarget(RenderTargetBlurMenu);
 
                 Effect.CurrentTechnique = Effect.Techniques["PostProcessing"];
@@ -364,11 +346,11 @@ namespace TGC.MonoGame.TP
                 GraphicsDevice.BlendState = BlendState.Opaque;
 
                 SpriteBatch.Begin(samplerState: GraphicsDevice.SamplerStates[0], rasterizerState: GraphicsDevice.RasterizerState);
-                SpriteBatch.DrawString(font, "GAME OVER", new Vector2((GraphicsDevice.Viewport.Width / 2) - 100, GraphicsDevice.Viewport.Height / 2 - 150), Color.White);
-                SpriteBatch.DrawString(font, "Score: " + Player.Instance.Score, new Vector2((GraphicsDevice.Viewport.Width / 2) - 80, GraphicsDevice.Viewport.Height / 2 - 100), Color.White);
 
-                var returnRectangle = new Rectangle((int)resumeButtonPosition.X + 50, (int)resumeButtonPosition.Y, 200, 100);
-                SpriteBatch.Draw(returnButton, returnRectangle, Color.White);
+                DrawCenteredString("GAME OVER", 0, -0.3f);
+                DrawCenteredString("Score " + Player.Instance.Score, 0, -0.2f);
+
+                SpriteBatch.Draw(ExitButt.Texture, ExitButt.Rectangle, Color.White);
                 SpriteBatch.End();
             }
 
@@ -380,18 +362,14 @@ namespace TGC.MonoGame.TP
 
             if (gameState == GameState.StartMenu)
             {
-                var startButtonRect = new Rectangle((int)startButtonPosition.X + 50, (int)startButtonPosition.Y, 200, 100);
-
-                var otroMapaRect = new Rectangle((int)otroMapaPosition2.X + 50, (int)otroMapaPosition2.Y, 200, 100);
-
-                if (mouseClickRect.Intersects(startButtonRect))
+                if (mouseClickRect.Intersects(LibraryStageButt.Rectangle))
                 {
                     Stage = new LibraryStage(this);
                     gameState = GameState.Loading;
                     isLoading = false;
                     Player.Init(this, Camera, Stage);
                 }
-                if (mouseClickRect.Intersects(otroMapaRect))
+                if (mouseClickRect.Intersects(MazeStageButt.Rectangle))
                 {
                     Stage = new MazeStage(this);
                     gameState = GameState.Loading;
@@ -402,26 +380,19 @@ namespace TGC.MonoGame.TP
 
             if (gameState == GameState.Paused)
             {
-
-                var resumeButtonRect = new Rectangle((int)resumeButtonPosition.X + 50, (int)resumeButtonPosition.Y, 200, 100);
-
-                var exitButtonRect = new Rectangle((int)exitButtonPosition.X + 50, (int)exitButtonPosition.Y, 200, 100);
-
-                if (mouseClickRect.Intersects(resumeButtonRect))
+                if (mouseClickRect.Intersects(ResumeButt.Rectangle))
                 {
                     gameState = GameState.Playing;
                 }
 
-                if (mouseClickRect.Intersects(exitButtonRect))
+                if (mouseClickRect.Intersects(ExitButt.Rectangle))
                 {
                     Exit();
                 }
             }
             if (gameState == GameState.Finished)
             {
-                var resumeButtonRect = new Rectangle((int)resumeButtonPosition.X + 50, (int)resumeButtonPosition.Y, 200, 100);
-
-                if (mouseClickRect.Intersects(resumeButtonRect))
+                if (mouseClickRect.Intersects(ExitButt.Rectangle))
                 {
                     SoundManager.Instance.detenerMusica();
                     gameState = GameState.StartMenu;
@@ -443,6 +414,27 @@ namespace TGC.MonoGame.TP
         private float VectorsAngle(Vector3 v1, Vector3 v2)
         {
             return (float)Math.Acos(Vector3.Dot(v1, v2) / (Vector3.Distance(v1, Vector3.Zero) * Vector3.Distance(v2, Vector3.Zero)));
+        }
+        public Vector2 centPos(Texture2D tex)
+        {
+            return new Vector2((resolution.Width / 2) - tex.Width / 2, (resolution.Height / 2) - tex.Height / 2);
+        }
+        public Button CreateButton(String texturePath, float offsetXPercent, float offsetYPercent)
+        {
+            Texture2D tex = Content.Load<Texture2D>(texturePath);
+            Vector2 pos = centPos(tex);
+            pos.X += resolution.Width * offsetXPercent;
+            pos.Y += resolution.Height * offsetYPercent;
+            Rectangle rec = new Rectangle((int)pos.X, (int)pos.Y, tex.Width, tex.Height);
+            return new Button { Texture = tex, Position = pos, Rectangle = rec };
+        }
+        public void DrawCenteredString(String str, float offsetXPercent, float offsetYPercent)
+        {
+            Vector2 strMes = font.MeasureString(str);
+            Vector2 pos = new Vector2((resolution.Width / 2) - strMes.X / 2, (resolution.Height / 2) - strMes.Y / 2);
+            pos.X += resolution.Width * offsetXPercent;
+            pos.Y += resolution.Height * offsetYPercent;
+            SpriteBatch.DrawString(font, str, pos, Color.White);
         }
 
         /// <summary>
