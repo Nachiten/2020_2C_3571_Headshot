@@ -119,12 +119,12 @@ namespace TGC.MonoGame.TP.FPS
             Position = NewPosition;
             Aabb.Translation(Position);
         }
-        public void Update(GameTime GameTime)
+        public void Update(GameTime GameTime, Effect Effect)
         {
             var elapsedTime = (float)GameTime.ElapsedGameTime.TotalSeconds;
             MouseManager.Instance.ViewChanged = false;
             KeyboardManager.Instance.Update(elapsedTime, this);
-            MouseManager.Instance.Update(elapsedTime, ShootableCollisionCB);
+            MouseManager.Instance.Update(elapsedTime, ShootableCollisionCB, Effect);
 
             Collision.Instance.CheckStatic(Aabb, StaticCollisionCB);
             Collision.Instance.CheckCollectable(Aabb, CollectableCollisionCB);
@@ -156,14 +156,6 @@ namespace TGC.MonoGame.TP.FPS
                 // TODO: Possibly custom animation.Stop(), depending on your animation class
             }
         }
-
-        //public void RecibirDisparo(int cantidadDanio) {
-        //    SoundManager.Instance.reproducirSonido(SoundManager.Sonido.PegarJugador);
-        //    Debug.WriteLine("Entre a recibir disparo");
-        //    if (this.Health > 0) {
-        //        this.Health -= cantidadDanio;
-        //    }
-        //}
 
         public bool sumarVida(int cantidadVida)
         {
@@ -262,10 +254,6 @@ namespace TGC.MonoGame.TP.FPS
         }
         public int CollectableCollisionCB(ARecolectable r)
         {
-            //String timeStamp = GetTimestamp(DateTime.Now);
-            //TODO: Use recolectable
-            //Debug.WriteLine("[" + timeStamp + "] Collectable Collision: " + r);
-
             if (Config.recolectablesActivados) 
             {
                 // Se delega la responsabilidad de recolectar al recolectable
@@ -275,11 +263,9 @@ namespace TGC.MonoGame.TP.FPS
         }
         public int ShootableCollisionCB(Ashootable e)
         {
-            //Debug.WriteLine("!!!!Dispare al tgcitoooooo " + Vector3.Transform(Vector3.Zero, ((Enemigo)e).ModeloTgcitoClassic.World));
             
             if (CurrentWeapon != null)
             {
-                Debug.WriteLine("!!!!Dispare al tgcitoooooo ");
                 e.GetDamaged(CurrentWeapon.Damage);
             }
             return 0;

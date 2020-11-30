@@ -209,7 +209,7 @@ namespace TGC.MonoGame.TP
 
             if (gameState == GameState.Playing)
             {
-                Player.Instance.Update(gameTime);
+                Player.Instance.Update(gameTime, Effect);
 
                 Stage.Update(gameTime);
 
