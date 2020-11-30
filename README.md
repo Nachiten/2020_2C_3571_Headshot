@@ -42,4 +42,4 @@ Foto Perfil | Apellido, Nombre
 ![screenshot5](https://github.com/Nachiten/2020_2C_3571_Headshot/blob/master/imagenes/screenshot5.png)
 
 ## Game Play
-[![gameplay](https://github.com/Nachiten/2020_2C_3571_Headshot/blob/master/imagenes/screenshot1.png)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+[![gameplay](https://github.com/Nachiten/2020_2C_3571_Headshot/blob/master/imagenes/screenshot1.png)](https://youtu.be/_NHxI8XsULI)
