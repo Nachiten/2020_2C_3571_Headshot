@@ -70,8 +70,8 @@ namespace TGC.MonoGame.TP.FPS.Interface
 
             if (keyboardState.IsKeyDown(Keys.D2))
                 Player.Instance.ChangeWeapon(2);
-            /*if (keyboardState.IsKeyDown(Keys.D3))
-                Player.Instance.ChangeWeapon(3);*/
+            if (keyboardState.IsKeyDown(Keys.D3))
+                Player.Instance.ChangeWeapon(3);
 
             Vector3 currpos = Player.Position;
 

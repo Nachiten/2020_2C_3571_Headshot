@@ -50,7 +50,7 @@ namespace TGC.MonoGame.TP
             Modelo.SetEffect(Effect);
         }
 
-        public void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime)
         {
             // Basado en el tiempo que pasa se va generando una rotacion.
             Rotation += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds) * 0.7f;
@@ -70,7 +70,7 @@ namespace TGC.MonoGame.TP
             Modelo.Draw(view, projection);
             Modelo.SetRecolectable(0f);
         }
-        public void Draw(Matrix world, Matrix view, Matrix projection)
+        public virtual void Draw(Matrix world, Matrix view, Matrix projection)
         {
             // Dibujo el modelo
             Modelo.Draw(world, view, projection);

@@ -21,6 +21,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         #endregion
 
         Color LightsColor = Color.White;
+        RocketLauncher rl;
 
         public LibraryStage(Game game) : base(game)
         { 
@@ -36,13 +37,13 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
             // Weapons
             ARecolectable m4 = new M4(new Vector3(-4 * xLenFloor / 10, 50, zLenFloor / 8));
-            ARecolectable mp44 = new MP44(new Vector3(-xLenFloor / 10, 50, zLenFloor / 8));
+            rl = new RocketLauncher(new Vector3(-xLenFloor / 10, 50, zLenFloor / 8));
             // Seteo las luces de sala A
             Rooms[0].Add(m4);
-            Rooms[0].Add(mp44);
+            Rooms[0].Add(rl);
             // Las agrego a los recolectables
             Recolectables.Add(m4);
-            Recolectables.Add(mp44);
+            Recolectables.Add(rl);
         }
 
         public override void LoadContent()
@@ -220,6 +221,8 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             SoundManager.Instance.comenzarMusica(SoundManager.Musica.LibraryStage);
 
             base.LoadContent();
+
+            Boxes.Add(rl.Rocket.Aabb);
         }
         public override void Update(GameTime gameTime)
         {
@@ -240,7 +243,6 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
                 if (Player.Camera.InView(t.Aabb))
                     t.Draw(View, Projection);
             }
-
             foreach (QuadPrimitiveCollidable q in Quads)
             {
                 if (Player.Camera.InView(q.aabb))

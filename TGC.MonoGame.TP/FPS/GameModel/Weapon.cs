@@ -13,19 +13,10 @@ namespace TGC.MonoGame.TP.FPS
             Gun = weapon;
             Damage = Gun.Damage;
             Index = Gun.Index;
+            
         }
         public AWeaponRecolectable Gun { get; set; }
         public int Damage { get; set; }
-
-        public int SpeedFire { get; set; }
-
-        //public Grafics.Model bullet { get; set; }
-        //sound!!!
-        //range??
-        public void Fire()
-        {
-            //disparar bala
-        }
 
         public void SetEffect(Effect Effect)
         {
@@ -34,20 +25,17 @@ namespace TGC.MonoGame.TP.FPS
         public void Draw(Matrix world, Matrix view, Matrix projection)
         {
             Matrix WorldModified;
-            /*if (Gun.Scalable)
+            switch (Index)
             {
-                WorldModified = world * Matrix.CreateScale(Gun.tamanioModelo * 0.8f) * Matrix.CreateTranslation(new Vector3(65,-15,55));
-            }
-            else
-            {
-                WorldModified = world;
-            }*/
-            if(Index == 2)
-            {
-                WorldModified = world * Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(new Vector3(100, 0, 220));
-            } else
-            {
-                WorldModified = world;
+                case 2:
+                    WorldModified = world * Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(new Vector3(100, 0, 220));
+                    break;
+                case 3:
+                    WorldModified = world * Matrix.CreateScale(0.2f) * Matrix.CreateRotationY(MathHelper.PiOver2) * Matrix.CreateTranslation(new Vector3(80, 0, 100));
+                    break;
+                default:
+                    WorldModified = world;
+                    break;
             }
             Gun.Draw(WorldModified, view, projection);
         }

@@ -38,11 +38,18 @@ namespace TGC.MonoGame.TP.FPS.Interface
             // Handle Click
             if (previousMouseState.LeftButton == ButtonState.Released && Mouse.GetState().LeftButton == ButtonState.Pressed && Player.Instance.CurrentWeapon != null)
             {
-                SoundManager.Instance.reproducirSonido(SoundManager.Sonido.Disparo);
                 Effect.Parameters["shot"]?.SetValue(1f);
                 Player.Instance.TriggerShot = true;
-                ShotDirection = new Ray(Camera.Position, Camera.FrontDirection);
-                Collision.Instance.CheckShootable(ShotDirection, Player.Instance, ShootCallback);
+                if (Player.Instance.CurrentWeapon.Index == 3)
+                {
+                    // TODO: Sonido lanzamiento SoundManager.Instance.reproducirSonido(SoundManager.Sonido.Lanzamiento);
+                    ((RocketLauncher)Player.Instance.CurrentWeapon.Gun).StartLaunch(Camera.FrontDirection);
+                } else
+                {
+                    SoundManager.Instance.reproducirSonido(SoundManager.Sonido.Disparo);
+                    ShotDirection = new Ray(Camera.Position, Camera.FrontDirection);
+                    Collision.Instance.CheckShootable(ShotDirection, Player.Instance, ShootCallback);
+                }
             } else
             {
                 Effect.Parameters["shot"]?.SetValue(0f);

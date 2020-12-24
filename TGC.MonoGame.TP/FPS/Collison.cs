@@ -139,7 +139,22 @@ namespace TGC.MonoGame.TP.Utils{
             }
 
         }
-
-        
+        public void CheckRocket(AABB box, Ashootable exclude, Func<Ashootable, int> callback)
+        {
+            foreach (Ashootable e in ShootableElements.Where(x => !x.Equals(exclude)))
+            {
+                if (e.Aabb.IntersectAABB(box))
+                {
+                    callback(e);
+                }
+            }
+            foreach (AABB s in StaticElements)
+            {
+                if (s.IntersectAABB(box))
+                {
+                    callback(null);
+                }
+            }
+        }
     }
 }

@@ -129,13 +129,17 @@ namespace TGC.MonoGame.TP.FPS
             Collision.Instance.CheckStatic(Aabb, StaticCollisionCB);
             Collision.Instance.CheckCollectable(Aabb, CollectableCollisionCB);
 
+            if(CurrentWeapon != null && CurrentWeapon.Index == 3)
+            {
+                CurrentWeapon.Gun.Update(GameTime);
+            }
+
             //If it is not already animating and there is a trigger, start animating
             if (!IsAnimating && TriggerShot)
             {
                 IsAnimating = true;
                 PreviousWorldWeapon = WorldWeapon;
             }
-
             //Increment the frameTimePlayed by the time (in milliseconds) since the last frame
             if (IsAnimating)
                 frameTimePlayed += GameTime.ElapsedGameTime.TotalMilliseconds;
