@@ -222,6 +222,8 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
             base.LoadContent();
 
+            rl.LoadContentRocket(Content, GraphicsDevice, Effect);
+
             Boxes.Add(rl.Rocket.Aabb);
         }
         public override void Update(GameTime gameTime)
@@ -253,6 +255,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
                 if (w.InView(Player.Camera))
                     w.Draw(View, Projection);
             }
+            rl.Rocket.Draw(View, Projection);
         }
         #endregion
 

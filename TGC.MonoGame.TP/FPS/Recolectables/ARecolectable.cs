@@ -63,14 +63,14 @@ namespace TGC.MonoGame.TP
             Modelo.SetTime((float)gameTime.TotalGameTime.TotalSeconds);
         }
 
-        public void Draw(Matrix view, Matrix projection)
+        public virtual void Draw(Matrix view, Matrix projection)
         {
             // Dibujo el modelo
             Modelo.SetRecolectable(1f);
             Modelo.Draw(view, projection);
             Modelo.SetRecolectable(0f);
         }
-        public virtual void Draw(Matrix world, Matrix view, Matrix projection)
+        public void Draw(Matrix world, Matrix view, Matrix projection)
         {
             // Dibujo el modelo
             Modelo.Draw(world, view, projection);

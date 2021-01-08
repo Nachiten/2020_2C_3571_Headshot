@@ -14,7 +14,7 @@ namespace TGC.MonoGame.TP
     {
         public ModelCollidable Rocket;
         public Matrix RocketWorld;
-        private Vector3 RocketPosDis = new Vector3(0, -500, 0);
+        private Vector3 RocketPosDis = new Vector3(-50, 50, 0);
         private Vector3 RocketDirection;
         private Vector3 RocketPosition;
         private float Offset;
@@ -42,19 +42,22 @@ namespace TGC.MonoGame.TP
             base.LoadContent(Content, GraphicsDevice);
             Modelo.SetLightParameters(.2f, .6f, .2f, 100f);
             Modelo.SetTexture(Content.Load<Texture2D>(ContentFolder3D + "weapons/rocket/rocketlauncher-texture"));
-
+        }
+        public void LoadContentRocket(ContentManager Content, GraphicsDevice GraphicsDevice, Effect Effect)
+        {
             // Rocket
-            RocketWorld = Matrix.CreateScale(0.06f) * Matrix.CreateTranslation(RocketPosDis);
-            Rocket = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + "weapons/rocket/rocketlauncher", RocketWorld);
+            RocketWorld = Matrix.CreateScale(1f) * Matrix.CreateTranslation(RocketPosDis);
+            Rocket = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + "weapons/rocket/rocket", RocketWorld);
             float aabboffset = 10;
             Rocket.Aabb.SetManually(new Vector3(RocketPosDis.X - aabboffset, RocketPosDis.Y - aabboffset, RocketPosDis.Z - aabboffset), new Vector3(RocketPosDis.X + aabboffset, RocketPosDis.Y + aabboffset, RocketPosDis.Z + aabboffset));
             Rocket.Aabb.Translation(RocketWorld);
             Rocket.SetEffect(Effect);
             Rocket.SetLightParameters(.2f, .6f, .2f, 100f);
-            Rocket.SetTexture(Content.Load<Texture2D>(ContentFolder3D + "weapons/rocket/rocketlauncher-texture"));
+            Rocket.SetTexture(Content.Load<Texture2D>(ContentFolder3D + "weapons/rocket/rocket-texture"));
         }
         public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
             if (Launching)
             {
                 Offset += DeltaPos;
@@ -71,11 +74,9 @@ namespace TGC.MonoGame.TP
             RocketDirection = Vector3.Normalize(Direction);
             Launching = true;
         }
-        public override void Draw(Matrix world, Matrix view, Matrix projection)
+        public override void Draw(Matrix view, Matrix projection)
         {
-            base.Draw(world, view, projection);
-            //Debug.WriteLine("Drawing...?");
-            Rocket.Draw(RocketWorld, view, projection);
+            base.Draw(view, projection);           
         }
         public int RocketCollisionShootableCB(Ashootable e)
         {
