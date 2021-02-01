@@ -255,7 +255,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
                 if (w.InView(Player.Camera))
                     w.Draw(View, Projection);
             }
-            rl.Rocket.Draw(View, Projection);
+            rl.DrawRocket(View, Projection);
         }
         #endregion
 
