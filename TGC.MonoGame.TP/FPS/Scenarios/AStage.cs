@@ -43,6 +43,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         protected List<QuadPrimitiveCollidable> Quads = new List<QuadPrimitiveCollidable>();
         protected List<WallCollidable> Walls = new List<WallCollidable>();
         protected Effect Effect;
+        public Effect PostProcessEffect;
 
         protected int cantidadCorazonesRandom = 4;
         protected int cantidadArmorRandom = 2;
@@ -60,6 +61,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             Game = game;
             GraphicsDevice = Game.GraphicsDevice;
             Content = Game.Content;
+            PostProcessEffect = ((TGCGame)Game).Effect;
 
             float AxisLenght = 50;
 

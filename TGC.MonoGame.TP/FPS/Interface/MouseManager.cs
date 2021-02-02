@@ -38,7 +38,7 @@ namespace TGC.MonoGame.TP.FPS.Interface
             // Handle Click
             if (previousMouseState.LeftButton == ButtonState.Released && Mouse.GetState().LeftButton == ButtonState.Pressed && Player.Instance.CurrentWeapon != null)
             {
-                Effect.Parameters["shot"]?.SetValue(1f);
+                //Effect.Parameters["shot"]?.SetValue(1f);
                 Player.Instance.TriggerShot = true;
                 if (Player.Instance.CurrentWeapon.Index == 3)
                 {
@@ -52,7 +52,7 @@ namespace TGC.MonoGame.TP.FPS.Interface
                 }
             } else
             {
-                Effect.Parameters["shot"]?.SetValue(0f);
+                //Effect.Parameters["shot"]?.SetValue(0f);
             }
             previousMouseState = Mouse.GetState();
 

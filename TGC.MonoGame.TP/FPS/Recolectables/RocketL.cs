@@ -20,10 +20,12 @@ namespace TGC.MonoGame.TP
         private Vector3 RocketInitialDirection = -Vector3.UnitX;
         private float RocketAngle = 0;
         public float StartExplosion = 0f;
+        private Effect PostProcessEffect;
 
         private float Offset;
-        private float RocketSpeed = 20f;
+        private float RocketSpeed = 10f;
         private bool Launching = false;
+        double frameTimePlayed = 0;
 
         public RocketLauncher(Vector3 posicionModelo)
         {
@@ -80,6 +82,19 @@ namespace TGC.MonoGame.TP
                 {
                     ResetRocket();
                 }
+                frameTimePlayed = 0;
+            } else
+            {
+                if(frameTimePlayed < 300) // .3s de explosion
+                {
+                    PostProcessEffect.Parameters["Time"]?.SetValue((float)frameTimePlayed / 1000);
+                    frameTimePlayed += gameTime.ElapsedGameTime.TotalMilliseconds;
+                } else
+                {
+                    PostProcessEffect.Parameters["shot"]?.SetValue(0f);
+                    frameTimePlayed = 0;
+                }
+                
             }
         }
         public void StartLaunch(Vector3 Direction)
@@ -119,7 +134,7 @@ namespace TGC.MonoGame.TP
             {
                 e.GetDamaged(Damage);
             }
-            StartExplosion = 1f;
+            PostProcessEffect.Parameters["shot"]?.SetValue(1f);
             ResetRocket();
             return 0;
         }
@@ -129,6 +144,10 @@ namespace TGC.MonoGame.TP
             RocketWorld = Matrix.CreateTranslation(RocketPosDis);
             Rocket.Transform(RocketWorld, true);
             Launching = false;
+        }
+        public void SetPostProcessEffect(Effect PostProcessEffect)
+        {
+            this.PostProcessEffect = PostProcessEffect;
         }
     }
 }

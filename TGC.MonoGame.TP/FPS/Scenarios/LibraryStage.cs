@@ -38,6 +38,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             // Weapons
             ARecolectable m4 = new M4(new Vector3(-4 * xLenFloor / 10, 50, zLenFloor / 8));
             rl = new RocketLauncher(new Vector3(-xLenFloor / 10, 50, zLenFloor / 8));
+            rl.SetPostProcessEffect(PostProcessEffect);
             // Seteo las luces de sala A
             Rooms[0].Add(m4);
             Rooms[0].Add(rl);
