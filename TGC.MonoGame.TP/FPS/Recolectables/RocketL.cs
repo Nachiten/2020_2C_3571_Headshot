@@ -14,7 +14,7 @@ namespace TGC.MonoGame.TP
     {
         public ModelCollidable Rocket;
         public Matrix RocketWorld;
-        private Vector3 RocketPosDis = new Vector3(-50, 50, 0);
+        private Vector3 RocketPosDis = new Vector3(-50, -50, 0);
         private Vector3 RocketDirection;
         private Vector3 RocketPosition;
         private Vector3 RocketInitialDirection = -Vector3.UnitX;
@@ -22,7 +22,7 @@ namespace TGC.MonoGame.TP
         public float StartExplosion = 0f;
 
         private float Offset;
-        private float DeltaPos = 15f;
+        private float RocketSpeed = 20f;
         private bool Launching = false;
 
         public RocketLauncher(Vector3 posicionModelo)
@@ -49,15 +49,21 @@ namespace TGC.MonoGame.TP
         }
         public void LoadContentRocket(ContentManager Content, GraphicsDevice GraphicsDevice, Effect Effect)
         {
-            // Rocket
+            // Load Model
             RocketWorld = Matrix.CreateScale(1f) * Matrix.CreateTranslation(RocketPosDis);
             Rocket = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + "weapons/rocket/rocket", RocketWorld);
             float aabboffset = 5;
             Rocket.Aabb.SetManually(new Vector3(RocketPosDis.X - aabboffset, RocketPosDis.Y - aabboffset, RocketPosDis.Z - aabboffset), new Vector3(RocketPosDis.X + aabboffset, RocketPosDis.Y + aabboffset, RocketPosDis.Z + aabboffset));
             Rocket.Aabb.Translation(RocketWorld);
-            //Rocket.SetEffect(Effect);
-            //Rocket.SetLightParameters(.2f, .6f, .2f, 100f);
-            //Rocket.SetTexture(Content.Load<Texture2D>(ContentFolder3D + "weapons/rocket/rocket-texture"));
+
+            // Set Texture
+            var modelEffect = (BasicEffect)Rocket.Model.Meshes[0].Effects[0];
+            modelEffect.TextureEnabled = true;
+            modelEffect.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/rocket/rocket-texture");
+
+            /*Rocket.SetEffect(Effect);
+            Rocket.SetLightParameters(.2f, .6f, .2f, 100f);
+            Rocket.SetTexture(Content.Load<Texture2D>(ContentFolder3D + "weapons/rocket/rocket-texture"));*/
         }
         public override void Update(GameTime gameTime)
         {
@@ -65,17 +71,23 @@ namespace TGC.MonoGame.TP
             if (Launching)
             {
                 // Movement
-                Offset += DeltaPos;
-                RocketWorld = Matrix.CreateRotationY(RocketAngle) * Matrix.CreateTranslation(RocketPosition + RocketDirection * Offset);
+                Offset += RocketSpeed;
+                RocketWorld = Matrix.CreateTranslation(new Vector3(0, -5, -10)) * Matrix.CreateRotationY(RocketAngle) * Matrix.CreateTranslation(RocketPosition + RocketDirection * Offset);
                 Rocket.Transform(RocketWorld, true);
-                RocketWorld *= Matrix.CreateTranslation(new Vector3(13, -2, -10));
-                Rocket.Transform(RocketWorld, false);
+                Rocket.Aabb.Translation(Matrix.CreateTranslation(RocketPosition + RocketDirection * Offset));
                 Collision.Instance.CheckRocket(Rocket.Aabb, Player.Instance, RocketCollisionShootableCB);
+                if (Offset > 1000)
+                {
+                    ResetRocket();
+                }
             }
-            
         }
         public void StartLaunch(Vector3 Direction)
         {
+            if (Launching)
+            {
+                return;
+            }
             Offset = 0;
             RocketPosition = Player.Instance.Position;
             RocketDirection = Vector3.Normalize(Direction);
@@ -108,11 +120,15 @@ namespace TGC.MonoGame.TP
                 e.GetDamaged(Damage);
             }
             StartExplosion = 1f;
+            ResetRocket();
+            return 0;
+        }
+        private void ResetRocket()
+        {
             Offset = 0;
             RocketWorld = Matrix.CreateTranslation(RocketPosDis);
             Rocket.Transform(RocketWorld, true);
             Launching = false;
-            return 0;
         }
     }
 }

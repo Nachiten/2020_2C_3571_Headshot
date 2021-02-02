@@ -31,7 +31,7 @@ namespace TGC.MonoGame.TP.FPS
                     WorldModified = world * Matrix.CreateRotationY(MathHelper.Pi) * Matrix.CreateTranslation(new Vector3(100, 0, 220));
                     break;
                 case 3:
-                    WorldModified = world * Matrix.CreateScale(0.2f) * Matrix.CreateRotationY(MathHelper.PiOver2) * Matrix.CreateTranslation(new Vector3(80, 0, 100));
+                    WorldModified = world * Matrix.CreateScale(0.06f) * Matrix.CreateRotationY(MathHelper.PiOver2) * Matrix.CreateTranslation(new Vector3(50, 10, 120));
                     break;
                 default:
                     WorldModified = world;
