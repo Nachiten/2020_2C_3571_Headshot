@@ -40,6 +40,7 @@ namespace TGC.MonoGame.TP.FPS.Interface
             {
                 //Effect.Parameters["shot"]?.SetValue(1f);
                 Player.Instance.TriggerShot = true;
+
                 if (Player.Instance.CurrentWeapon.Index == 3)
                 {
                     // TODO: Sonido lanzamiento SoundManager.Instance.reproducirSonido(SoundManager.Sonido.Lanzamiento);

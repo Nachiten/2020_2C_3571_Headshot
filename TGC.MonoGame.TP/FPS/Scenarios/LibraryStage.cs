@@ -214,6 +214,13 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             Rooms[3].Add(enemy);
             Enemigos.Add(enemy);
 
+            // Explosion
+            ModelCollidable explosion = new ModelCollidable(GraphicsDevice, Content, FPSManager.ContentFolder3D + "explosion/sphere", Matrix.CreateScale(0.002f) * Matrix.CreateTranslation(-100,80,50));
+            explosion.SetEffect(Effect);
+            explosion.SetLightParameters(.3f, .3f, .4f, 100f);
+            explosion.SetTexture(Content.Load<Texture2D>(FPSManager.ContentFolder3D + "explosion/sphere_tex"));
+            Tables.Add(explosion);
+
             Player.Instance.Move(new Vector3(-5 * xLenFloor / 20, Player.Instance.Position.Y, zLenFloor / 8));
             //Player.Instance.Move(new Vector3(enemyPath[0].posicion.X-100, Player.Instance.Position.Y, enemyPath[0].posicion.Y));
 

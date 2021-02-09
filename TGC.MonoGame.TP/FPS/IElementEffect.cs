@@ -9,5 +9,7 @@ namespace TGC.MonoGame.TP.FPS
     public interface IElementEffect
     {
         public void SetLight(Light Light);
+        public void SetLightMuzzle(Light Light);
+        public void UnsetLightMuzzle();
     }
 }

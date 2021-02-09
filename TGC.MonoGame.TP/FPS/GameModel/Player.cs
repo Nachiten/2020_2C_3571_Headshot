@@ -46,7 +46,7 @@ namespace TGC.MonoGame.TP.FPS
         #region animation
         public bool TriggerShot = false;
         double frameTimePlayed = 0; //Amount of time (out of animationTime) that the animation has been playing for
-        bool IsAnimating = false; //Self-Explanitory
+        public bool IsAnimating = false; //Self-Explanitory
         int animationTime = 500; //For .5 seconds of animation.
         Matrix PreviousWorldWeapon;
         #endregion
@@ -137,6 +137,7 @@ namespace TGC.MonoGame.TP.FPS
             //If it is not already animating and there is a trigger, start animating
             if (!IsAnimating && TriggerShot)
             {
+                startlightshoot = true;
                 IsAnimating = true;
                 PreviousWorldWeapon = WorldWeapon;
             }
@@ -159,6 +160,28 @@ namespace TGC.MonoGame.TP.FPS
                 TriggerShot = false;
                 // TODO: Possibly custom animation.Stop(), depending on your animation class
             }
+        }
+        bool startlightshoot = false;
+        double shottime = 0;
+        public bool ShootStarted(GameTime GameTime)
+        {
+            if (startlightshoot && shottime == 0)
+            {
+                shottime = GameTime.TotalGameTime.TotalMilliseconds;
+                return true;
+            }
+            return false;
+        }
+        public bool ShootEnded(GameTime GameTime)
+        {
+            double timedifference = GameTime.TotalGameTime.TotalMilliseconds - shottime;
+            if (startlightshoot && timedifference>100)
+            {
+                startlightshoot = false;
+                shottime = 0;
+                return true;
+            }
+            return false;
         }
 
         public bool sumarVida(int cantidadVida)

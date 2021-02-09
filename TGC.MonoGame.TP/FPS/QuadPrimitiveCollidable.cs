@@ -28,5 +28,6 @@ namespace TGC.MonoGame.TP.Utils
             Matrix world = Matrix.CreateTranslation(Vector3.Zero);
             base.Draw(world, view, projection);
         }
+
     }
 }

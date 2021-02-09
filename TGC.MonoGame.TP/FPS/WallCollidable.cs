@@ -64,6 +64,22 @@ namespace TGC.MonoGame.TP.FPS
             Right.SetLight(Light);
             Bottom.SetLight(Light);
         }
+        public void SetLightMuzzle(Light Light)
+        {
+            Front.SetLightMuzzle(Light);
+            Back.SetLightMuzzle(Light);
+            Left.SetLightMuzzle(Light);
+            Right.SetLightMuzzle(Light);
+            Bottom.SetLightMuzzle(Light);
+        }
+        public void UnsetLightMuzzle()
+        {
+            Front.UnsetLightMuzzle();
+            Back.UnsetLightMuzzle();
+            Left.UnsetLightMuzzle();
+            Right.UnsetLightMuzzle();
+            Bottom.UnsetLightMuzzle();
+        }
         public bool InView(FreeCamera Camera)
         {
             if (Camera.InView(Front.aabb))

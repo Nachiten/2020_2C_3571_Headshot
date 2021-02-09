@@ -285,6 +285,15 @@ namespace TGC.MonoGame.TP
             Weapon.Draw(ww, view, projection);
         }
 
+        public void SetLightMuzzle(Light Light)
+        {
+            Model.SetLightMuzzle(Light);
+        }
+        public void UnsetLightMuzzle()
+        {
+            Model.UnsetLightMuzzle();
+        }
+
         public override void GetDamaged(int damage)
         {
             if (health <= 0)

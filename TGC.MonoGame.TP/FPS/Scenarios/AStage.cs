@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using TGC.MonoGame.TP.FPS.Interface;
+using System.Diagnostics;
 
 namespace TGC.MonoGame.TP.FPS.Scenarios
 {
@@ -99,7 +100,6 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             }
 
             AddLamps();
-
             // Agrego Luces
             for (int i = 0; i < Rooms.Count; i++)
                 foreach (var e in Rooms[i])
@@ -135,6 +135,30 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             {
                 q.SetCameraPos(Player.Instance.GetCameraPos());
             }
+            if (Player.Instance.ShootStarted(gameTime))
+            {
+                UpdateLights(true);
+            }
+            if (Player.Instance.ShootEnded(gameTime))
+            {
+                UpdateLights(false);
+            }
+        }
+        private void UpdateLights(bool Enable)
+        {
+            for (int i = 0; i < Rooms.Count; i++)
+                foreach (var e in Rooms[i])
+                {
+                    if (Enable)
+                    {
+                        e.SetLightMuzzle(new Light { Position = Player.Instance.Position, AmbientColor = Color.Red, DiffuseColor = Color.Red, SpecularColor = Color.Red });
+                    }
+                    else
+                    {
+                        e.UnsetLightMuzzle();
+                    }
+                }
+                    
         }
         public virtual void Draw(GameTime gameTime)
         {

@@ -63,6 +63,13 @@ namespace TGC.MonoGame.TP
             modelEffect.TextureEnabled = true;
             modelEffect.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/rocket/rocket-texture");
 
+            
+
+            // Set Texture
+            /*var modeleEffect = (BasicEffect)Explosion.Model.Meshes[0].Effects[0];
+            modeleEffect.TextureEnabled = true;
+            modeleEffect.Texture = Content.Load<Texture2D>(ContentFolder3D + "explosion/sphere_tex");*/
+
             /*Rocket.SetEffect(Effect);
             Rocket.SetLightParameters(.2f, .6f, .2f, 100f);
             Rocket.SetTexture(Content.Load<Texture2D>(ContentFolder3D + "weapons/rocket/rocket-texture"));*/

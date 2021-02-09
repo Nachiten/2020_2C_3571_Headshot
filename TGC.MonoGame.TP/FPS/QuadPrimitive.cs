@@ -183,6 +183,16 @@ namespace TGC.MonoGame.TP.Utils
         {
             this.Light = Light;
         }
+        private Light LightMuzzle;
+        private Light nolight = new Light { Position = Vector3.Zero, AmbientColor = Color.Black, DiffuseColor = Color.Black, SpecularColor = Color.Black };
+        public void SetLightMuzzle(Light Light)
+        {
+            LightMuzzle = Light;
+        }
+        public void UnsetLightMuzzle()
+        {
+            LightMuzzle = nolight;
+        }
 
         /// <summary>
         ///     Draw the Quad.
@@ -203,10 +213,16 @@ namespace TGC.MonoGame.TP.Utils
             Effect.Parameters["KDiffuse"]?.SetValue(KDiffuse);
             Effect.Parameters["KSpecular"]?.SetValue(KSpecular);
             Effect.Parameters["Shininess"]?.SetValue(Shininess);
+            // Main Light
             Effect.Parameters["AmbientColor"]?.SetValue(Light.AmbientColor.ToVector3());
             Effect.Parameters["DiffuseColor"]?.SetValue(Light.DiffuseColor.ToVector3());
             Effect.Parameters["SpecularColor"]?.SetValue(Light.SpecularColor.ToVector3());
             Effect.Parameters["LightPosition"]?.SetValue(Light.Position);
+            // Muzzle Light
+            Effect.Parameters["AmbientColorMuzzle"]?.SetValue(LightMuzzle.AmbientColor.ToVector3());
+            Effect.Parameters["DiffuseColorMuzzle"]?.SetValue(LightMuzzle.DiffuseColor.ToVector3());
+            Effect.Parameters["SpecularColorMuzzle"]?.SetValue(LightMuzzle.SpecularColor.ToVector3());
+            Effect.Parameters["LightPositionMuzzle"]?.SetValue(LightMuzzle.Position);
             Effect.CurrentTechnique = Effect.Techniques["BasicColorDrawing"];
 
             // Draw the model, using BasicEffect.

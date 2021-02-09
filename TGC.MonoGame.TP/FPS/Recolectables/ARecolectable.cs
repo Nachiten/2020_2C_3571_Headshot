@@ -83,6 +83,14 @@ namespace TGC.MonoGame.TP
         {
             Modelo.SetLight(Light);
         }
+        public void SetLightMuzzle(Light Light)
+        {
+            Modelo.SetLightMuzzle(Light);
+        }
+        public void UnsetLightMuzzle()
+        {
+            Modelo.UnsetLightMuzzle();
+        }
 
         public abstract void recolectar(AStage Stage);
 
