@@ -85,14 +85,17 @@ namespace TGC.MonoGame.TP.Utils{
             this.Light = Light;
         }
         private Light LightMuzzle;
+        private float MuzzleStatus = 0;
         private Light nolight = new Light { Position = Vector3.Zero, AmbientColor = Color.Black, DiffuseColor = Color.Black, SpecularColor = Color.Black };
         public void SetLightMuzzle(Light Light)
         {
             LightMuzzle = Light;
+            MuzzleStatus = 1;
         }
         public void UnsetLightMuzzle()
         {
             LightMuzzle = nolight;
+            MuzzleStatus = 0;
         }
         public void SetTexture(Texture2D texture)
         {
@@ -135,6 +138,7 @@ namespace TGC.MonoGame.TP.Utils{
             Effect.Parameters["DiffuseColorMuzzle"]?.SetValue(LightMuzzle.DiffuseColor.ToVector3());
             Effect.Parameters["SpecularColorMuzzle"]?.SetValue(LightMuzzle.SpecularColor.ToVector3());
             Effect.Parameters["LightPositionMuzzle"]?.SetValue(LightMuzzle.Position);
+            Effect.Parameters["Muzzle"]?.SetValue(MuzzleStatus);
             Effect.CurrentTechnique = Effect.Techniques["BasicColorDrawing"];
 
             foreach (var mesh in Model.Meshes)

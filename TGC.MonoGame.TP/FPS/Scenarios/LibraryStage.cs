@@ -215,9 +215,9 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             Enemigos.Add(enemy);
 
             // Explosion
-            ModelCollidable explosion = new ModelCollidable(GraphicsDevice, Content, FPSManager.ContentFolder3D + "explosion/sphere", Matrix.CreateScale(0.002f) * Matrix.CreateTranslation(-100,80,50));
+            ModelCollidable explosion = new ModelCollidable(GraphicsDevice, Content, FPSManager.ContentFolder3D + "explosion/sphere", Matrix.CreateScale(100f) * Matrix.CreateTranslation(-100,80,50));
             explosion.SetEffect(Effect);
-            explosion.SetLightParameters(.3f, .3f, .4f, 100f);
+            explosion.SetLightParameters(.4f, .3f, .3f, 100f);
             explosion.SetTexture(Content.Load<Texture2D>(FPSManager.ContentFolder3D + "explosion/sphere_tex"));
             Tables.Add(explosion);
 
@@ -241,6 +241,14 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
                 t.SetCameraPos(Player.Instance.GetCameraPos());
             }
             base.Update(gameTime);
+            if (rl.ShootStarted(gameTime))
+            {
+                UpdateLights(true, rl.RocketPosition);
+            }
+            if (rl.ShootEnded(gameTime))
+            {
+                UpdateLights(false, rl.RocketPosition);
+            }
         }
 
         #region metodoDraw

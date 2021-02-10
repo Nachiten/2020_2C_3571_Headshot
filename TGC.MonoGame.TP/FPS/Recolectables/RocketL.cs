@@ -16,7 +16,7 @@ namespace TGC.MonoGame.TP
         public Matrix RocketWorld;
         private Vector3 RocketPosDis = new Vector3(-50, -50, 0);
         private Vector3 RocketDirection;
-        private Vector3 RocketPosition;
+        public Vector3 RocketPosition;
         private Vector3 RocketInitialDirection = -Vector3.UnitX;
         private float RocketAngle = 0;
         public float StartExplosion = 0f;
@@ -80,12 +80,13 @@ namespace TGC.MonoGame.TP
             if (Launching)
             {
                 // Movement
+                RocketPosition += RocketDirection * RocketSpeed;
                 Offset += RocketSpeed;
-                RocketWorld = Matrix.CreateTranslation(new Vector3(0, -5, -10)) * Matrix.CreateRotationY(RocketAngle) * Matrix.CreateTranslation(RocketPosition + RocketDirection * Offset);
+                RocketWorld = Matrix.CreateTranslation(new Vector3(0, -5, -10)) * Matrix.CreateRotationY(RocketAngle) * Matrix.CreateTranslation(RocketPosition);
                 Rocket.Transform(RocketWorld, true);
-                Rocket.Aabb.Translation(Matrix.CreateTranslation(RocketPosition + RocketDirection * Offset));
+                Rocket.Aabb.Translation(Matrix.CreateTranslation(RocketPosition));
                 Collision.Instance.CheckRocket(Rocket.Aabb, Player.Instance, RocketCollisionShootableCB);
-                if (Offset > 1000)
+                if (Offset > 2000)
                 {
                     ResetRocket();
                 }
@@ -116,6 +117,29 @@ namespace TGC.MonoGame.TP
             Launching = true;
             RocketAngle = AngleBet2Vec(RocketDirection, RocketInitialDirection);
         }
+        bool startlightshoot = false;
+        double shottime = 0;
+        public bool ShootStarted(GameTime GameTime)
+        {
+            if (startlightshoot && shottime == 0)
+            {
+                shottime = GameTime.TotalGameTime.TotalMilliseconds;
+                return true;
+            }
+            return false;
+        }
+        public bool ShootEnded(GameTime GameTime)
+        {
+            double timedifference = GameTime.TotalGameTime.TotalMilliseconds - shottime;
+            if (startlightshoot && timedifference > 100)
+            {
+                startlightshoot = false;
+                shottime = 0;
+                return true;
+            }
+            return false;
+        }
+
         public float AngleBet2Vec(Vector3 v1, Vector3 v2)
         {
             Vector2 v1_2 = new Vector2(v1.X, v1.Z);
@@ -141,6 +165,7 @@ namespace TGC.MonoGame.TP
             {
                 e.GetDamaged(Damage);
             }
+            startlightshoot = true;
             PostProcessEffect.Parameters["shot"]?.SetValue(1f);
             ResetRocket();
             return 0;

@@ -10,12 +10,13 @@ namespace TGC.MonoGame.TP.Utils
             : base(graphicsDevice,origin,normal,up,width,height,texture,textureRepeats)
         { 
             Vector3 size;
+            float thickness = 10;
             if(normal == Vector3.UnitX || normal == -Vector3.UnitX) {
-                size = new Vector3(1,height/2,width/2);
+                size = new Vector3(thickness, height/2, width/2);
             } else if(normal == Vector3.UnitY || normal == -Vector3.UnitY){
-                size = new Vector3(height/2,1,width/2);
+                size = new Vector3(height/2, thickness, width/2);
             } else if(normal == Vector3.UnitZ || normal == -Vector3.UnitZ) {
-                size = new Vector3(width/2,height/2,1);
+                size = new Vector3(width/2, height/2, thickness);
             } else {
                 throw new System.Exception("QuadPrimitiveCollidable expects parameter 'normal' to be Axis Aligned");
             }

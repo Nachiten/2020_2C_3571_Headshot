@@ -185,12 +185,15 @@ namespace TGC.MonoGame.TP.Utils
         }
         private Light LightMuzzle;
         private Light nolight = new Light { Position = Vector3.Zero, AmbientColor = Color.Black, DiffuseColor = Color.Black, SpecularColor = Color.Black };
+        private float MuzzleStatus = 0;
         public void SetLightMuzzle(Light Light)
         {
+            MuzzleStatus = 1;
             LightMuzzle = Light;
         }
         public void UnsetLightMuzzle()
         {
+            MuzzleStatus = 0;
             LightMuzzle = nolight;
         }
 
@@ -223,6 +226,7 @@ namespace TGC.MonoGame.TP.Utils
             Effect.Parameters["DiffuseColorMuzzle"]?.SetValue(LightMuzzle.DiffuseColor.ToVector3());
             Effect.Parameters["SpecularColorMuzzle"]?.SetValue(LightMuzzle.SpecularColor.ToVector3());
             Effect.Parameters["LightPositionMuzzle"]?.SetValue(LightMuzzle.Position);
+            Effect.Parameters["Muzzle"]?.SetValue(MuzzleStatus);
             Effect.CurrentTechnique = Effect.Techniques["BasicColorDrawing"];
 
             // Draw the model, using BasicEffect.

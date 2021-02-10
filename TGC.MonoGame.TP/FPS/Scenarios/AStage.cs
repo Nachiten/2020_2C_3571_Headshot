@@ -137,21 +137,21 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             }
             if (Player.Instance.ShootStarted(gameTime))
             {
-                UpdateLights(true);
+                UpdateLights(true, Player.Instance.Position);
             }
             if (Player.Instance.ShootEnded(gameTime))
             {
-                UpdateLights(false);
+                UpdateLights(false, Player.Instance.Position);
             }
         }
-        private void UpdateLights(bool Enable)
+        protected void UpdateLights(bool Enable, Vector3 Position)
         {
             for (int i = 0; i < Rooms.Count; i++)
                 foreach (var e in Rooms[i])
                 {
                     if (Enable)
                     {
-                        e.SetLightMuzzle(new Light { Position = Player.Instance.Position, AmbientColor = Color.Red, DiffuseColor = Color.Red, SpecularColor = Color.Red });
+                        e.SetLightMuzzle(new Light { Position = Position, AmbientColor = Color.White, DiffuseColor = Color.Red, SpecularColor = Color.Red });
                     }
                     else
                     {
