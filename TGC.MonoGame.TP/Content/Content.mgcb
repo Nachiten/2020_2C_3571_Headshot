@@ -150,7 +150,7 @@
 /processorParam:TextureFormat=Compressed
 /build:Models/enemy/Hellknight_LATEST.fbx
 
-#begin Models/explosion/sphere.fbx
+#begin Models/explosion/sphere.obj
 /importer:FbxImporter
 /processor:ModelProcessor
 /processorParam:ColorKeyColor=0,0,0,0
@@ -167,7 +167,7 @@
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=Compressed
-/build:Models/explosion/sphere.fbx
+/build:Models/explosion/sphere.obj
 
 #begin Models/explosion/sphere_tex.jpg
 /importer:TextureImporter
@@ -981,6 +981,12 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/EnemyKillWindowsXP.mp3
+
+#begin Sounds/explosion.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/explosion.mp3
 
 #begin Sounds/GunPickUp.mp3
 /importer:Mp3Importer

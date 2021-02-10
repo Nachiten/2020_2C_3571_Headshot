@@ -12,7 +12,8 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
         float zLenFloor = 2000;
         int yLenWall = 150;
         float thickness = 20;
-        
+        RocketLauncher rl;
+
         List<ModelCollidable> Columnas = new List<ModelCollidable>();
 
         Color LightsColor = Color.White;
@@ -152,12 +153,16 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             // Weapons
             ARecolectable m4 = new M4(new Vector3(-5 * xLenFloor / 32, 50, -3 * zLenFloor / 16));
             ARecolectable mp44 = new MP44(new Vector3(-11 * xLenFloor / 32, 50, -3 * zLenFloor / 16));
+            rl = new RocketLauncher(new Vector3(-4 * xLenFloor / 16, 50, -5 * zLenFloor / 16));
+            rl.SetPostProcessEffect(PostProcessEffect);
             // Seteo las luces de sala A
             Rooms[0].Add(m4);
             Rooms[0].Add(mp44);
+            Rooms[0].Add(rl);
             // Las agrego a los recolectables
             Recolectables.Add(m4);
             Recolectables.Add(mp44);
+            Recolectables.Add(rl);
 
             Enemigo enemy = new Enemigo(enemyPath);
             Rooms[3].Add(enemy);
@@ -174,6 +179,10 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             SoundManager.Instance.comenzarMusica(SoundManager.Musica.MazeStage);
 
             base.LoadContent();
+
+            rl.LoadContentRocket(Content, GraphicsDevice, Effect);
+
+            Boxes.Add(rl.Rocket.Aabb);
         }
 
         public override void Update(GameTime gameTime)
@@ -183,6 +192,14 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
                 c.SetCameraPos(Player.Instance.GetCameraPos());
             }
             base.Update(gameTime);
+            if (rl.ShootStarted(gameTime))
+            {
+                UpdateLights(true, rl.RocketPosition);
+            }
+            if (rl.ShootEnded(gameTime))
+            {
+                UpdateLights(false, rl.RocketPosition);
+            }
         }
 
         public override void Draw(GameTime gameTime)
@@ -214,6 +231,7 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
                 if (Player.Camera.InView(c.Aabb))
                     c.Draw(View, Projection);
             }
+            rl.DrawRocket(View, Projection);
         }
 
         private ModelCollidable AddColumn(Vector2 Position)

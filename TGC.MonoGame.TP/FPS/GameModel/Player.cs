@@ -129,10 +129,10 @@ namespace TGC.MonoGame.TP.FPS
             Collision.Instance.CheckStatic(Aabb, StaticCollisionCB);
             Collision.Instance.CheckCollectable(Aabb, CollectableCollisionCB);
 
-            if(CurrentWeapon != null && CurrentWeapon.Index == 3)
-            {
-                CurrentWeapon.Gun.Update(GameTime);
-            }
+
+            foreach (Weapon w in Weapons)
+                if (w != null)
+                    w.Gun.Update(GameTime);
 
             //If it is not already animating and there is a trigger, start animating
             if (!IsAnimating && TriggerShot)

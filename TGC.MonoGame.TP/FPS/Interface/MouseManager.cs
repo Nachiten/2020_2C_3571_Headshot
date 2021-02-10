@@ -43,7 +43,7 @@ namespace TGC.MonoGame.TP.FPS.Interface
 
                 if (Player.Instance.CurrentWeapon.Index == 3)
                 {
-                    // TODO: Sonido lanzamiento SoundManager.Instance.reproducirSonido(SoundManager.Sonido.Lanzamiento);
+                    SoundManager.Instance.reproducirSonido(SoundManager.Sonido.Explosion);
                     ((RocketLauncher)Player.Instance.CurrentWeapon.Gun).StartLaunch(Camera.FrontDirection);
                 } else
                 {

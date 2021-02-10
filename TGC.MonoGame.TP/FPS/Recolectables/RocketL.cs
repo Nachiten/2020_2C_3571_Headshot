@@ -7,12 +7,17 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using TGC.MonoGame.TP.Utils;
 using TGC.MonoGame.TP.FPS;
+using TGC.MonoGame.TP.FPS.Scenarios;
+using TGC.MonoGame.TP.FPS.Interface;
 
 namespace TGC.MonoGame.TP
 {
     class RocketLauncher : AWeaponRecolectable
     {
         public ModelCollidable Rocket;
+        public ModelCollidable Explosion;
+        private Matrix ExplosionScale = Matrix.CreateScale(0.002f);
+        private Matrix ExplosionBasePosition = Matrix.CreateTranslation(0, -100, 0);
         public Matrix RocketWorld;
         private Vector3 RocketPosDis = new Vector3(-50, -50, 0);
         private Vector3 RocketDirection;
@@ -63,7 +68,11 @@ namespace TGC.MonoGame.TP
             modelEffect.TextureEnabled = true;
             modelEffect.Texture = Content.Load<Texture2D>(ContentFolder3D + "weapons/rocket/rocket-texture");
 
-            
+            // Explosion
+            Explosion = new ModelCollidable(GraphicsDevice, Content, ContentFolder3D + "explosion/sphere", ExplosionScale * ExplosionBasePosition);
+            Explosion.SetEffect(Effect);
+            Explosion.SetLightParameters(1f, 0f, 0f, 0f);
+            Explosion.SetTexture(Content.Load<Texture2D>(ContentFolder3D + "explosion/sphere_tex"));
 
             // Set Texture
             /*var modeleEffect = (BasicEffect)Explosion.Model.Meshes[0].Effects[0];
@@ -77,6 +86,16 @@ namespace TGC.MonoGame.TP
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+            if (ExplosionStarted(gameTime))
+            {
+                Explosion.Transform(ExplosionScale * Matrix.CreateTranslation(RocketPosition), false);
+                Explosion.SetLight(new Light { Position = RocketPosition, AmbientColor = Color.White, DiffuseColor = Color.White, SpecularColor = Color.White });
+            }
+            if (ExplosionEnded(gameTime))
+            {
+                Explosion.Transform(ExplosionScale * ExplosionBasePosition, false);
+            }
+            
             if (Launching)
             {
                 // Movement
@@ -140,6 +159,29 @@ namespace TGC.MonoGame.TP
             return false;
         }
 
+        bool explosioneffect = false;
+        double explosiontime = 0;
+        public bool ExplosionStarted(GameTime GameTime)
+        {
+            if (explosioneffect && explosiontime == 0)
+            {
+                explosiontime = GameTime.TotalGameTime.TotalMilliseconds;
+                return true;
+            }
+            return false;
+        }
+        public bool ExplosionEnded(GameTime GameTime)
+        {
+            double timedifference = GameTime.TotalGameTime.TotalMilliseconds - explosiontime;
+            if (explosioneffect && timedifference > 100)
+            {
+                explosioneffect = false;
+                explosiontime = 0;
+                return true;
+            }
+            return false;
+        }
+
         public float AngleBet2Vec(Vector3 v1, Vector3 v2)
         {
             Vector2 v1_2 = new Vector2(v1.X, v1.Z);
@@ -158,6 +200,7 @@ namespace TGC.MonoGame.TP
         public void DrawRocket(Matrix view, Matrix projection)
         {
             Rocket.Draw(view, projection);
+            Explosion.Draw(view, projection);
         }
         public int RocketCollisionShootableCB(Ashootable e)
         {
@@ -165,7 +208,9 @@ namespace TGC.MonoGame.TP
             {
                 e.GetDamaged(Damage);
             }
+            SoundManager.Instance.reproducirSonido(SoundManager.Sonido.Explosion);
             startlightshoot = true;
+            explosioneffect = true;
             PostProcessEffect.Parameters["shot"]?.SetValue(1f);
             ResetRocket();
             return 0;

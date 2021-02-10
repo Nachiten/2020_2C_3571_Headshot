@@ -32,6 +32,7 @@ namespace TGC.MonoGame.TP.FPS.Interface
         private SoundEffect pegarEnemigo;
         private SoundEffect matarEnemigo;
         private SoundEffect pegarJugador;
+        private SoundEffect explosion;
         // Songs
         private Song muerteJugadorSong;
         private Song menuSong;
@@ -51,7 +52,8 @@ namespace TGC.MonoGame.TP.FPS.Interface
             MatarEnemigo,
             MuerteJugador,
             PegarJugador,
-            Menu
+            Menu,
+            Explosion
         }
         public enum Musica
         {
@@ -68,6 +70,7 @@ namespace TGC.MonoGame.TP.FPS.Interface
             pegarEnemigo = Content.Load<SoundEffect>(soundPath + "EnemyHitOof");
             matarEnemigo = Content.Load<SoundEffect>(soundPath + "EnemyKillWindowsXP");
             pegarJugador = Content.Load<SoundEffect>(soundPath + "PlayerHit");
+            explosion = Content.Load<SoundEffect>(soundPath + "explosion");
 
             // Canciones
             muerteJugadorSong = Content.Load<Song>(soundPath + "PlayerDeathTitanic");
@@ -95,6 +98,9 @@ namespace TGC.MonoGame.TP.FPS.Interface
                     break;
                 case Sonido.MatarEnemigo:
                     matarEnemigo.Play();
+                    break;
+                case Sonido.Explosion:
+                    explosion.Play();
                     break;
                 case Sonido.MuerteJugador:
                     MediaPlayer.Play(muerteJugadorSong);

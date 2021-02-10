@@ -37,13 +37,17 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
 
             // Weapons
             ARecolectable m4 = new M4(new Vector3(-4 * xLenFloor / 10, 50, zLenFloor / 8));
-            rl = new RocketLauncher(new Vector3(-xLenFloor / 10, 50, zLenFloor / 8));
+            rl = new RocketLauncher(new Vector3(11 * xLenFloor / 32, 50, 3 * zLenFloor / 10 - zLenFloor / 5));
             rl.SetPostProcessEffect(PostProcessEffect);
+            ARecolectable mp44 = new MP44(new Vector3(-xLenFloor / 10, 50, zLenFloor / 8));
+
             // Seteo las luces de sala A
             Rooms[0].Add(m4);
-            Rooms[0].Add(rl);
+            Rooms[0].Add(mp44);
+            Rooms[2].Add(rl);
             // Las agrego a los recolectables
             Recolectables.Add(m4);
+            Recolectables.Add(mp44);
             Recolectables.Add(rl);
         }
 
@@ -213,13 +217,6 @@ namespace TGC.MonoGame.TP.FPS.Scenarios
             Enemigo enemy = new Enemigo(enemyPath);
             Rooms[3].Add(enemy);
             Enemigos.Add(enemy);
-
-            // Explosion
-            ModelCollidable explosion = new ModelCollidable(GraphicsDevice, Content, FPSManager.ContentFolder3D + "explosion/sphere", Matrix.CreateScale(100f) * Matrix.CreateTranslation(-100,80,50));
-            explosion.SetEffect(Effect);
-            explosion.SetLightParameters(.4f, .3f, .3f, 100f);
-            explosion.SetTexture(Content.Load<Texture2D>(FPSManager.ContentFolder3D + "explosion/sphere_tex"));
-            Tables.Add(explosion);
 
             Player.Instance.Move(new Vector3(-5 * xLenFloor / 20, Player.Instance.Position.Y, zLenFloor / 8));
             //Player.Instance.Move(new Vector3(enemyPath[0].posicion.X-100, Player.Instance.Position.Y, enemyPath[0].posicion.Y));
